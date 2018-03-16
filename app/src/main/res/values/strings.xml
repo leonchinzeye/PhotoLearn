@@ -1,3 +1,12 @@
 <resources>
     <string name="app_name">PhotoLearn</string>
+    <string name="button">Button</string>
+
+    <!--Action Bar Strings-->
+    <string name="action_done">Done</string>
+
+    <!--error message Strings-->
+    <string name="error_gernal">Something wrong now, please try again!</string>
+    <string name="error_selectmode">Please select a mode first!</string>
+
 </resources>
