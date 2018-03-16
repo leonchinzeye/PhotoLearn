@@ -8,5 +8,10 @@
     <!--error message Strings-->
     <string name="error_gernal">Something wrong now, please try again!</string>
     <string name="error_selectmode">Please select a mode first!</string>
+    <string name="title_activity_bottom_bar">BottomBarActivity</string>
+
+    <!--Text on Bottom bar-->
+    <string name="title_main">Main</string>
+    <string name="title_me">Me</string>
 
 </resources>
