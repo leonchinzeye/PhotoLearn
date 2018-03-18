@@ -1,3 +1,7 @@
+/**
+ * Activity for the Bottom Navigation Bar.
+ * Created by Changling
+ */
 package com.mtech.parttimeone.photolearn.activity;
 
 import android.support.v4.app.Fragment;

@@ -1,9 +1,12 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
+import android.app.LauncherActivity;
 import android.content.Context;
+import android.graphics.drawable.Drawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.ListFragment;
+import android.support.v4.content.ContextCompat;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +14,20 @@ import android.support.v4.app.Fragment;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
+import android.widget.Switch;
 import android.widget.Toast;
 
+import com.mtech.parttimeone.photolearn.Adapter.ListModel;
+import com.mtech.parttimeone.photolearn.Adapter.MeListAdapter;
 import com.mtech.parttimeone.photolearn.R;
+
+import java.util.ArrayList;
 
 public class MeFragment extends Fragment implements AdapterView.OnItemClickListener {
 
    // private OnFragmentInteractionListener mListener;
-   String[] infolist = {"Google", "Apple"};
+   String userName = "ChangLingLiu";
+   ArrayList<ListModel>infoList;
    private ListView listView;
 
     public MeFragment() {
@@ -28,6 +37,13 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+
+        infoList  = new ArrayList();
+        ListModel itemmodel = new ListModel();
+        itemmodel.setTitle("Logout");
+        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
+        itemmodel.setImage(d);
+        infoList.add(itemmodel);
     }
 
     @Override
@@ -42,69 +58,31 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
     @Override
     public void onActivityCreated(Bundle savedInstanceState) {
         super.onActivityCreated(savedInstanceState);
-        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_list_item_1, infolist){
 
-            //set row height.
-            @Override
-            public View getView(int position, View convertView, ViewGroup parent){
-                // Get the current item from ListView
-                View view = super.getView(position,convertView,parent);
-
-                // Get the Layout Parameters for ListView Current Item View
-                ViewGroup.LayoutParams params = view.getLayoutParams();
-
-                // Set the height of the Item View
-                params.height = 150;
-                view.setLayoutParams(params);
-
-                return view;
-            }
-        };
-
+        MeListAdapter adapter = new MeListAdapter(getActivity(),userName,infoList);
         listView.setAdapter(adapter);
         listView.setOnItemClickListener(this);
     }
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
+        switch (position){
+            case 1:
+            //logout function.
+            onClicklogout();
+            default:
+            break;
+        }
         Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
     }
 
-    // TODO: Rename method, update argument and hook method into UI event
-//    public void onButtonPressed(Uri uri) {
-//        if (mListener != null) {
-//            mListener.onFragmentInteraction(uri);
-//        }
-//    }
+    private void onClicklogout(){
 
-//    @Override
-//    public void onAttach(Context context) {
-//        super.onAttach(context);
-//        if (context instanceof OnFragmentInteractionListener) {
-//            mListener = (OnFragmentInteractionListener) context;
-//        } else {
-//            throw new RuntimeException(context.toString()
-//                    + " must implement OnFragmentInteractionListener");
-//        }
-//    }
+    }
 
     @Override
     public void onDetach() {
         super.onDetach();
     }
 
-    /**
-     * This interface must be implemented by activities that contain this
-     * fragment to allow an interaction in this fragment to be communicated
-     * to the activity and potentially other fragments contained in that
-     * activity.
-     * <p>
-     * See the Android Training lesson <a href=
-     * "http://developer.android.com/training/basics/fragments/communicating.html"
-     * >Communicating with Other Fragments</a> for more information.
-     */
-//    public interface OnFragmentInteractionListener {
-//        // TODO: Update argument type and name
-//        void onFragmentInteraction(Uri uri);
-//    }
 }
