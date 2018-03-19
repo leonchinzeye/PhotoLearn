@@ -3,7 +3,6 @@ package com.mtech.parttimeone.photolearn.activity;
 import android.content.Intent;
 import android.support.annotation.NonNull;
 
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
@@ -13,7 +12,6 @@ import com.facebook.AccessToken;
 import com.facebook.CallbackManager;
 import com.facebook.FacebookCallback;
 import com.facebook.FacebookException;
-import com.facebook.login.LoginManager;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
@@ -31,8 +29,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 
-public class MainActivity extends AppCompatActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener{
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
@@ -50,7 +49,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         Log.d(TAG, "onCreate call!");
 
         findViewById(R.id.sign_in_button).setOnClickListener(this);
-        findViewById(R.id.sign_out_button).setOnClickListener(this);
 
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
@@ -96,12 +94,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
         if(currentUser == null){
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.VISIBLE);
         }else{
             Log.d(TAG, "onStart uesr id:"+currentUser.getUid()+"::display name:"+currentUser.getDisplayName());
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
         }
     }
@@ -114,8 +110,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
             startActivityForResult(signInIntent,RESULT_CODE_SIGN_IN);
 
-        } else if(i == R.id.sign_out_button){
-            signOut();
         }
     }
     @Override
@@ -200,13 +194,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         if (user != null) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
-            findViewById(R.id.sign_out_button).setVisibility(View.VISIBLE);
+
             Log.d(TAG, "signInWithCredential:success:Display Name:"+user.getDisplayName()+":Email:"
                     +user.getEmail()+":Uid:"+user.getUid());
-            Toast.makeText(MainActivity.this, "Facebook Authentication success:Display Name:"+user.getDisplayName()+":Email:"
-                            +user.getEmail()+":Uid:"+user.getUid(),
-                    Toast.LENGTH_LONG).show();
-            Intent learningSessionIntent = new Intent(this,LearningSessionActivity.class);
+
+            GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)getApplicationContext();
+            globalPhotoLearn.setmAuth(mAuth);
+            globalPhotoLearn.setmGoogleSignInClient(mGoogleSignInClient);
+
+            Intent learningSessionIntent = new Intent(this,BottomBarActivity.class);
             startActivity(learningSessionIntent);
         } else {
 
@@ -214,8 +210,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     Toast.LENGTH_SHORT).show();
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.button_facebook_login).setVisibility(View.VISIBLE);
-            findViewById(R.id.sign_out_button).setVisibility(View.GONE);
-
         }
 
     }
@@ -226,21 +220,5 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onStop();
 
     }
-
-    private void signOut() {
-        // Firebase sign out
-        mAuth.signOut();
-        LoginManager.getInstance().logOut();
-        FirebaseUser currentUser = mAuth.getCurrentUser();
-        // Google sign out
-        mGoogleSignInClient.signOut().addOnCompleteListener(this,
-                new OnCompleteListener<Void>() {
-                    @Override
-                    public void onComplete(@NonNull Task<Void> task) {
-                        updateUI(null);
-                    }
-                });
-    }
-
 
 }
