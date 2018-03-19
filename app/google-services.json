@@ -1,0 +1,55 @@
+{
+  "project_info": {
+    "project_number": "801712334264",
+    "firebase_url": "https://photolearn-c06db.firebaseio.com",
+    "project_id": "photolearn-c06db",
+    "storage_bucket": "photolearn-c06db.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:801712334264:android:37fdf5b70ac1ca65",
+        "android_client_info": {
+          "package_name": "com.mtech.parttimeone.photolearn"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "801712334264-pkprcpaeoepnnbu9iuq5jeo441igogfn.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.mtech.parttimeone.photolearn",
+            "certificate_hash": "94e84fa72f57359b3e2ef20624b43f22b9e5232d"
+          }
+        },
+        {
+          "client_id": "801712334264-l6uic31dh2gng5enethidk9sqrv6v8tr.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyDjCRArqsPg3mjBObmJi9BHTyz6gogZWms"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 2,
+          "other_platform_oauth_client": [
+            {
+              "client_id": "801712334264-l6uic31dh2gng5enethidk9sqrv6v8tr.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
