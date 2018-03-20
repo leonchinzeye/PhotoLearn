@@ -23,6 +23,7 @@ public class BottomBarActivity extends BaseActivity {
     private FragmentManager mFragmentManager;
 
 
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -34,9 +35,11 @@ public class BottomBarActivity extends BaseActivity {
             switch (item.getItemId()) {
                 case R.id.navigation_main:
                     setCurrentFragment(mainFragment);
+                    setPageTitle("Session");
                     return true;
                 case R.id.navigation_me:
                     setCurrentFragment(meFragment);
+                    setPageTitle("Me");
                     return true;
             }
             return false;
@@ -46,7 +49,7 @@ public class BottomBarActivity extends BaseActivity {
     private void setDefaultFragment(){
 
         FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
-              fragmentTransaction.add(R.id.fragment_content, mainFragment);
+        fragmentTransaction.add(R.id.fragment_content, mainFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         currentFragment = mainFragment;
@@ -84,6 +87,12 @@ public class BottomBarActivity extends BaseActivity {
 
         intheView();
         setDefaultFragment();
+        setPageTitle("Session");
+
     }
 
+    @Override
+    void setPageTitle(String title){
+        super.setPageTitle(title);
+    }
 }
