@@ -39,6 +39,7 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
     private FragmentManager mFragmentManager;
 
 
+
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
             = new BottomNavigationView.OnNavigationItemSelectedListener() {
 
@@ -50,9 +51,11 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
             switch (item.getItemId()) {
                 case R.id.navigation_main:
                     setCurrentFragment(mainFragment);
+                    setPageTitle("Session");
                     return true;
                 case R.id.navigation_me:
                     setCurrentFragment(meFragment);
+                    setPageTitle("Me");
                     return true;
             }
             return false;
@@ -65,6 +68,7 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
               //To Changling. Why did you use add? Its causing UI problems..
         //fragmentTransaction.add(R.id.fragment_content, mainFragment);
         fragmentTransaction.replace(R.id.fragment_content, mainFragment);
+     //   fragmentTransaction.add(R.id.fragment_content, mainFragment);
         fragmentTransaction.addToBackStack(null);
         fragmentTransaction.commit();
         currentFragment = mainFragment;
@@ -148,5 +152,13 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         mainFragment = (Fragment) CreateQuizTitleFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");
         intheView(mainFragment);
         return mainFragment;
+       // setDefaultFragment();
+        //setPageTitle("Session");
+
+    }
+
+    @Override
+    void setPageTitle(String title){
+        super.setPageTitle(title);
     }
 }

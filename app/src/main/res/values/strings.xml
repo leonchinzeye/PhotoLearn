@@ -23,4 +23,9 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    
+    <!--Title for Pop Up Menu (Take Photo&Library)-->
+    <string name="take_photo">Take Photo</string>
+    <string name="select_library">Select from Library</string>
+
 </resources>
