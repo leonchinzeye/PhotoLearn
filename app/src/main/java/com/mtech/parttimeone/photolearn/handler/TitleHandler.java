@@ -32,24 +32,28 @@ public class TitleHandler {
         return handler;
     }
 
-    public TitleBO createTitle(TitleType type, Context context) {
+    public void createTitle(TitleType type) {
         TitleBO title = null;
 
         switch (type) {
             case LEARNING:
-                title = createLearningTitle(context);
                 break;
             case QUIZ:
-                title = createQuizTitle(context);
                 break;
             default:
                 break;
         }
-
-        return title;
     }
 
-    private QuizTitleBO createQuizTitle(Context context) {
+    public void updateTitle(TitleType type) {
+
+    }
+
+    public void deleteTitle(TitleType type) {
+
+    }
+
+    private QuizTitleBO createQuizTitle() {
         QuizTitleBO quizTitle = new QuizTitleBO();
 
         // TODO
@@ -60,7 +64,7 @@ public class TitleHandler {
         return quizTitle;
     }
 
-    private LearningTitleBO createLearningTitle(Context context) {
+    private LearningTitleBO createLearningTitle() {
         LearningTitleBO learningTitle = new LearningTitleBO();
 
         // TODO

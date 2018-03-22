@@ -5,20 +5,20 @@ import org.apache.logging.log4j.Logger;
 
 /**
  * @author Leon
- * @date 17/3/18
+ * @date 22/3/18
  */
 
-public class LearningSessionHandler {
-    private static LearningSessionHandler handler = null;
-    private static final Logger logger = LogManager.getLogger(LearningSessionHandler.class);
+public class QuizAttemptHandler {
+    private static QuizAttemptHandler handler = null;
+    private static final Logger logger = LogManager.getLogger(QuizAttemptHandler.class);
 
-    private LearningSessionHandler() {
+    private QuizAttemptHandler() {
 
     }
 
-    public static LearningSessionHandler getInstance() {
+    public static QuizAttemptHandler getInstance() {
         if (handler == null) {
-            handler = new LearningSessionHandler();
+            handler = new QuizAttemptHandler();
         }
         return handler;
     }

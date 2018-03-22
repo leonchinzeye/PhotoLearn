@@ -7,9 +7,6 @@ import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 import com.mtech.parttimeone.photolearn.enumeration.ItemType;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-
 /**
  * @author Leon
  * @date 17/3/18
@@ -17,37 +14,29 @@ import org.apache.logging.log4j.Logger;
 
 public class ItemHandler {
 
-    private static ItemHandler handler = null;
-    private static final Logger logger = LogManager.getLogger(ItemHandler.class);
-
-    private ItemHandler() {
-
-    }
-
-    public static ItemHandler getInstance() {
-        if (handler == null) {
-            handler = new ItemHandler();
-        }
-        return handler;
-    }
-
-    public ItemBO createItem(ItemType type, Context context) {
+    // Equivalent to adding an item
+    public void createItem(ItemType type) {
         ItemBO item = null;
         switch (type) {
             case LEARNING:
-                item = createLearningItem(context);
                 break;
             case QUIZ:
-                item = createQuizItem(context);
                 break;
             default:
                 break;
         }
-
-        return item;
     }
 
-    private LearningItemBO createLearningItem(Context context) {
+
+    public void updateItem(ItemType type) {
+
+    }
+
+    public void deleteItem(ItemType type) {
+
+    }
+
+    private LearningItemBO createLearningItem() {
         LearningItemBO learningItem = new LearningItemBO();
 
         // TODO
@@ -58,7 +47,7 @@ public class ItemHandler {
         return learningItem;
     }
 
-    private QuizItemBO createQuizItem(Context context) {
+    private QuizItemBO createQuizItem() {
         QuizItemBO quizItem = new QuizItemBO();
 
         // TODO
