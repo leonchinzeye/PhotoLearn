@@ -1,13 +1,15 @@
 package com.mtech.parttimeone.photolearn.data.mapper;
 
-import com.mtech.parttimeone.photolearn.data.model.AccountModel;
-import com.mtech.parttimeone.photolearn.domain.Account;
+import com.mtech.parttimeone.photolearn.bo.AccountBO;
+import com.mtech.parttimeone.photolearn.domain.AccountEntity;
 
-public class AccountMapper extends FirebaseMapper<AccountModel, Account>{
+public class AccountMapper extends FirebaseMapper<AccountBO, AccountEntity>{
     @Override
-    public Account map(AccountModel accountModel) {
-        Account account = new Account(accountModel.getUserUid(),accountModel.getName(),accountModel.getEmail(),accountModel.getLastActive());
-
-        return account;
+    public AccountEntity map(AccountBO AccountBO) {
+        AccountEntity accountEntity = new AccountEntity("","","");
+        accountEntity.setName(AccountBO.getAccountName());
+        //accountEntity.setEmail(AccountBO.getEmail());
+        //accountEntity.setLastActive(AccountBO.getLastActive());
+        return accountEntity;
     }
 }

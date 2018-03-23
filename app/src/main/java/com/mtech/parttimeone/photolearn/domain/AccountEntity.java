@@ -1,10 +1,15 @@
 package com.mtech.parttimeone.photolearn.domain;
 
-public class Account {
-    private String userUid;
+public class AccountEntity {
     private String name;
     private String email;
     private String lastActive;
+
+    public AccountEntity(String name, String email, String lastActive) {
+        this.name = name;
+        this.email = email;
+        this.lastActive = lastActive;
+    }
 
     public void setUserUid(String userUid) {
         this.userUid = userUid;
@@ -12,17 +17,6 @@ public class Account {
 
     public String getUserUid() {
         return userUid;
-    }
-
-    public Account(){
-
-    }
-
-    public Account(String userUid, String name, String email, String lastActive) {
-        this.userUid = userUid;
-        this.name = name;
-        this.email = email;
-        this.lastActive = lastActive;
     }
 
     public String getName() {
