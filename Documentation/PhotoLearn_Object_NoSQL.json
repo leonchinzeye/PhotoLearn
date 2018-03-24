@@ -1,138 +1,78 @@
 {
   "accounts": [
     {
-      "google": [
-        {
-          "G123": {
-            "user_name": "Boon Kui",
-            "email": "boonkui@nus.edu.sg",
-            "last_active": "trainer"
-          },
-          "G567": {
-            "user_name": "Swarna Ashok",
-            "email": "swarna@nus.edu.sg",
-            "last_active": "trainer"
-          },
-          "G789": {
-            "user_name": "Karen Athaide",
-            "email": "karenathaide@nus.edu.sg",
-            "last_active": "participant"
-          }
-        }
-      ]
-    },
-    {
-      "facebook": [
-        {
-          "F234": {
-            "user_name": "Boon Kui",
-            "email": "boonkui@nus.edu.sg",
-            "last_active": "trainer"
-          }
-        }
-      ]
-    }
-  ],
-  "user_learning_sessions": [
-    {
-      "trainers": [
-        {
-          "G123": [
-            {
-              "session_id": "20180301-IOT-M01",
-              "user_name": "Boon Kui"
-            }
-          ]
-        },
-        {
-          "G567": [
-            {
-              "session_id": "20180212-SRE-M01",
-              "user_name": "Swarna Ashok"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "participants": [
-        {
-          "F234": [
-            {
-              "session_id": "20180301-IOT-M01",
-              "user_name": "Boon Kui"
-            }
-          ]
-        },
-        {
-          "G789": [
-            {
-              "session_id": "20180212-SRE-M01",
-              "user_name": "Karen Athaide"
-            }
-          ]
-        }
-      ]
-    }
-  ],
-  "user_titles": [
-    {
-      "trainers": [
-        {
-          "G123": [
-            {
-              "user_name": "Boon Kui",
-              "session_id": "20180318-IOT-M01"
-            }
-          ]
-        },
-        {
-          "G567": [
-            {
-              "user_name": "Swarna Ashok",
-              "session_id": "20180212-SRE-M01"
-            }
-          ]
-        }
-      ]
-    },
-    {
-      "participants": [
-        {
-          "F234": [
-            {
-              "user_name": "Boon Kui",
-              "session_id": "20180318-IOT-M01"
-            }
-          ]
-        },
-        {
-          "G789": [
-            {
-              "user_name": "Karen Athaide",
-              "session_id": "20180212-SRE-M01"
-            }
-          ]
-        }
-      ]
+      "G123": {
+        "user_name": "Boon Kui",
+        "email": "boonkui@nus.edu.sg",
+        "last_active": "trainer"
+      },
+      "G567": {
+        "user_name": "Swarna Ashok",
+        "email": "swarna@nus.edu.sg",
+        "last_active": "trainer"
+      },
+      "G789": {
+        "user_name": "Karen Athaide",
+        "email": "karenathaide@nus.edu.sg",
+        "last_active": "participant"
+      },
+      "F234": {
+        "user_name": "Boon Kui",
+        "email": "boonkui@nus.edu.sg",
+        "last_active": "trainer"
+      }
     }
   ],
   "learning_sessions": [
     {
-      "20180301-IOT-M01": {
-        "course_title": "Internet of Things",
-        "module_name": "Overview",
-        "start_date": "01/02/2018",
-        "created_date": "12/03/2018"
-      }
+      "trainers": [
+        {
+          "G123": [
+            {
+              "session_id": "20180301-IOT-M01",
+              "course_title": "Internet of Things",
+              "module_name": "Overview",
+              "start_date": "01/02/2018",
+              "created_date": "12/03/2018"
+            }
+          ],
+          "G567": [
+            {
+              "session_id": "20180212-SRE-M01",
+              "course_title": "Software Requirements Eng",
+              "module_name": "Overview",
+              "start_date": "01/04/2018",
+              "created_date": "12/03/2018"
+            }
+          ]
+        }
+      ]
     },
     {
-      "20180212-SRE-M01": {
-        "course_title": "Software Requirements Eng",
-        "module_name": "Overview",
-        "start_date": "01/04/2018",
-        "created_date": "12/03/2018"
-      }
+      "participants": [
+        {
+          "F234": [
+            {
+              "session_id": "20180301-IOT-M01",
+              "course_title": "Internet of Things",
+              "module_name": "Overview",
+              "start_date": "01/02/2018",
+              "created_date": "12/03/2018"
+            }
+          ]
+        },
+        {
+          "G789": [
+            {
+              "session_id": "20180212-SRE-M01",
+              "course_title": "Software Requirements Eng",
+              "module_name": "Overview",
+              "start_date": "01/04/2018",
+              "created_date": "12/03/2018"
+            }
+          ]
+        }
+      ]
     }
   ],
   "learning_titles": [
@@ -142,6 +82,7 @@
           "title_id": "20180312-SensorMotorola",
           "title": "Sensors from Motorola",
           "created_date": "12/03/2018",
+          "created_by": "G789",
           "learning_items": [
             {
               "MotionSensor": [
@@ -163,6 +104,7 @@
           "title_id": "20180312-AgileRequirements",
           "title": "Agile Scrum",
           "created_date": "12/03/2018",
+          "created_by": "G789",
           "learning_items": [
             {
               "Agile": [
@@ -250,6 +192,7 @@
       "G789": [
         {
           "attempt_id": "Q-01",
+          "quiz_item_id": "20180312-QuizItem1",
           "quiz_items": [
             {
               "20180312-QuizItem1": [
@@ -272,6 +215,7 @@
       "F234": [
         {
           "attempt_id": "Q-02",
+          "quiz_item_id": "20180312-QuizItem1",
           "quiz_items": [
             {
               "20180312-QuizItem1": [
