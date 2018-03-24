@@ -7,8 +7,8 @@ import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 import com.mtech.parttimeone.photolearn.enumeration.ItemType;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 
 /**
  * @author Leon
@@ -18,7 +18,7 @@ import org.apache.logging.log4j.Logger;
 public class ItemHandler {
 
     private static ItemHandler handler = null;
-    private static final Logger logger = LogManager.getLogger(ItemHandler.class);
+   // private static final Logger logger = LogManager.getLogger(ItemHandler.class);
 
     private ItemHandler() {
 

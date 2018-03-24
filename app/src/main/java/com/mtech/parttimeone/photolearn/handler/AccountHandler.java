@@ -7,8 +7,8 @@ import com.mtech.parttimeone.photolearn.bo.AccountBO;
 import com.mtech.parttimeone.photolearn.bo.ParticipantBO;
 import com.mtech.parttimeone.photolearn.bo.TrainerBO;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
+//import org.apache.logging.log4j.LogManager;
+//import org.apache.logging.log4j.Logger;
 
 import java.math.BigInteger;
 
@@ -23,7 +23,7 @@ import java.math.BigInteger;
 public class AccountHandler {
 
     private static AccountHandler handler = null;
-    private static final Logger logger = LogManager.getLogger(AccountHandler.class);
+   // private static final Logger logger = LogManager.getLogger(AccountHandler.class);
     private AccountBO accountBO;
 
     private AccountHandler() {
