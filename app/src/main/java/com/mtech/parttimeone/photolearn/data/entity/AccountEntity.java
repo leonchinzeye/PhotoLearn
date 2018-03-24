@@ -13,14 +13,14 @@ public class AccountEntity {
         this.lastActive = lastActive;
     }
 
-    public void setUserUid(String userUid) {
-        this.userUid = userUid;
+    public String getUserId() {
+        return userId;
     }
 
-    public String getUserUid() {
-        return userUid;
+    public void setUserId(String userId) {
+        this.userId = userId;
     }
-    
+
     public String getName() {
         return name;
     }

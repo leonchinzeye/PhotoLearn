@@ -51,7 +51,7 @@ public class ItemHandler {
 
     }
 
-    private LearningItemBO createLearningItem(Context context) {
+    private LearningItemBO createLearningItem() {
 
         //Changed by ZK
         LearningItemBO learningItem = new LearningItemBO("DEFAULT","DEFAULT","DEFAULT","DEFAULT");

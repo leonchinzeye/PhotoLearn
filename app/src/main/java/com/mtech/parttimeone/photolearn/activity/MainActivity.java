@@ -2,11 +2,8 @@ package com.mtech.parttimeone.photolearn.activity;
 
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
-import android.support.annotation.NonNull;
-import android.arch.lifecycle.ViewModelProviders;
-
-
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -18,8 +15,8 @@ import com.facebook.FacebookException;
 import com.facebook.login.LoginResult;
 import com.facebook.login.widget.LoginButton;
 import com.google.android.gms.auth.api.signin.GoogleSignIn;
-import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInAccount;
+import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.android.gms.auth.api.signin.GoogleSignInOptions;
 import com.google.android.gms.common.api.ApiException;
 import com.google.android.gms.tasks.OnCompleteListener;
@@ -33,7 +30,7 @@ import com.google.firebase.auth.GoogleAuthProvider;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
-import com.mtech.parttimeone.photolearn.entity.AccountEntity;
+import com.mtech.parttimeone.photolearn.data.entity.AccountEntity;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
 
@@ -202,7 +199,10 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
             AccountEntity UserAccount = new AccountEntity(user.getUid(),user.getDisplayName(),user.getEmail(),"");
             AccountViewModel model = ViewModelProviders.of(this).get(AccountViewModel.class);
-            model.setAccount(UserAccount);
+
+            model.signIn(user);
+
+//            model.setAccount(UserAccount);
 
             Log.d(TAG, "signInWithCredential:success:Display Name:"+user.getDisplayName()+":Email:"
                     +user.getEmail()+":Uid:"+user.getUid());
