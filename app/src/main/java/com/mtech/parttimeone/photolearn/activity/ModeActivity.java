@@ -36,7 +36,7 @@ public class ModeActivity extends BaseActivity implements AdapterView.OnItemClic
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        getMenuInflater().inflate(R.menu.menu_mode,menu);
+        getMenuInflater().inflate(R.menu.menu_done,menu);
         return super.onCreateOptionsMenu(menu);
     }
 

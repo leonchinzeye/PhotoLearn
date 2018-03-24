@@ -9,6 +9,7 @@
     <string name="error_gernal">Something wrong now, please try again!</string>
     <string name="error_selectmode">Please select a mode first!</string>
     <string name="title_activity_bottom_bar">BottomBarActivity</string>
+    <string name="error_keep_one_option">Please keep at least 1 option.</string>
 
     <!--Text on Bottom bar-->
     <string name="title_main">Main</string>
@@ -27,5 +28,10 @@
     <!--Title for Pop Up Menu (Take Photo&Library)-->
     <string name="take_photo">Take Photo</string>
     <string name="select_library">Select from Library</string>
-
+    
+    <!--Title for Pop Up Menu (Add Option,Delete Option, mark as answear)-->
+    <string name="add_ans_option">Add A New Option</string>
+    <string name="delete_ans_option">Delete Option</string>
+    <string name="mark_as_ans">Mark As Answear</string>
+    <string name="unmark_as_ans">Unmark As Answear</string>
 </resources>
