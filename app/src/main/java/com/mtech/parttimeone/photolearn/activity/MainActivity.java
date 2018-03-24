@@ -2,6 +2,8 @@ package com.mtech.parttimeone.photolearn.activity;
 
 import android.content.Intent;
 import android.support.annotation.NonNull;
+import android.arch.lifecycle.ViewModelProviders;
+
 
 import android.os.Bundle;
 import android.util.Log;
@@ -29,7 +31,9 @@ import com.google.firebase.auth.FirebaseAuthUserCollisionException;
 import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
+import com.mtech.parttimeone.photolearn.domain.Account;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
 
@@ -99,6 +103,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             Log.d(TAG, "onStart uesr id:"+currentUser.getUid()+"::display name:"+currentUser.getDisplayName());
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
+            updateUI(currentUser);
         }
     }
 
@@ -194,6 +199,12 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         if (user != null) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
+
+            // karen
+            Account UserAccount = new Account(user.getUid(),user.getDisplayName(),user.getEmail(),"");
+            AccountViewModel model = ViewModelProviders.of(this).get(AccountViewModel.class);
+            model.setAccount(UserAccount);
+
 
             Log.d(TAG, "signInWithCredential:success:Display Name:"+user.getDisplayName()+":Email:"
                     +user.getEmail()+":Uid:"+user.getUid());
