@@ -19,6 +19,7 @@ public class ItemHandler {
 
     private static ItemHandler handler = null;
    // private static final Logger logger = LogManager.getLogger(ItemHandler.class);
+  //  private static final Logger logger = LogManager.getLogger(ItemHandler.class);
 
     private ItemHandler() {
 
@@ -48,7 +49,9 @@ public class ItemHandler {
     }
 
     private LearningItemBO createLearningItem(Context context) {
-        LearningItemBO learningItem = new LearningItemBO();
+
+        //Changed by ZK
+        LearningItemBO learningItem = new LearningItemBO("DEFAULT","DEFAULT","DEFAULT","DEFAULT");
 
         // TODO
         // Assume that all the necessary information for the quiz item is set

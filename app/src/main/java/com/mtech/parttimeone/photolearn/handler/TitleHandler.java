@@ -20,6 +20,7 @@ public class TitleHandler {
 
     private static TitleHandler handler = null;
 //    private static final Logger logger = LogManager.getLogger(TitleHandler.class);
+   // private static final Logger logger = LogManager.getLogger(TitleHandler.class);
 
     private TitleHandler() {
 
@@ -50,7 +51,7 @@ public class TitleHandler {
     }
 
     private QuizTitleBO createQuizTitle(Context context) {
-        QuizTitleBO quizTitle = new QuizTitleBO();
+        QuizTitleBO quizTitle = new QuizTitleBO("default","default");
 
         // TODO
         // Assume that all the necessary information for the quiz item is set
@@ -61,7 +62,7 @@ public class TitleHandler {
     }
 
     private LearningTitleBO createLearningTitle(Context context) {
-        LearningTitleBO learningTitle = new LearningTitleBO();
+        LearningTitleBO learningTitle = new LearningTitleBO("default","default");
 
         // TODO
         // Assume that all the necessary information for the quiz item is set

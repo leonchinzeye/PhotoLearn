@@ -11,6 +11,7 @@ package com.mtech.parttimeone.photolearn.handler;
 public class LearningSessionHandler {
     private static LearningSessionHandler handler = null;
 //    private static final Logger logger = LogManager.getLogger(LearningSessionHandler.class);
+  //  private static final Logger logger = LogManager.getLogger(LearningSessionHandler.class);
 
     private LearningSessionHandler() {
 

@@ -15,6 +15,15 @@ public class LearningSessionBO {
     private List<LearningTitleBO> learningTitles;
     private List<QuizTitleBO> quizTitles;
 
+    //Added By Zhikai, need the constructor for convenience. Can remove later if necessary
+
+
+    public LearningSessionBO(String courseCode, String courseModule, String courseDate) {
+        this.courseCode = courseCode;
+        this.courseModule = courseModule;
+        this.courseDate = courseDate;
+    }
+
     public String getCourseCode() {
         return courseCode;
     }
