@@ -1,7 +1,5 @@
 package com.mtech.parttimeone.photolearn.handler;
 
-import android.content.Context;
-
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
@@ -32,23 +30,28 @@ public class ItemHandler {
         return handler;
     }
 
-    public ItemBO createItem(ItemType type, Context context) {
+    public void createItem(ItemType type) {
         ItemBO item = null;
         switch (type) {
             case LEARNING:
-                item = createLearningItem(context);
                 break;
             case QUIZ:
-                item = createQuizItem(context);
                 break;
             default:
                 break;
         }
-
-        return item;
     }
 
-    private LearningItemBO createLearningItem(Context context) {
+
+    public void updateItem(ItemType type) {
+
+    }
+
+    public void deleteItem(ItemType type) {
+
+    }
+
+    private LearningItemBO createLearningItem() {
 
         //Changed by ZK
         LearningItemBO learningItem = new LearningItemBO("DEFAULT","DEFAULT","DEFAULT","DEFAULT");
@@ -61,7 +64,7 @@ public class ItemHandler {
         return learningItem;
     }
 
-    private QuizItemBO createQuizItem(Context context) {
+    private QuizItemBO createQuizItem() {
         QuizItemBO quizItem = new QuizItemBO();
 
         // TODO

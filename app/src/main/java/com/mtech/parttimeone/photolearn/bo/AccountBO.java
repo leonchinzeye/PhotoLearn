@@ -9,6 +9,7 @@ import java.math.BigInteger;
 
 public class AccountBO {
 
+    private String uid;
     private BigInteger accountNumber;
     private String accountName;
     private TrainerBO trainerBO;
@@ -44,5 +45,13 @@ public class AccountBO {
 
     public void setParticipantBO(ParticipantBO participantBO) {
         this.participantBO = participantBO;
+    }
+
+    public String getUid() {
+        return uid;
+    }
+
+    public void setUid(String uid) {
+        this.uid = uid;
     }
 }

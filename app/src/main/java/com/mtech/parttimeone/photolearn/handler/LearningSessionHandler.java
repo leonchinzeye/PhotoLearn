@@ -24,4 +24,15 @@ public class LearningSessionHandler {
         return handler;
     }
 
+    public void createLearningSession() {
+
+    }
+
+    public void updateLearningSession() {
+
+    }
+
+    public void deleteLearningSession() {
+
+    }
 }
