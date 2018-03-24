@@ -1,10 +1,17 @@
-package com.mtech.parttimeone.photolearn.domain;
+package com.mtech.parttimeone.photolearn.data.entity;
 
-public class Account {
-    private String userUid;
+public class AccountEntity {
+    private String userId;
     private String name;
     private String email;
     private String lastActive;
+
+    public AccountEntity(String userId, String name, String email, String lastActive) {
+        this.userId = userId;
+        this.name = name;
+        this.email = email;
+        this.lastActive = lastActive;
+    }
 
     public void setUserUid(String userUid) {
         this.userUid = userUid;
@@ -13,18 +20,7 @@ public class Account {
     public String getUserUid() {
         return userUid;
     }
-
-    public Account(){
-
-    }
-
-    public Account(String userUid, String name, String email, String lastActive) {
-        this.userUid = userUid;
-        this.name = name;
-        this.email = email;
-        this.lastActive = lastActive;
-    }
-
+    
     public String getName() {
         return name;
     }

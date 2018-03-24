@@ -7,17 +7,17 @@ import android.arch.lifecycle.ViewModel;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mtech.parttimeone.photolearn.data.repository.AccountRepository;
 import com.mtech.parttimeone.photolearn.data.repository.FirebaseDatabaseRepository;
-import com.mtech.parttimeone.photolearn.domain.Account;
+import com.mtech.parttimeone.photolearn.bo.AccountBO;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
-public class AccountViewModel extends ViewModel {
-    private MutableLiveData<List<Account>> accounts;
+    public class AccountViewModel extends ViewModel {
+    private MutableLiveData<List<AccountBO>> accounts;
     private AccountRepository repository = new AccountRepository();
     private DatabaseReference mDatabaseReference;
 
-    public LiveData<List<Account>> getAccounts() {
+    public LiveData<List<AccountBO>> getAccounts() {
         if (accounts == null) {
             accounts = new MutableLiveData<>();
             loadAccounts();
@@ -31,9 +31,9 @@ public class AccountViewModel extends ViewModel {
     }
 
     private void loadAccounts() {
-        repository.addListener(new FirebaseDatabaseRepository.FirebaseDatabaseRepositoryCallback<Account>() {
+        repository.addListener(new FirebaseDatabaseRepository.FirebaseDatabaseRepositoryCallback<AccountBO>() {
             @Override
-            public void onSuccess(List<Account> result) {
+            public void onSuccess(List<AccountBO> result) {
                 accounts.setValue(result);
             }
 
@@ -44,9 +44,9 @@ public class AccountViewModel extends ViewModel {
         });
     }
 
-    public boolean setAccount(Account mAccount) {
+    public boolean setAccount(AccountEntity mAccountEntity) {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference(repository.getRootNode());
-        mDatabaseReference.child(mAccount.getUserUid()).setValue(mAccount);
+        mDatabaseReference.child(mAccount.getUserUid()).setValue(mAccountEntity);
 
         return true;
     }
