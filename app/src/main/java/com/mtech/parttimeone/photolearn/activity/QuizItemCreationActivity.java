@@ -1,40 +1,28 @@
 package com.mtech.parttimeone.photolearn.activity;
 
+import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
-import com.mtech.parttimeone.photolearn.Adapter.LearningItemCreationAdapter;
+import com.mtech.parttimeone.photolearn.Adapter.QuizItemCreationAdapter;
 import com.mtech.parttimeone.photolearn.R;
 
-public class LearnItemCreationActivity extends BaseActivity {
+public class QuizItemCreationActivity extends BaseActivity  {
 
     private ListView listView;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        setContentView(R.layout.activity_learn_item_creation);
+        setContentView(R.layout.activity_quiz_item_creation);
+        initView();
 
-        intheView();
-    }
-
-    //call back function for "Done" button on right top.
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-
-        if (item.getItemId() == R.id.action_done) {
-            createtheLearningItem();
-            return true;
-        } else {
-            Toast.makeText(LearnItemCreationActivity.this, R.string.error_gernal, Toast.LENGTH_SHORT).show();
-            return true;
-        }
     }
 
     @Override
@@ -45,15 +33,26 @@ public class LearnItemCreationActivity extends BaseActivity {
     }
 
     // INIT the UI
-    private void intheView(){
-        super.setPageTitle("Create Learning Item");
-        listView = (ListView) findViewById(R.id.learnning_creation_list);
-        LearningItemCreationAdapter adapter = new  LearningItemCreationAdapter(this);
+    private void initView(){
+        super.setPageTitle("Create Quiz Item");
+        listView = findViewById(R.id.quiz_creation_list);
+        QuizItemCreationAdapter adapter = new  QuizItemCreationAdapter(this);
         listView.setAdapter(adapter);
     }
 
-    //function for click the done button.
-    public void createtheLearningItem(){
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+
+        if (item.getItemId() == R.id.action_done) {
+            submitQuizItem();
+            return true;
+        } else {
+
+            return true;
+        }
+    }
+
+    public void submitQuizItem(){
 
     }
 
@@ -72,7 +71,7 @@ public class LearnItemCreationActivity extends BaseActivity {
     public boolean onContextItemSelected (MenuItem item){
         switch (item.getItemId()) {
             case R.id.add_photo_button:{
-              takePhoto();
+                takePhoto();
             }
             break;
             case R.id.library:{
@@ -84,6 +83,7 @@ public class LearnItemCreationActivity extends BaseActivity {
     }
 
     public void takePhoto(){
+
     }
 
     public void selectPhotofromLibrary(){
@@ -97,4 +97,3 @@ public class LearnItemCreationActivity extends BaseActivity {
     }
 
 }
-
