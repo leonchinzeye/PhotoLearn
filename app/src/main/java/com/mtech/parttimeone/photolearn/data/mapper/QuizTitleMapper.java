@@ -1,8 +1,8 @@
 package com.mtech.parttimeone.photolearn.data.mapper;
 
 import com.mtech.parttimeone.photolearn.bo.TitleBO;
-import com.mtech.parttimeone.photolearn.domain.QuizItemEntity;
-import com.mtech.parttimeone.photolearn.domain.QuizTitleEntity;
+import com.mtech.parttimeone.photolearn.data.entity.QuizItemEntity;
+import com.mtech.parttimeone.photolearn.data.entity.QuizTitleEntity;
 
 import java.util.ArrayList;
 import java.util.List;

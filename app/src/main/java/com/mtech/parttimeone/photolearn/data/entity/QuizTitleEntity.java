@@ -1,26 +1,26 @@
-package com.mtech.parttimeone.photolearn.domain;
+package com.mtech.parttimeone.photolearn.data.entity;
 
-import com.mtech.parttimeone.photolearn.domain.LearningItemEntity;
 import java.util.ArrayList;
 import java.util.List;
+
 /**
  * Created by karen on 23/3/2018.
  */
 
-public class LearningTitleEntity {
+public class QuizTitleEntity {
     private String sessionId;
     private String titleId;
     private String title;
     private String createdDate;
 
-    private List<LearningItemEntity> learningItemEntities = new ArrayList<>();
+    private List<QuizItemEntity> quizItemEntities = new ArrayList<>();
 
-    public LearningTitleEntity(String sessionId, String titleId, String title, String createdDate, List<LearningItemEntity> learningItemEntities) {
+    public QuizTitleEntity (String sessionId, String titleId, String title, String createdDate, List<QuizItemEntity> quizItemEntities) {
         this.sessionId = sessionId;
         this.titleId = titleId;
         this.title = title;
         this.createdDate = createdDate;
-        this.learningItemEntities = learningItemEntities;
+        this.quizItemEntities = quizItemEntities;
     }
 
     public String getSessionId() { return sessionId; }
@@ -39,8 +39,8 @@ public class LearningTitleEntity {
 
     public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
 
-    public List<LearningItemEntity> getLearningItemsEntities() { return learningItemEntities; }
+    public List<QuizItemEntity> getQuizItemEntities() { return quizItemEntities; }
 
-    public void setLearningItemEntities(List<LearningItemEntity> learningItemEntities) { this.learningItemEntities = learningItemEntities; }
+    public void setQuizItemEntities(List<QuizItemEntity> quizItemEntities) { this.quizItemEntities = quizItemEntities; }
 
 }

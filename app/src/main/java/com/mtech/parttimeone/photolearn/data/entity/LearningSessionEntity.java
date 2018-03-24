@@ -1,4 +1,4 @@
-package com.mtech.parttimeone.photolearn.domain;
+package com.mtech.parttimeone.photolearn.data.entity;
 
 /**
  * Created by karen on 20/3/2018.

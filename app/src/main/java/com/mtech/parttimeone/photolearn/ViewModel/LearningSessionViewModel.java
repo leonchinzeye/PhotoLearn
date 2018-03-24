@@ -8,7 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mtech.parttimeone.photolearn.data.repository.FirebaseDatabaseRepository;
 import com.mtech.parttimeone.photolearn.data.repository.LearningSessionRepository;
-import com.mtech.parttimeone.photolearn.domain.LearningSessionEntity;
+import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
 
 import java.util.List;
 
@@ -50,7 +50,7 @@ public class LearningSessionViewModel extends ViewModel {
 
     public boolean setLearningSession(LearningSessionEntity mLearningSession) {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference(repository.getRootNode());
-        mDatabaseReference.setValue(mLearningSession);
+        mDatabaseReference.child(mLearningSession.getSessionId()).setValue(mLearningSession);
 
         return true;
     }

@@ -1,4 +1,4 @@
-package com.mtech.parttimeone.photolearn.domain;
+package com.mtech.parttimeone.photolearn.data.entity;
 
 import java.util.ArrayList;
 import java.util.List;

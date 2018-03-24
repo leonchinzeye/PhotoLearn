@@ -7,17 +7,17 @@ import android.arch.lifecycle.ViewModel;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mtech.parttimeone.photolearn.data.repository.AccountRepository;
 import com.mtech.parttimeone.photolearn.data.repository.FirebaseDatabaseRepository;
-import com.mtech.parttimeone.photolearn.domain.AccountEntity;
+import com.mtech.parttimeone.photolearn.bo.AccountBO;
 import com.google.firebase.database.DatabaseReference;
 
 import java.util.List;
 
-public class AccountViewModel extends ViewModel {
-    private MutableLiveData<List<AccountEntity>> accounts;
+    public class AccountViewModel extends ViewModel {
+    private MutableLiveData<List<AccountBO>> accounts;
     private AccountRepository repository = new AccountRepository();
     private DatabaseReference mDatabaseReference;
 
-    public LiveData<List<AccountEntity>> getAccounts() {
+    public LiveData<List<AccountBO>> getAccounts() {
         if (accounts == null) {
             accounts = new MutableLiveData<>();
             loadAccounts();
@@ -31,9 +31,9 @@ public class AccountViewModel extends ViewModel {
     }
 
     private void loadAccounts() {
-        repository.addListener(new FirebaseDatabaseRepository.FirebaseDatabaseRepositoryCallback<AccountEntity>() {
+        repository.addListener(new FirebaseDatabaseRepository.FirebaseDatabaseRepositoryCallback<AccountBO>() {
             @Override
-            public void onSuccess(List<AccountEntity> result) {
+            public void onSuccess(List<AccountBO> result) {
                 accounts.setValue(result);
             }
 

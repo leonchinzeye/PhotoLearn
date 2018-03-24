@@ -60,6 +60,7 @@ dependencies {
     annotationProcessor "android.arch.lifecycle:compiler:1.0.0"
     compile "android.arch.lifecycle:runtime:1.0.3"
 
+    /*
     compile (
             [group: 'com.fasterxml.jackson.core', name: 'jackson-core', version: '2.7.3'],
             [group: 'com.fasterxml.jackson.core', name: 'jackson-annotations', version: '2.7.3'],

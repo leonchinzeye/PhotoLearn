@@ -8,7 +8,7 @@ import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.mtech.parttimeone.photolearn.data.repository.FirebaseDatabaseRepository;
 import com.mtech.parttimeone.photolearn.data.repository.QuizAttemptRepository;
-import com.mtech.parttimeone.photolearn.domain.QuizAttemptEntity;
+import com.mtech.parttimeone.photolearn.data.entity.QuizAttemptEntity;
 
 import java.util.List;
 
@@ -50,9 +50,8 @@ public class QuizAttemptViewModel extends ViewModel {
 
     public boolean setQuizAttempt(QuizAttemptEntity mQuizAttempt) {
         mDatabaseReference = FirebaseDatabase.getInstance().getReference(repository.getRootNode());
-        mDatabaseReference.setValue(mQuizAttempt);
+        mDatabaseReference.child(mQuizAttempt.getUserId()).setValue(mQuizAttempt);
 
         return true;
     }
-
 }

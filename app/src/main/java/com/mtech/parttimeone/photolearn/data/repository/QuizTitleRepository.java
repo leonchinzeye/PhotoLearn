@@ -1,7 +1,7 @@
 package com.mtech.parttimeone.photolearn.data.repository;
 
 import com.mtech.parttimeone.photolearn.data.mapper.QuizTitleMapper;
-import com.mtech.parttimeone.photolearn.domain.QuizTitleEntity;
+import com.mtech.parttimeone.photolearn.data.entity.QuizTitleEntity;
 
 /**
  * Created by karen on 23/3/2018.

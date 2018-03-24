@@ -1,7 +1,7 @@
 package com.mtech.parttimeone.photolearn.data.mapper;
 
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
-import com.mtech.parttimeone.photolearn.domain.LearningSessionEntity;
+import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
 
 /**
  * Created by karen on 20/3/2018.
