@@ -1,9 +1,9 @@
 package com.mtech.parttimeone.photolearn.data.repository;
 
 import com.mtech.parttimeone.photolearn.data.mapper.AccountMapper;
-import com.mtech.parttimeone.photolearn.bo.AccountBO;
+import com.mtech.parttimeone.photolearn.data.model.AccountModel;
 
-public class AccountRepository extends FirebaseDatabaseRepository<AccountBO> {
+public class AccountRepository extends FirebaseDatabaseRepository<AccountModel> {
     public AccountRepository() {
         super (new AccountMapper());
     }
@@ -11,5 +11,9 @@ public class AccountRepository extends FirebaseDatabaseRepository<AccountBO> {
     @Override
     public String getRootNode() {
         return "accounts";
+    }
+
+    public String getAccount() {
+        return null;
     }
 }

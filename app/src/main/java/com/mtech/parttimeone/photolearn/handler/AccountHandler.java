@@ -28,59 +28,27 @@ public class AccountHandler {
 
     private AccountBO accountBO;
 
-    private AccountHandler() {
+    public static void createAccount(/* Account createdAccount */) {
+        AccountBO accountBO = new AccountBO();
 
+        // TODO
+        // Map account details to AccountBO from object passed in via parameter
+
+        LifeCycleHandler lifeCycle = LifeCycleHandler.getInstance();
+        lifeCycle.setAccountBO(accountBO);
     }
 
-    public static AccountHandler getInstance() {
-        if (handler == null) {
-            handler = new AccountHandler();
-        }
-        return handler;
+    public static void updateAccount(/* Account updatedAccount */) {
+        LifeCycleHandler lifeCycle = LifeCycleHandler.getInstance();
+
+        AccountBO accountBO = lifeCycle.getAccountBO();
+
+        // TODO
+        // Update account details
     }
 
-    public AccountBO loadAccount() {
-
-        // Check if cloud db has data change for account
-        if (accountBO == null || hasDataChange()) {
-            // TODO
-            // build account BO
-
-            createAccount();
-        }
-
-        return accountBO;
+    public static void deleteAccount() {
+        LifeCycleHandler lifeCycle = LifeCycleHandler.getInstance();
+        lifeCycle.setAccountBO(null);
     }
-
-    private boolean hasDataChange() {
-        return false;
-    }
-
-
-    private void createAccount() {
-        AccountBO account = new AccountBO();
-
-        account.setAccountName("Jason Bourne");
-        account.setAccountNumber(new BigInteger(Long.toString(System.currentTimeMillis())));
-
-        populateParticipantDetails(account);
-        populateTrainerDetails(account);
-
-        this.accountBO = account;
-    }
-
-    private void populateTrainerDetails(AccountBO accountBO) {
-        TrainerBO trainer = new TrainerBO();
-
-        LearningSessionHandler sessionHandler = LearningSessionHandler.getInstance();
-
-        accountBO.setTrainerBO(trainer);
-    }
-
-    private void populateParticipantDetails(AccountBO accountBO) {
-        ParticipantBO participant = new ParticipantBO();
-
-        accountBO.setParticipantBO(participant);
-    }
-
 }
