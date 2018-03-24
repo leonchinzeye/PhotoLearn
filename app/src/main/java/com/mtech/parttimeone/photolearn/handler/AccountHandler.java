@@ -24,6 +24,8 @@ public class AccountHandler {
 
     private static AccountHandler handler = null;
    // private static final Logger logger = LogManager.getLogger(AccountHandler.class);
+    //private static final Logger logger = LogManager.getLogger(AccountHandler.class);
+
     private AccountBO accountBO;
 
     private AccountHandler() {

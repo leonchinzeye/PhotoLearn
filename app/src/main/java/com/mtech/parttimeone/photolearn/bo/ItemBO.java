@@ -8,6 +8,13 @@ import java.math.BigInteger;
  */
 
 public abstract class ItemBO {
+    //Added by zhikai. Need an Item title.
+    //Not sure what and how to use titleid
+    //Where is the location field?
+    private String itemtitle;
+//    private String itemLocation;
+//    private String itemDate;
+
 
     private BigInteger titleId;
     private String userID;
@@ -16,6 +23,13 @@ public abstract class ItemBO {
 
     public ItemBO () {
 
+    }
+
+    public ItemBO(String itemtitle, String userID, String photoURL, String photoDesc) {
+        this.itemtitle = itemtitle;
+        this.userID = userID;
+        this.photoURL = photoURL;
+        this.photoDesc = photoDesc;
     }
 
     public BigInteger getTitleId() {
@@ -48,5 +62,15 @@ public abstract class ItemBO {
 
     public void setUserID(String userID) {
         this.userID = userID;
+    }
+
+    //Added by Zhikai
+
+    public String getItemtitle() {
+        return itemtitle;
+    }
+
+    public void setItemtitle(String itemtitle) {
+        this.itemtitle = itemtitle;
     }
 }

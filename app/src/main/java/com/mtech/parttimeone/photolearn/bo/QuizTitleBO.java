@@ -7,4 +7,9 @@ package com.mtech.parttimeone.photolearn.bo;
 
 public class QuizTitleBO extends TitleBO {
 
+    public QuizTitleBO(String s, String s1) {
+        super(s,s1);
+    }
+
+
 }

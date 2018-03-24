@@ -14,6 +14,14 @@ public abstract class TitleBO {
     private String title;
     private List<ItemBO> items = new ArrayList<>();
 
+    //Constructor by zhikai. can delete once the model is completed
+    //Question. Who is the creator of the title? How do I get that?
+
+    public TitleBO(String sessionId, String title) {
+        this.sessionId = sessionId;
+        this.title = title;
+    }
+
     public String getSessionId() {
         return sessionId;
     }

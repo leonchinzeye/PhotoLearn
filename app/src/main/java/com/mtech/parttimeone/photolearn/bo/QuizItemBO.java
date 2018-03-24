@@ -2,6 +2,7 @@ package com.mtech.parttimeone.photolearn.bo;
 
 import com.mtech.parttimeone.photolearn.enumeration.QuizType;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
