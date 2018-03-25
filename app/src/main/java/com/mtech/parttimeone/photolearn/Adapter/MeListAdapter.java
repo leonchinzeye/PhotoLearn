@@ -88,6 +88,7 @@ public class MeListAdapter extends BaseAdapter {
             TextView textView = (TextView) convertView.findViewById(R.id.text_t);
             convertView.setOnClickListener(null);
             textView.setText(text_item0);
+
             }else{
 
             Drawable img = actionList.get(position-1).getImage();

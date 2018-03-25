@@ -12,26 +12,20 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".activity.BottomBarActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
 
-                <category android:name="android.intent.category.DEFAULT" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.QuizItemDetailActivity"/>
         <activity android:name=".activity.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.BaseActivity" />
+        <activity android:name=".activity.QuizItemCreationActivity" />
+        <activity android:name=".activity.BottomBarActivity" />
+        <activity android:name=".activity.LearnItemCreationActivity" />
         <activity android:name=".activity.ModeActivity" />
-        <!--<activity-->
-            <!--android:name=".activity.BottomBarActivity"-->
-            <!--android:label="@string/title_activity_bottom_bar"></activity>-->
 
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
@@ -53,7 +47,36 @@
                 <data android:scheme="@string/fb_login_protocol_scheme" />
             </intent-filter>
         </activity>
+        <activity android:name=".activity.LearningSessionActivity"
+            android:parentActivityName=".activity.MainActivity">
+            <meta-data android:name="android.support.PARENT_ACTIVITY"
+                android:value=".activity.MainActivity"/>
+        </activity>
 
+        <activity android:name=".activity.MainPageActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.CreateLearningSessionActivity" />
+        <activity android:name=".activity.TitleListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT " />
+            </intent-filter>
+        </activity>
+        <activity android:name=".activity.CreateLearningTitleActivity" />
+        <activity android:name=".activity.CreateQuizTitleActivity" />
+        <activity android:name=".activity.ItemListActivity">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
     </application>
 
 </manifest>
