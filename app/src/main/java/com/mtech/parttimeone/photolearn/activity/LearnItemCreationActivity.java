@@ -55,6 +55,7 @@ public class LearnItemCreationActivity extends BaseActivity {
     //function for click the done button.
     public void createtheLearningItem(){
 
+
     }
 
     @Override
@@ -94,6 +95,7 @@ public class LearnItemCreationActivity extends BaseActivity {
     public void addPhoto(View v){
         registerForContextMenu(v);
         openContextMenu(v);
+
     }
 
 }

@@ -6,12 +6,10 @@
     android:layout_height="match_parent"
     tools:context="com.mtech.parttimeone.photolearn.activity.QuizItemDetailActivity">
 
-    <ListView android:id="@+id/quiz_item_detail_list"
+    <FrameLayout android:id="@+id/item_detail_fragment_content"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:divider="#F7F7F7"
-        android:dividerHeight="25px"
-        android:background="#F7F7F7">
-    </ListView>
+        android:layout_weight="1">
+    </FrameLayout>
 
 </android.support.constraint.ConstraintLayout>
