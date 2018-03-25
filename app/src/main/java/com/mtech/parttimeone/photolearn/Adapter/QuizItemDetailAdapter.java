@@ -15,6 +15,7 @@ import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -109,6 +110,8 @@ public class QuizItemDetailAdapter extends BaseAdapter {
                     convertView = LayoutInflater.from(context).inflate(
                             R.layout.quizitem_photo_layout,parent,false);
                     TextView textView = (TextView) convertView.findViewById(R.id.quiz_photo_desc);
+                    ImageView imageView  = (ImageView) convertView.findViewById(R.id.photo_view);
+                    imageView.setImageResource(R.drawable.pic2);
                     textView.setText(quizItemObj.getQuiz_desc());
                 }
                 break;
@@ -124,7 +127,6 @@ public class QuizItemDetailAdapter extends BaseAdapter {
                     optionText.setOnClickListener(new View.OnClickListener() {
                         @Override
                         public void onClick(View v) {
-                            // TODO Auto-generated method stub
                             optionText.toggle();
                             int position = (int)optionText.getTag();
                             OptionItem optionItem = quizItemObj.options.get(position-2);
