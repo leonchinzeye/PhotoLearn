@@ -234,5 +234,23 @@
         }
       ]
     }
-  ]
+  ],
+  "master_learning_sessions": {
+    "20180301-IOT-M01": true,
+    "20180212-SRE-M01": true
+  },
+  "master_learning_titles": {
+    "20180312-SensorMotorola": true,
+    "20180312-AgileRequirements": true
+  },
+  "master_learning_items": {
+    "MotionSensor": true,
+    "Agile": true
+  },
+  "master_quiz_titles": {
+    "20180312-Quiz1": true
+  },
+  "master_quiz_items": {
+    "20180312-QuizItem1": true
+  }
 }
