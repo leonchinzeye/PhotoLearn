@@ -96,7 +96,11 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
 
         mListView = (ListView) view.findViewById(R.id.fragment_learning_session_list_view);
 
-        setListview();
+        try {
+            setListview();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
 
         registerForContextMenu(mListView);
 
@@ -213,13 +217,15 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
         void onFragmentInteraction(Uri uri);
     }
 
-    private void setListview(){
+    private void setListview() throws InterruptedException {
         //Test class for displaying items
         //TODO Should do to AsyncTask
 
         dummyDao dao = new dummyDao();
 
-        ArrayList<LearningSessionBO> lsl = dao.GetLearningSessionAll();
+        //ArrayList<LearningSessionBO> lsl = dao.GetLearningSessionAll();
+
+        ArrayList<LearningSessionBO> lsl =dao.GetLearningSessionByUser(this,"");
 
         lslAdap = new LearningSessionListAdapter(getActivity(),lsl);
 
