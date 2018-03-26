@@ -78,6 +78,7 @@ public class LearningSessionViewModel extends ViewModel {
      * @return learningSessionBO
      */
     public LearningSessionBO loadLearningSession(String userId, String sessionId) {
+        getLearningSession(sessionId);
 
         if (hasLoadedLearningSession) {
             hasLoadedLearningSession = false;
@@ -87,15 +88,35 @@ public class LearningSessionViewModel extends ViewModel {
         }
     }
 
-    // TODO
     /**
      * Creates a learning session as a trainer
      * @param learningSessionBO
      * @param userId
      * @throws Exception if the learning session is not a unique session ID
      */
-    public void createLearningSession(LearningSessionBO learningSessionBO, String userId) throws Exception {
+    public void createLearningSession(LearningSessionBO learningSessionBO, String userId) {
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+        mDatabaseReference.child(learningSessionBO.getCourseCode()).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                learningSession = dataSnapshot.getValue(LearningSessionBO.class);
 
+                if (learningSession == null) {
+//                    saveLearningSessionCreation()
+                } else {
+                    try {
+                        throw new Exception("Session was created before");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
     }
 
     // TODO
@@ -105,6 +126,32 @@ public class LearningSessionViewModel extends ViewModel {
      * @param userId
      */
     public void enrollLearningSession(String sessionId, String userId) {
+        mDatabaseReference = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+        mDatabaseReference.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                learningSession = dataSnapshot.getValue(LearningSessionBO.class);
+
+                if (learningSession == null) {
+                    try {
+                        throw new Exception("No such session ID was found");
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                } else {
+                    saveLearningSessionEnrolment();
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void saveLearningSessionEnrolment() {
+        
     }
 
     // TODO
@@ -119,23 +166,32 @@ public class LearningSessionViewModel extends ViewModel {
         return learningSessionBO;
     }
 
-    private void getLearningSession(String courseCode, String userType, String userId) {
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mDatabaseReference.child(userType).child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object listOfLearningSessions = dataSnapshot.getValue(List.class);
+    /**
+     * Fetches the learning session via the session ID as the key
+     * @param sessionId
+     */
+    private void getLearningSession(String sessionId) {
 
-                if (listOfLearningSessions != null) {
+//        mDatabaseReference = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+//        mDatabaseReference.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Object listOfLearningSessions = dataSnapshot.getValue(List.class);
+//
+//                // TODO
+//                // determine return type and fix this
+//                learningSession = (LearningSessionBO) listOfLearningSessions;
+//                setHasLoadedLearningSession(true);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
 
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+        learningSession = DummyUtils.populateDummyLearningSession();
+        setHasLoadedLearningSession(true);
     }
 
     private void loadParticipantLearningSessions(String userId) {
