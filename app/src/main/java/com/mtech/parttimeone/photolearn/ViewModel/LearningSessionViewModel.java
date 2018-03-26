@@ -11,6 +11,7 @@ import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
 import com.mtech.parttimeone.photolearn.data.repository.LearningSessionRepository;
 import com.mtech.parttimeone.photolearn.data.repository.UserLearningSessionRepository;
+import com.mtech.parttimeone.photolearn.dummyModel.utils.DummyUtils;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
 import java.util.List;
@@ -138,43 +139,48 @@ public class LearningSessionViewModel extends ViewModel {
     }
 
     private void loadParticipantLearningSessions(String userId) {
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mDatabaseReference.child("participants").child(userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object object = dataSnapshot.getValue();
-
-                // TODO
-                // determine return type and fix this
-                learningSessions = (List) object;
-                setHasLoadedLearningSessions(true);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
+//        mDatabaseReference = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+//        mDatabaseReference.child("participants").child(userId).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Object object = dataSnapshot.getValue();
+//
+//                // TODO
+//                // determine return type and fix this
+//                learningSessions = (List) object;
+//                setHasLoadedLearningSessions(true);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        learningSessions = DummyUtils.populateDummyLearningBOs();
+        setHasLoadedLearningSessions(true);
     }
 
     private void loadTrainerLearningSessions(String userId) {
-        mDatabaseReference = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mDatabaseReference.child("trainers").child(userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                Object object = dataSnapshot.getValue();
+//        mDatabaseReference = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
+//        mDatabaseReference.child("trainers").child(userId).addValueEventListener(new ValueEventListener() {
+//            @Override
+//            public void onDataChange(DataSnapshot dataSnapshot) {
+//                Object object = dataSnapshot.getValue();
+//
+//                // TODO
+//                // determine return type and fix this
+//                learningSessions = (List) object;
+//                setHasLoadedLearningSessions(true);
+//            }
+//
+//            @Override
+//            public void onCancelled(DatabaseError databaseError) {
+//
+//            }
+//        });
+        learningSessions = DummyUtils.populateDummyLearningBOs();
+        setHasLoadedLearningSessions(true);
 
-                // TODO
-                // determine return type and fix this
-                learningSessions = (List) object;
-                setHasLoadedLearningSessions(true);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
     }
 
 

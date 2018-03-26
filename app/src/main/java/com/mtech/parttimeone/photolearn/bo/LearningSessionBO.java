@@ -17,6 +17,9 @@ public class LearningSessionBO {
 
     //Added By Zhikai, need the constructor for convenience. Can remove later if necessary
 
+    public LearningSessionBO() {
+
+    }
 
     public LearningSessionBO(String courseCode, String courseModule, String courseDate) {
         this.courseCode = courseCode;
