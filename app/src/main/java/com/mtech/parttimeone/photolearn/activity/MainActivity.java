@@ -29,6 +29,7 @@ import com.google.firebase.auth.FirebaseUser;
 import com.google.firebase.auth.GoogleAuthProvider;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 import com.mtech.parttimeone.photolearn.data.entity.AccountEntity;
 
@@ -199,6 +200,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
 
             AccountEntity UserAccount = new AccountEntity(user.getUid(),user.getDisplayName(),user.getEmail(),"");
             AccountViewModel model = ViewModelProviders.of(this).get(AccountViewModel.class);
+            LearningSessionViewModel lModel = ViewModelProviders.of(this).get(LearningSessionViewModel.class);
 
             model.signIn(user);
 
