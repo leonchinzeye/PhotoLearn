@@ -39,6 +39,7 @@
             android:textStyle="italic" />
 
         <EditText
+            android:id="@+id/editTextModuleCode"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -54,6 +55,12 @@
             android:hint="Start Date"
             android:inputType="textPersonName"
             android:textStyle="italic" />
+
+        <Button
+            android:id="@+id/btnSaveLearningSession"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Save" />
     </LinearLayout>
 
 </FrameLayout>

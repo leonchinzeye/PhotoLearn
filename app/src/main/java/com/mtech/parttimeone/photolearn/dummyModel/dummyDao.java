@@ -24,6 +24,8 @@ import java.util.List;
  */
 
 public class dummyDao {
+    private String userName;
+    private Fragment f;
 
     public ArrayList<TitleBO> GetTitleList(String SessionID){
 
@@ -148,6 +150,23 @@ public class dummyDao {
         return lsl;
     }
 
+    private String getUserName(Fragment f){
+        GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)f.getActivity().getApplicationContext();
+        FirebaseAuth mAuth;
+        String userName;
+        mAuth = globalPhotoLearn.getmAuth();
+        userName = mAuth.getCurrentUser().getDisplayName();
+        return userName;
+    }
+
+    public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO) throws Exception {
+        LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
+
+        String userName =getUserName(f);
+
+        lModel.createLearningSession(learningSessionBO,userName);
+    }
+
     public ArrayList<LearningSessionBO> GetLearningSessionByUser(Fragment f, String userID) throws InterruptedException {
         //Dummy, To replace with real filter
 
@@ -156,11 +175,7 @@ public class dummyDao {
 
         LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
 
-        GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)f.getActivity().getApplicationContext();
-        FirebaseAuth mAuth;
-        String userName;
-        mAuth = globalPhotoLearn.getmAuth();
-        userName = mAuth.getCurrentUser().getDisplayName();
+        String userName =getUserName(f);
 
         for (int i=0;i<100;i++){
 
