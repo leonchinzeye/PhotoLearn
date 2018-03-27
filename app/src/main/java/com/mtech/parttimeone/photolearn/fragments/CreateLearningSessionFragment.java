@@ -7,8 +7,13 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
+import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -27,6 +32,9 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    Button btnSave;
+    android.support.v4.app.Fragment FragmentSelf;
 
     private OnFragmentInteractionListener mListener;
 
@@ -65,7 +73,40 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_learning_session, container, false);
+        View view = inflater.inflate(R.layout.fragment_create_learning_session, container, false);
+
+        btnSave = view.findViewById(R.id.btnSaveLearningSession);
+
+        FragmentSelf = this;
+
+        btnSave.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                LearningSessionBO lsbo = new LearningSessionBO();
+                EditText txtCourseCode = (EditText)view.findViewById(R.id.editTextModuleCode);
+                EditText txtCourseModule = (EditText)view.findViewById(R.id.editTextModuleName);
+                EditText txtCourseDate = (EditText)view.findViewById(R.id.editTextStartDate);
+
+                lsbo.setCourseCode(txtCourseCode.getText().toString());
+                lsbo.setCourseModule(txtCourseModule.getText().toString());
+                lsbo.setCourseDate(txtCourseDate.getText().toString());
+
+                dummyDao dao = new dummyDao();
+
+                try {
+                    dao.createLearningSession(FragmentSelf,lsbo);
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Learning Session already exists!",Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                }
+
+            }
+        });
+
+        return view;
+
     }
 
     // TODO: Rename method, update argument and hook method into UI event
