@@ -23,4 +23,9 @@ public class QuizTitleMapper extends FirebaseMapper<TitleBO, QuizTitleEntity> {
         //quiztitleentity.setQuizItemEntities(TitleBO.getItems());
         return quiztitleentity;
     }
+
+    @Override
+    public TitleBO mapFrom(QuizTitleEntity quizTitleEntity) {
+        return null;
+    }
 }

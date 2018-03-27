@@ -11,6 +11,10 @@ public class UserLearningSessionEntity {
     //includes sessions the trainer has created
     private List<LearningSessionEntity> sessionList = new ArrayList<>();
 
+    public UserLearningSessionEntity() {
+
+    }
+
     public UserLearningSessionEntity(List<LearningSessionEntity> sessionList) {
         this.sessionList = sessionList;
     }
