@@ -159,12 +159,20 @@ public class dummyDao {
         return userName;
     }
 
+<<<<<<< HEAD
     public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO,String sessionID) throws Exception {
+=======
+    public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO) throws Exception {
+>>>>>>> 661f9068c0ac55e931fcbfe0640e991645fd3f7d
         LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
 
         String userName =getUserName(f);
 
+<<<<<<< HEAD
         lModel.createLearningSession(learningSessionBO,sessionID,userName);
+=======
+        lModel.createLearningSession(learningSessionBO,userName);
+>>>>>>> 661f9068c0ac55e931fcbfe0640e991645fd3f7d
     }
 
     public ArrayList<LearningSessionBO> GetLearningSessionByUser(Fragment f, String userID) throws InterruptedException {

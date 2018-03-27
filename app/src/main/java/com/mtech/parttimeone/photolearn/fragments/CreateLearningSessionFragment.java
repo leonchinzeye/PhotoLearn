@@ -90,6 +90,7 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
                 EditText txtCourseDate = (EditText)view.findViewById(R.id.editTextStartDate);
                 EditText txtSessionID = (EditText)view.findViewById(R.id.editTextSessionID);
 
+
                 lsbo.setCourseCode(txtCourseCode.getText().toString());
                 lsbo.setCourseModule(txtCourseModule.getText().toString());
                 lsbo.setCourseDate(txtCourseDate.getText().toString());
@@ -97,7 +98,9 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
                 dummyDao dao = new dummyDao();
 
                 try {
+
                     dao.createLearningSession(FragmentSelf,lsbo,txtSessionID.getText().toString());
+
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Learning Session already exists!",Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
