@@ -47,7 +47,6 @@ public class QuizItemCreationActivity extends BaseActivity  {
             submitQuizItem();
             return true;
         } else {
-
             return true;
         }
     }

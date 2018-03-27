@@ -46,7 +46,7 @@ public class QuizItemObj {
 
     public boolean isAns(int index){
         OptionItem item = this.options.get(index);
-        return item.isAns;
+        return item.getAns();
     }
 
 

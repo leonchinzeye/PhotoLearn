@@ -261,7 +261,7 @@ public class QuizItemCreationAdapter extends BaseAdapter {
 
     public void changeAnswerOption(int position){
         OptionItem optionItem = quizItemObj.options.get(position-2);
-        optionItem.isAns = !optionItem.isAns;
+        optionItem.setAns(!optionItem.getAns());
         notifyDataSetChanged();
     }
 

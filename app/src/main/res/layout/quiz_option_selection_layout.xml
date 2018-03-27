@@ -9,11 +9,13 @@ android:orientation="vertical"
         android:id="@+id/option_selection_text"
         android:layout_width="fill_parent"
         android:layout_height="?android:attr/listPreferredItemHeight"
-        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:gravity="center_vertical"
         android:paddingLeft="6dip"
+        android:checkMark="?android:attr/listChoiceIndicatorMultiple"
         android:paddingRight="6dip"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="16sp" />
     
 </RelativeLayout>
+
+<!---->
