@@ -1,5 +1,7 @@
 package com.mtech.parttimeone.photolearn.bo;
 
+import com.mtech.parttimeone.photolearn.enumeration.UserType;
+
 import java.math.BigInteger;
 
 /**
@@ -14,6 +16,7 @@ public class AccountBO {
     private String accountName;
     private TrainerBO trainerBO;
     private ParticipantBO participantBO;
+    private UserType currentUser;
 
     public BigInteger getAccountNumber() {
         return accountNumber;
@@ -53,5 +56,13 @@ public class AccountBO {
 
     public void setUid(String uid) {
         this.uid = uid;
+    }
+
+    public UserType getCurrentUser() {
+        return currentUser;
+    }
+
+    public void setCurrentUser(UserType currentUser) {
+        this.currentUser = currentUser;
     }
 }
