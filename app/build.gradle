@@ -50,6 +50,7 @@ dependencies {
     compile "android.arch.lifecycle:extensions:1.1.0"
     compile "android.arch.lifecycle:runtime:1.1.0"
     compile "org.apache.commons:commons-lang3:3.6"
+    compile group: 'org.apache.commons', name: 'commons-collections4', version: '4.0'
 
     /*annotationProcessor 'org.apache.logging.log4j:log4j-core:2.11.0'
 

@@ -1,11 +1,14 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
 import android.app.AlertDialog;
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -21,12 +24,15 @@ import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.LearningSessionListAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.dummyModel.LearningSession;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
+import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -225,12 +231,20 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
 
         //ArrayList<LearningSessionBO> lsl = dao.GetLearningSessionAll();
 
-        ArrayList<LearningSessionBO> lsl =dao.GetLearningSessionByUser(this,"");
 
-        lslAdap = new LearningSessionListAdapter(getActivity(),lsl);
+        LearningSessionViewModel vmLearningSession = ViewModelProviders.of(this).get(LearningSessionViewModel.class);
+        vmLearningSession.getLearningSessions(dao.getUserName(this), com.mtech.parttimeone.photolearn.enumeration.UserType.TRAINER).observe(this, new Observer<List<LearningSessionBO>>() {
+            @Override
+            public void onChanged(@Nullable List<LearningSessionBO> learningSessionBOS) {
+                lslAdap = new LearningSessionListAdapter(getActivity(), learningSessionBOS);
+                mListView.setAdapter(lslAdap);
+            }
+        });
+//        List<LearningSessionBO> lsl =
 
-        mListView.setAdapter(lslAdap);
-    }
+//        ArrayList<LearningSessionBO> lsl =dao.GetLearningSessionByUser(this,"");
+
+            }
 
     @Override
     public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)

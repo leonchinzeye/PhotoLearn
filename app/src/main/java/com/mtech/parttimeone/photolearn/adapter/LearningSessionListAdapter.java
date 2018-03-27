@@ -8,6 +8,8 @@ import android.widget.BaseAdapter;
 import android.widget.TextView;
 
 import java.util.ArrayList;
+import java.util.List;
+
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.dummyModel.LearningSession;
@@ -20,9 +22,9 @@ public class LearningSessionListAdapter extends BaseAdapter {
 
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<LearningSessionBO> mDataSource;
+    private List<LearningSessionBO> mDataSource;
 
-    public LearningSessionListAdapter(Context mContext, ArrayList<LearningSessionBO> mDataSource) {
+    public LearningSessionListAdapter(Context mContext, List<LearningSessionBO> mDataSource) {
         this.mContext = mContext;
         this.mDataSource = mDataSource;
         mInflater = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);

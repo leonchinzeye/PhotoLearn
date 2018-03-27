@@ -1,5 +1,7 @@
 package com.mtech.parttimeone.photolearn.ViewModel;
 
+import android.arch.lifecycle.LiveData;
+import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 
 import com.google.firebase.database.DataSnapshot;
@@ -12,10 +14,15 @@ import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
 import com.mtech.parttimeone.photolearn.data.entity.UserLearningSessionEntity;
 import com.mtech.parttimeone.photolearn.data.mapper.LearningSessionMapper;
 import com.mtech.parttimeone.photolearn.data.mapper.UserLearningSessionMapper;
+import com.mtech.parttimeone.photolearn.data.repository.FirebaseDatabaseRepository;
 import com.mtech.parttimeone.photolearn.data.repository.LearningSessionRepository;
 import com.mtech.parttimeone.photolearn.data.repository.UserLearningSessionRepository;
+import com.mtech.parttimeone.photolearn.dummyModel.LearningSession;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
+import org.apache.commons.collections4.CollectionUtils;
+
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
 
@@ -38,6 +45,7 @@ public class LearningSessionViewModel extends ViewModel {
     private DatabaseReference mLearningSession;
     private DatabaseReference mUserLearningSession;
 
+    private MutableLiveData<List<LearningSessionBO>> learningSessionBOs;
     private List<LearningSessionBO> learningSessions;
     private LearningSessionBO learningSession;
     private boolean hasLoadedLearningSessions = false;
@@ -48,6 +56,42 @@ public class LearningSessionViewModel extends ViewModel {
         learningSessionRepository.removeListener();
         userLearningSessionRepository.removeListener();
     }
+
+
+    public LiveData<List<LearningSessionBO>> getLearningSessions(String userId, UserType type) {
+        if (learningSessionBOs == null) {
+            learningSessionBOs = new MutableLiveData<List<LearningSessionBO>>();
+            loadLearningSessionsTemp(userId, type);
+        }
+
+        return learningSessionBOs;
+    }
+
+    private void loadLearningSessionsTemp(String userId, UserType type) {
+        mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
+        mUserLearningSession.child("trainers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    List<LearningSessionBO> listLearningSessions = new ArrayList<>();
+                    LearningSessionMapper mapper = new LearningSessionMapper();
+
+                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
+                        LearningSessionEntity entity = sessionSnapshot.getValue(LearningSessionEntity.class);
+                        LearningSessionBO learningSessionBO = mapper.map(entity);
+                        listLearningSessions.add(learningSessionBO);
+                    }
+
+                    learningSessionBOs.setValue(listLearningSessions);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
 
     /**
      * Loads a list of learning sessions
@@ -182,18 +226,24 @@ public class LearningSessionViewModel extends ViewModel {
     }
 
     private void loadTrainerLearningSessions(String userId) {
-        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mLearningSession.child("trainers").child(userId).addValueEventListener(new ValueEventListener() {
+        mUserLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+        mUserLearningSession.child("trainers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                userLearningSessionEntity = dataSnapshot.getValue(UserLearningSessionEntity.class);
+                UserLearningSessionEntity eLearningSession = dataSnapshot.getValue(UserLearningSessionEntity.class);
 
-                // TODO
-                // determine return type and fix this
-                //learningSessions = (List) object;
-                setHasLoadedLearningSessions(true);
+                if (eLearningSession != null) {
+                    List<LearningSessionBO> learningSessionBOs = new ArrayList<>();
+                    LearningSessionMapper mapper = new LearningSessionMapper();
+                    for (LearningSessionEntity entity : eLearningSession.getSessionList()) {
+                        LearningSessionBO learningSessionBO = mapper.map(entity);
+                        learningSessionBOs.add(learningSessionBO);
+                    }
+
+                    learningSessions = learningSessionBOs;
+                    setHasLoadedLearningSessions(true);
+                }
             }
-
             @Override
             public void onCancelled(DatabaseError databaseError) {
 
