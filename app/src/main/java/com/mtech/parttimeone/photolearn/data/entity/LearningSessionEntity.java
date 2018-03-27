@@ -5,23 +5,23 @@ package com.mtech.parttimeone.photolearn.data.entity;
  */
 
 public class LearningSessionEntity {
-    private String sessionId;
+    //private String sessionId;
     private String courseTitle;
     private String moduleName;
     private String startDate;
-    private String createdDate;
+    //private String createdDate;
 
-    public LearningSessionEntity(String sessionId, String courseTitle, String moduleName, String startDate, String createdDate) {
-        this.sessionId = sessionId;
+    public LearningSessionEntity(String courseTitle, String moduleName, String startDate) {
+        //this.sessionId = sessionId;
         this.courseTitle = courseTitle;
         this.moduleName = moduleName;
         this.startDate = startDate;
-        this.createdDate = createdDate;
+        //this.createdDate = createdDate;
     }
 
-    public String getSessionId() { return sessionId; }
+    //public String getSessionId() { return sessionId; }
 
-    public void setSessionId(String sessionId) {this.sessionId = sessionId; }
+    //public void setSessionId(String sessionId) {this.sessionId = sessionId; }
 
     public String getCourseTitle() {return courseTitle; }
 
@@ -35,7 +35,7 @@ public class LearningSessionEntity {
 
     public void setStartDate(String startDate) {this.startDate = startDate; }
 
-    public String getCreatedDate() { return createdDate; }
+    //public String getCreatedDate() { return createdDate; }
 
-    public void setCreatedDate(String createdDate) {this.createdDate = createdDate; }
+    //public void setCreatedDate(String createdDate) {this.createdDate = createdDate; }
 }

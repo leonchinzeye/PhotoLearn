@@ -7,15 +7,15 @@ import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
  * Created by karen on 20/3/2018.
  */
 
-public class LearningSessionMapper extends FirebaseMapper<LearningSessionBO, LearningSessionEntity> {
+public class LearningSessionMapper extends FirebaseMapper<LearningSessionEntity, LearningSessionBO> {
     @Override
-    public LearningSessionEntity map(LearningSessionBO LearningSessionBO) {
-        LearningSessionEntity learningsession = new LearningSessionEntity("","","", "", "");
-        //learningsession.setSessionId(LearningSessionBO.getsessionId());
-        learningsession.setCourseTitle(LearningSessionBO.getCourseCode());
-        learningsession.setModuleName(LearningSessionBO.getCourseModule());
-        learningsession.setStartDate(LearningSessionBO.getCourseDate());
-        //learningsession.setCreatedDate(LearningSessionBO.getCreatedDate);
-        return learningsession;
+    public LearningSessionBO map(LearningSessionEntity LearningSessionEntity) {
+        LearningSessionBO learningsessionBO = new LearningSessionBO("","","");
+        //learningsessionBO.setSessionId(LearningSessionEntity.getSessionId());
+        learningsessionBO.setCourseCode(LearningSessionEntity.getCourseTitle());
+        learningsessionBO.setCourseModule(LearningSessionEntity.getModuleName());
+        learningsessionBO.setCourseDate(LearningSessionEntity.getStartDate());
+        //learningsessionBO.setCreatedDate(LearningSessionBO.getCreatedDate);
+        return learningsessionBO;
     }
 }

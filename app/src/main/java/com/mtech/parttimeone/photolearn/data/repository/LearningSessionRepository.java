@@ -1,13 +1,13 @@
 package com.mtech.parttimeone.photolearn.data.repository;
 
+import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.data.mapper.LearningSessionMapper;
-import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
 
 /**
  * Created by karen on 20/3/2018.
  */
 
-public class LearningSessionRepository extends FirebaseDatabaseRepository<LearningSessionEntity> {
+public class LearningSessionRepository extends FirebaseDatabaseRepository<LearningSessionBO> {
     public LearningSessionRepository() {
         super (new LearningSessionMapper());
     }

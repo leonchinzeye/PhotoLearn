@@ -9,21 +9,13 @@ import java.util.List;
 
 public class UserLearningSessionEntity {
     //includes sessions the trainer has created
-    private List<UserTypeEntity> trainerList = new ArrayList<>();
+    private List<LearningSessionEntity> sessionList = new ArrayList<>();
 
-    //includes enrolled sessions by the participant
-    private List<UserTypeEntity> participantList = new ArrayList<>();
-
-    public UserLearningSessionEntity(List<UserTypeEntity> trainerList, List<UserTypeEntity> participantList) {
-        this.trainerList = trainerList;
-        this.participantList = participantList;
+    public UserLearningSessionEntity(List<LearningSessionEntity> sessionList) {
+        this.sessionList = sessionList;
     }
 
-    public List<UserTypeEntity> getTrainerList() { return trainerList; }
+    public List<LearningSessionEntity> getSessionList() { return sessionList; }
 
-    public void setTrainerList(List<UserTypeEntity> trainerList) { this.trainerList = trainerList; }
-
-    public List<UserTypeEntity> getParticipantList() { return participantList; }
-
-    public void setParticipantList(List<UserTypeEntity> participantList) { this.participantList = participantList; }
+    public void setSessionList(List<LearningSessionEntity> sessionList) { this.sessionList = sessionList; }
 }
