@@ -18,4 +18,9 @@ public class UserTitleMapper extends FirebaseMapper<UserTitleEntity, UserTitleEn
         UserTitleEntity usertitle = new UserTitleEntity(trainerlist, participantlist);
         return usertitle;
     }
+
+    @Override
+    public UserTitleEntity mapFrom(UserTitleEntity userTitleEntity) {
+        return null;
+    }
 }

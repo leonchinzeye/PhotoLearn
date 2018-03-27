@@ -23,4 +23,11 @@ public class LearningTitleMapper extends FirebaseMapper<TitleBO, LearningTitleEn
         //learningtitleentity.setLearningItemEntities(TitleBO.getItems());
         return learningtitleentity;
     }
+
+    @Override
+    public TitleBO mapFrom(LearningTitleEntity learningTitleEntity) {
+        return null;
+    }
+
+
 }

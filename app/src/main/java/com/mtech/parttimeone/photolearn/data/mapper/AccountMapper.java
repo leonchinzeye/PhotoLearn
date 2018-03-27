@@ -13,4 +13,11 @@ public class AccountMapper extends FirebaseMapper<AccountEntity, AccountBO>{
         //accountEntity.setLastActive(AccountBO.getLastActive());
         return accountBO;
     }
+
+    @Override
+    public AccountEntity mapFrom(AccountBO accountBO) {
+        return null;
+    }
+
+
 }

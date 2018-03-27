@@ -8,6 +8,7 @@ import java.util.List;
  */
 
 public class LearningSessionBO {
+    private String sessionId;
     private String courseCode;
     private String courseModule;
     private String courseDate;
@@ -25,6 +26,14 @@ public class LearningSessionBO {
         this.courseCode = courseCode;
         this.courseModule = courseModule;
         this.courseDate = courseDate;
+    }
+
+    public String getSessionId() {
+        return sessionId;
+    }
+
+    public void setSessionId(String sessionId) {
+        this.sessionId = sessionId;
     }
 
     public String getCourseCode() {

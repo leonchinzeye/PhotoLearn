@@ -150,12 +150,12 @@ public class dummyDao {
         return lsl;
     }
 
-    private String getUserName(Fragment f){
+    public String getUserName(Fragment f){
         GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)f.getActivity().getApplicationContext();
         FirebaseAuth mAuth;
         String userName;
         mAuth = globalPhotoLearn.getmAuth();
-        userName = mAuth.getCurrentUser().getDisplayName();
+        userName = mAuth.getCurrentUser().getUid();
         return userName;
     }
 
@@ -179,17 +179,17 @@ public class dummyDao {
 
         String userName =getUserName(f);
 
-        for (int i=0;i<100;i++){
+//        for (int i=0;i<100;i++){
 
             lst=lModel.loadLearningSessions(userName, UserType.TRAINER);
-
-
-            if (lst==null){
-                Thread.sleep(1000);
-                continue;
-            }
-            else break;
-        }
+//
+//
+//            if (lst==null){
+//                Thread.sleep(1000);
+//                continue;
+//            }
+//            else break;
+//        }
 
         if (lst == null) {
             lsl = new ArrayList<LearningSessionBO>();
