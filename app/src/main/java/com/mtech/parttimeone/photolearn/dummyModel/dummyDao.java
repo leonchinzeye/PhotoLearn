@@ -1,20 +1,31 @@
 package com.mtech.parttimeone.photolearn.dummyModel;
 
+import android.arch.lifecycle.ViewModelProviders;
+import android.support.v4.app.Fragment;
+
+import com.google.firebase.auth.FirebaseAuth;
+import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
+import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
 import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.bo.TitleBO;
+import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
 import java.math.BigInteger;
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Zhikai on 17/3/2018.
  */
 
 public class dummyDao {
+    private String userName;
+    private Fragment f;
 
     public ArrayList<TitleBO> GetTitleList(String SessionID){
 
@@ -136,6 +147,56 @@ public class dummyDao {
         LearningSessionBO ls1 = new LearningSessionBO("Internet of things","MTECH-ORO-002","2018/07/03");
 
         lsl.add(ls1);
+        return lsl;
+    }
+
+    public String getUserName(Fragment f){
+        GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)f.getActivity().getApplicationContext();
+        FirebaseAuth mAuth;
+        String userName;
+        mAuth = globalPhotoLearn.getmAuth();
+        userName = mAuth.getCurrentUser().getUid();
+        return userName;
+    }
+
+
+    public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO,String sessionID) throws Exception {
+
+        LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.createLearningSession(learningSessionBO,sessionID,userName);
+
+    }
+
+    public ArrayList<LearningSessionBO> GetLearningSessionByUser(Fragment f, String userID) throws InterruptedException {
+        //Dummy, To replace with real filter
+
+        ArrayList<LearningSessionBO> lsl = null;
+        List<LearningSessionBO> lst =null;
+
+        LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
+
+        String userName =getUserName(f);
+
+//        for (int i=0;i<100;i++){
+
+            lst=lModel.loadLearningSessions(userName, UserType.TRAINER);
+//
+//
+//            if (lst==null){
+//                Thread.sleep(1000);
+//                continue;
+//            }
+//            else break;
+//        }
+
+        if (lst == null) {
+            lsl = new ArrayList<LearningSessionBO>();
+        }else{
+            lsl = new ArrayList<LearningSessionBO>(lst);
+        }
+
         return lsl;
     }
 

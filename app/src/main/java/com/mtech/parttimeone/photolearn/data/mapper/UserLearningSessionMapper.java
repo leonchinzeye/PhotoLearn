@@ -1,7 +1,10 @@
 package com.mtech.parttimeone.photolearn.data.mapper;
 
+import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
+import com.mtech.parttimeone.photolearn.bo.TrainerBO;
 import com.mtech.parttimeone.photolearn.data.entity.UserLearningSessionEntity;
-import com.mtech.parttimeone.photolearn.data.entity.UserTypeEntity;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -10,12 +13,20 @@ import java.util.List;
  * Created by karen on 25/3/2018.
  */
 
-public class UserLearningSessionMapper extends FirebaseMapper<UserLearningSessionEntity, UserLearningSessionEntity> {
+public class UserLearningSessionMapper extends FirebaseMapper<UserLearningSessionEntity, LearningSessionBO> {
     @Override
-    public UserLearningSessionEntity map(UserLearningSessionEntity UserLearningSessionEntity) {
-        List<UserTypeEntity> trainerlist = new ArrayList();
-        List<UserTypeEntity> participantlist = new ArrayList();
-        UserLearningSessionEntity userlearningsession = new UserLearningSessionEntity(trainerlist, participantlist);
-        return userlearningsession;
+    public LearningSessionBO map(UserLearningSessionEntity UserLearningSessionEntity) {
+        LearningSessionBO mtrainerBO = new LearningSessionBO();
+        //trainerBO.setSessionList(UserLearningSessionEntity.getSessionList());
+        return mtrainerBO;
+    }
+
+    @Override
+    public UserLearningSessionEntity mapFrom(LearningSessionBO learningSessionBO) {
+        UserLearningSessionEntity eUserLearningSession = new UserLearningSessionEntity();
+
+        if (StringUtils.isNotEmpty(learningSessionBO.getSessionId())) {
+        }
+        return null;
     }
 }
