@@ -13,17 +13,12 @@ import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
 import com.mtech.parttimeone.photolearn.data.entity.UserLearningSessionEntity;
 import com.mtech.parttimeone.photolearn.data.mapper.LearningSessionMapper;
-import com.mtech.parttimeone.photolearn.data.mapper.UserLearningSessionMapper;
-import com.mtech.parttimeone.photolearn.data.repository.FirebaseDatabaseRepository;
 import com.mtech.parttimeone.photolearn.data.repository.LearningSessionRepository;
 import com.mtech.parttimeone.photolearn.data.repository.UserLearningSessionRepository;
 import com.mtech.parttimeone.photolearn.dummyModel.LearningSession;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
-import org.apache.commons.collections4.CollectionUtils;
-
 import java.util.ArrayList;
-import java.util.Date;
 import java.util.List;
 
 /**
@@ -31,6 +26,9 @@ import java.util.List;
  */
 
 public class LearningSessionViewModel extends ViewModel {
+
+    private static final String KEY_PARTICIPANTS = "participants";
+    private static final String KEY_TRAINERS = "trainers";
 
     /** This points to the collection of learning sessions **/
     private LearningSessionRepository learningSessionRepository = new LearningSessionRepository();
@@ -40,13 +38,15 @@ public class LearningSessionViewModel extends ViewModel {
      **/
     private UserLearningSessionRepository userLearningSessionRepository = new UserLearningSessionRepository();
 
-    private UserLearningSessionEntity userLearningSessionEntity;
+
 
     private DatabaseReference mLearningSession;
     private DatabaseReference mUserLearningSession;
 
-    private MutableLiveData<List<LearningSessionBO>> learningSessionBOs;
-    private List<LearningSessionBO> learningSessions;
+    private MutableLiveData<List<LearningSessionBO>> trainerLearningSessionBOs;
+    private MutableLiveData<List<LearningSessionBO>> participantLearningSessionBOs;
+    private MutableLiveData<LearningSessionBO> learningSessionBO;
+
     private LearningSessionBO learningSession;
     private boolean hasLoadedLearningSessions = false;
     private boolean hasLoadedLearningSession = false;
@@ -57,19 +57,56 @@ public class LearningSessionViewModel extends ViewModel {
         userLearningSessionRepository.removeListener();
     }
 
-
-    public LiveData<List<LearningSessionBO>> getLearningSessions(String userId, UserType type) {
-        if (learningSessionBOs == null) {
-            learningSessionBOs = new MutableLiveData<List<LearningSessionBO>>();
-            loadLearningSessionsTemp(userId, type);
+    public LiveData<LearningSessionBO> getLearningSession(String sessionId) {
+        if (learningSessionBO == null) {
+            learningSessionBO = new MutableLiveData<LearningSessionBO>();
+            loadLearningSession(sessionId);
         }
-
-        return learningSessionBOs;
+        return learningSessionBO;
     }
 
-    private void loadLearningSessionsTemp(String userId, UserType type) {
+    private void loadLearningSession(String sessionId) {
+        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+        mLearningSession.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    LearningSessionMapper mapper = new LearningSessionMapper();
+                    LearningSessionEntity entity = dataSnapshot.getValue(LearningSessionEntity.class);
+                    LearningSessionBO learningSession = mapper.map(entity);
+                    learningSessionBO.setValue(learningSession);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    public LiveData<List<LearningSessionBO>> getLearningSessions(String userId, UserType type) {
+        switch (type) {
+            case TRAINER:
+                if (trainerLearningSessionBOs == null) {
+                    trainerLearningSessionBOs = new MutableLiveData<List<LearningSessionBO>>();
+                    loadTrainerLearningSessions(userId);
+                }
+                return trainerLearningSessionBOs;
+            case PARTICIPANT:
+                if (participantLearningSessionBOs == null) {
+                    participantLearningSessionBOs = new MutableLiveData<List<LearningSessionBO>>();
+                    loadParticipantLearningSessions(userId);
+                }
+                return participantLearningSessionBOs;
+            default:
+                return null;
+        }
+    }
+
+    private void loadTrainerLearningSessions(String userId) {
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child("trainers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserLearningSession.child(KEY_TRAINERS).child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -82,7 +119,32 @@ public class LearningSessionViewModel extends ViewModel {
                         listLearningSessions.add(learningSessionBO);
                     }
 
-                    learningSessionBOs.setValue(listLearningSessions);
+                    trainerLearningSessionBOs.setValue(listLearningSessions);
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    private void loadParticipantLearningSessions(String userId) {
+        mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
+        mUserLearningSession.child(KEY_PARTICIPANTS).child(userId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    List<LearningSessionBO> listLearningSessions = new ArrayList<>();
+                    LearningSessionMapper mapper = new LearningSessionMapper();
+
+                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
+                        LearningSessionEntity entity = sessionSnapshot.getValue(LearningSessionEntity.class);
+                        LearningSessionBO learningSessionBO = mapper.map(entity);
+                        listLearningSessions.add(learningSessionBO);
+                    }
+
+                    participantLearningSessionBOs.setValue(listLearningSessions);
                 }
             }
             @Override
@@ -94,63 +156,14 @@ public class LearningSessionViewModel extends ViewModel {
 
 
     /**
-     * Loads a list of learning sessions
-     * If the user is a trainer, loads the learning sessions that he has created
-     * If the user is a participant, loads the learning sessions that he has enrolled in
-     * @param userId
-     * @param type
-     * @return
-     */
-    public List<LearningSessionBO> loadLearningSessions(String userId, UserType type) {
-
-        switch (type) {
-            case TRAINER:
-                loadTrainerLearningSessions(userId);
-                break;
-            case PARTICIPANT:
-                loadParticipantLearningSessions(userId);
-                break;
-            default:
-                break;
-        }
-
-        if (hasLoadedLearningSessions) {
-            hasLoadedLearningSessions = false;
-            return this.learningSessions;
-        } else {
-            return null;
-        }
-    }
-
-    /**
-     * This method loads just a single learning session
-     * @param userId
-     * @param sessionId
-     * @return learningSessionBO
-     */
-    public LearningSessionBO loadLearningSession(String userId, String sessionId) {
-        getLearningSession(sessionId);
-
-        if (hasLoadedLearningSession) {
-            hasLoadedLearningSession = false;
-            return this.learningSession;
-        } else {
-            return null;
-        }
-    }
-
-
-    /**
      * Creates a learning session as a trainer
      * @param learningSessionBO
      * @param userId
      * @throws Exception if the learning session is not a unique session ID
      */
-    public void createLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) throws Exception {
-        //inserts learning_sessions
-        setLearningSession(learningSessionBO, sessionId);
-        //inserts user_learning_sessions -> trainers
-        setTrainerLearningSession(learningSessionBO, sessionId, userId);
+    public void createLearningSession(LearningSessionBO learningSessionBO, String userId) {
+        setLearningSession(learningSessionBO);
+        setTrainerLearningSession(learningSessionBO, userId);
     }
 
     /**
@@ -158,9 +171,8 @@ public class LearningSessionViewModel extends ViewModel {
      * @param sessionId
      * @param userId
      */
-    public void enrollLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) {
-        //writes user_learning_sessions -> participants
-        setParticipantLearningSession(learningSessionBO, sessionId, userId);
+    public void enrollLearningSession(LearningSessionBO learningSessionBO, String userId) {
+        setParticipantLearningSession(learningSessionBO, userId);
     }
 
 
@@ -182,107 +194,33 @@ public class LearningSessionViewModel extends ViewModel {
         return learningSessionBO;
     }
 
-    private void getLearningSession(String sessionId) {
-        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mLearningSession.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                LearningSessionEntity eLearningSession = dataSnapshot.getValue(LearningSessionEntity.class);
-
-                if (eLearningSession != null) {
-                    LearningSessionMapper mapper = new LearningSessionMapper();
-                    learningSession = mapper.map(eLearningSession);
-                    hasLoadedLearningSession = true;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-    }
-
-    private void loadParticipantLearningSessions(String userId) {
-        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mLearningSession.child("participants").child(userId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                userLearningSessionEntity = dataSnapshot.getValue(UserLearningSessionEntity.class);
-
-                // TODO
-                // determine return type and fix this
-                //learningSessions = (List) object;
-                setHasLoadedLearningSessions(true);
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        //learningSessions = DummyUtils.populateDummyLearningBOs();
-        //setHasLoadedLearningSessions(true);
-    }
-
-    private void loadTrainerLearningSessions(String userId) {
-        mUserLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mUserLearningSession.child("trainers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                UserLearningSessionEntity eLearningSession = dataSnapshot.getValue(UserLearningSessionEntity.class);
-
-                if (eLearningSession != null) {
-                    List<LearningSessionBO> learningSessionBOs = new ArrayList<>();
-                    LearningSessionMapper mapper = new LearningSessionMapper();
-                    for (LearningSessionEntity entity : eLearningSession.getSessionList()) {
-                        LearningSessionBO learningSessionBO = mapper.map(entity);
-                        learningSessionBOs.add(learningSessionBO);
-                    }
-
-                    learningSessions = learningSessionBOs;
-                    setHasLoadedLearningSessions(true);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-
-            }
-        });
-        //learningSessions = DummyUtils.populateDummyLearningBOs();
-        //setHasLoadedLearningSessions(true);
-    }
-
-    //creates learning sessions filtered by session Id
-    public boolean setLearningSession(LearningSessionBO learningSessionBO, String sessionId) {
+    public void setLearningSession(LearningSessionBO learningSessionBO) {
         LearningSessionEntity eLearningSession;
         LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
         eLearningSession = learningSessionMapper.mapFrom(learningSessionBO);
 
         this.mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        this.mLearningSession.child(sessionId).setValue(eLearningSession);
-
-        return true;
+        this.mLearningSession.child(eLearningSession.getSessionId()).setValue(eLearningSession);
     }
 
-    //creates learning sessions filtered by trainer user Id and stores the session Id
-    public boolean setTrainerLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) {
+    public boolean setTrainerLearningSession(LearningSessionBO learningSessionBO, String userId) {
         LearningSessionEntity eLearningSession;
         LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
         eLearningSession = learningSessionMapper.mapFrom(learningSessionBO);
 
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child("trainers").child(userId).child(sessionId).setValue(eLearningSession);
+        mUserLearningSession.child(KEY_TRAINERS).child(userId).child(eLearningSession.getSessionId()).setValue(eLearningSession);
 
         return true;
     }
 
-    //creates learning sessions filtered by participant user Id and stores the session Id
-    public boolean setParticipantLearningSession(LearningSessionBO mLearningSession, String sessionId, String userId) {
-        mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child("participants").child(userId).child(sessionId).setValue(mLearningSession);
+    public void setParticipantLearningSession(LearningSessionBO mLearningSession, String userId) {
+        LearningSessionEntity eLearningSession;
+        LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
+        eLearningSession = learningSessionMapper.mapFrom(mLearningSession);
 
-        return true;
+        mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
+        mUserLearningSession.child(KEY_PARTICIPANTS).child(userId).child(eLearningSession.getSessionId()).setValue(mLearningSession);
     }
 
     public boolean isHasLoadedLearningSessions() {
