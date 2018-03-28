@@ -1,7 +1,5 @@
 package com.mtech.parttimeone.photolearn.data.entity;
 
-import java.util.ArrayList;
-import java.util.List;
 /**
  * Created by karen on 23/3/2018.
  */
@@ -10,16 +8,17 @@ public class LearningTitleEntity {
     private String sessionId;
     private String titleId;
     private String title;
-    private String createdDate;
+    private String createdBy;
 
-    private List<LearningItemEntity> learningItemEntities = new ArrayList<>();
+    public LearningTitleEntity() {
 
-    public LearningTitleEntity(String sessionId, String titleId, String title, String createdDate, List<LearningItemEntity> learningItemEntities) {
+    }
+
+    public LearningTitleEntity(String sessionId, String titleId, String title, String createdDate) {
         this.sessionId = sessionId;
         this.titleId = titleId;
         this.title = title;
-        this.createdDate = createdDate;
-        this.learningItemEntities = learningItemEntities;
+        this.createdBy = createdBy;
     }
 
     public String getSessionId() { return sessionId; }
@@ -34,12 +33,7 @@ public class LearningTitleEntity {
 
     public void setTitle(String title) { this.title = title; }
 
-    public String getCreatedDate() { return createdDate; }
+    public String getCreatedBy() { return createdBy; }
 
-    public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
-
-    public List<LearningItemEntity> getLearningItemsEntities() { return learningItemEntities; }
-
-    public void setLearningItemEntities(List<LearningItemEntity> learningItemEntities) { this.learningItemEntities = learningItemEntities; }
-
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 }
