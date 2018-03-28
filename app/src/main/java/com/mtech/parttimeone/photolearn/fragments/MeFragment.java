@@ -37,7 +37,7 @@ import java.util.ArrayList;
 public class MeFragment extends Fragment implements AdapterView.OnItemClickListener {
 
    // private OnFragmentInteractionListener mListener;
-   String userName = "ChangLingLiu";
+   String userName = "";
    ArrayList<ListModel>infoList;
    private ListView listView;
    private GlobalPhotoLearn globalPhotoLearn;
@@ -53,10 +53,16 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
 
         infoList  = new ArrayList();
         ListModel itemmodel = new ListModel();
-
         globalPhotoLearn = (GlobalPhotoLearn)getActivity().getApplicationContext();
         mAuth = globalPhotoLearn.getmAuth();
         userName = mAuth.getCurrentUser().getDisplayName();
+
+        ListModel itemmodel0 = new ListModel();
+        itemmodel.setTitle("Trainer");
+        Drawable d0 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
+        itemmodel.setImage(d0);
+        infoList.add(itemmodel0);
+
 
         itemmodel.setTitle("Logout");
         Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
@@ -86,6 +92,8 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
     public void onItemClick(AdapterView<?> parent, View view, int position,long id) {
         switch (position){
             case 1:
+                changeMode();
+            case 2:
             //logout function.
             onClicklogout();
             default:
@@ -109,6 +117,11 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
                         getActivity().startActivity(mainActivityIntent);
                     }
                 });
+    }
+
+
+    private void changeMode(){
+
     }
 
     @Override

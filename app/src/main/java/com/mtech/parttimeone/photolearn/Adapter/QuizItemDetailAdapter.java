@@ -11,22 +11,25 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.BaseAdapter;
 import android.widget.CheckedTextView;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.ImageView;
 import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
+import com.mtech.parttimeone.photolearn.activity.QuizItemDetailActivity;
 
 /**
  * Created by changling on 18/3/18.
  */
 
-public class QuizItemDetailAdapter extends BaseAdapter {
+public class QuizItemDetailAdapter extends BaseAdapter  {
 
     private static final int TYPE_TITLE = 0;
     private static final int TYPE_PHOTO = 1;
@@ -39,11 +42,12 @@ public class QuizItemDetailAdapter extends BaseAdapter {
     private Context context;
 
     private QuizItemObj quizItemObj = new QuizItemObj();
+    private int currentPage;
 
-
-    public QuizItemDetailAdapter(Context context, QuizItemObj obj){
+    public QuizItemDetailAdapter(Context context, QuizItemObj obj, int page){
         this.context = context;
         this.quizItemObj = obj;
+        this.currentPage = page;
     }
 
     @Override
@@ -95,7 +99,7 @@ public class QuizItemDetailAdapter extends BaseAdapter {
     public View getView(int position, View convertView, ViewGroup parent) {
 
         int type = getItemViewType(position);
-
+        ViewHolder optionHolder = null;
         if (convertView==null){
             switch (type){
                 case TYPE_TITLE:{
@@ -109,28 +113,16 @@ public class QuizItemDetailAdapter extends BaseAdapter {
                     convertView = LayoutInflater.from(context).inflate(
                             R.layout.quizitem_photo_layout,parent,false);
                     TextView textView = (TextView) convertView.findViewById(R.id.quiz_photo_desc);
+                    ImageView imageView  = (ImageView) convertView.findViewById(R.id.photo_view);
+                    imageView.setImageResource(R.drawable.pic2);
                     textView.setText(quizItemObj.getQuiz_desc());
                 }
                 break;
                 case TYPE_OPTION:{
                     convertView = LayoutInflater.from(context).inflate(
                             R.layout.quiz_option_selection_layout,parent,false);
-
-                    CheckedTextView optionText = (CheckedTextView)convertView.findViewById(R.id.option_selection_text);
-                    OptionItem item = quizItemObj.options.get(position-2);
-                    optionText.setText(item.getOptionDetail());
-                    optionText.setTag(position);
-                    optionText.setChecked(item.isAns);
-                    optionText.setOnClickListener(new View.OnClickListener() {
-                        @Override
-                        public void onClick(View v) {
-                            // TODO Auto-generated method stub
-                            optionText.toggle();
-                            int position = (int)optionText.getTag();
-                            OptionItem optionItem = quizItemObj.options.get(position-2);
-                            optionItem.isAns = !optionItem.isAns;
-                        }
-                    });
+                    optionHolder = new ViewHolder(convertView,R.id.option_selection_text);
+                    convertView.setTag(optionHolder);
                 }
                 break;
                 case TYPE_EXPLANATION:{
@@ -141,9 +133,48 @@ public class QuizItemDetailAdapter extends BaseAdapter {
                 }
                 break;
             }
+        }else{
+            switch (type){
+                case TYPE_OPTION:{
+                  optionHolder  = (ViewHolder) convertView.getTag();
+                }
+                break;
+            }
+        }
+
+        switch (type){
+            case TYPE_OPTION:{
+                OptionItem item = quizItemObj.options.get(position-2);
+                optionHolder.optionTextView.setText(item.getOptionDetail());
+                optionHolder.optionTextView.setTag(position);
+                optionHolder.optionTextView.setChecked(item.getAns());
+
+//                optionHolder.optionTextView.setOnClickListener(new View.OnClickListener() {
+//                    @Override
+//                    public void onClick(View v) {
+//                        // TODO Auto-generated method stub
+//                        ((CheckedTextView)v).toggle();
+//                        int position = (int)v.getTag();
+//                        OptionItem optionItem = quizItemObj.options.get(position-2);
+//                        optionItem.setAns(!optionItem.getAns());
+//                        ((QuizItemDetailActivity)context).updateData(quizItemObj, currentPage);
+//                    }
+//                });
+            }
         }
 
         return convertView;
+    }
+
+
+
+
+    private class ViewHolder{
+        private CheckedTextView optionTextView;
+
+        private ViewHolder(View convertView,int id) {
+            optionTextView = (CheckedTextView) convertView.findViewById(id);
+        }
     }
 
 }
