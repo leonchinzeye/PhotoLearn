@@ -33,7 +33,7 @@ public class QuizItemCreationActivity extends BaseActivity  {
     private void initData(){
         QuizItemBO obj_0 = new QuizItemBO();
         obj_0.setItemtitle("How to resolve this issue");
-        obj_0.setPhotoDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
+        obj_0.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
         obj_0.setDetailedSolution("he Internet of things (IoT) is the network of physical devices, vehicles.");
 
         obj_0.addOption("ques0_This is option 1");

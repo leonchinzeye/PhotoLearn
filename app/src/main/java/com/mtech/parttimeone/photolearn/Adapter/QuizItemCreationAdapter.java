@@ -49,7 +49,7 @@ public class QuizItemCreationAdapter extends BaseAdapter {
 
     @Override
     public int getCount(){
-        return 3 + quizItemObj.getOptions().size();
+        return 3 + quizItemObj.getAnswer().size();
     }
 
     @Override
@@ -83,11 +83,11 @@ public class QuizItemCreationAdapter extends BaseAdapter {
         if (type == TYPE_TITLE){
             return quizItemObj.getItemtitle();
         }else if (type == TYPE_PHOTO){
-            return quizItemObj.getPhotoDesc();
+            return quizItemObj.getItemDesc();
         }else if (position == TYPE_EXPLANATION){
             return quizItemObj.getDetailedSolution();
         }else {
-            return quizItemObj.getOptions().get(position - 2);
+            return quizItemObj.getAnswer().get(position - 2);
         }
 
     }
@@ -252,7 +252,7 @@ public class QuizItemCreationAdapter extends BaseAdapter {
     }
 
     public void deleteOption(int position){
-        if (quizItemObj.getOptions().size() == 1){
+        if (quizItemObj.getAnswer().size() == 1){
             Toast.makeText(context,R.string.error_keep_one_option, Toast.LENGTH_SHORT).show();
         }else {
             quizItemObj.deleteOptionAndAnswer(position-2);
@@ -278,13 +278,13 @@ public class QuizItemCreationAdapter extends BaseAdapter {
             }
             break;
             case TYPE_PHOTO:{
-                holder.editText.setText(quizItemObj.getPhotoDesc() != null?quizItemObj.getPhotoDesc():"");
+                holder.editText.setText(quizItemObj.getItemDesc() != null?quizItemObj.getItemDesc():"");
             }
             break;
             case TYPE_OPTION:{
               // OptionItem optionitem = quizItemObj.options.get(position-2);
              //  holder.editText.setText(optionitem.getOptionDetail() != null?optionitem.getOptionDetail():"");
-                holder.editText.setText(quizItemObj.getOptions().get(position-2));
+                holder.editText.setText(quizItemObj.getAnswer().get(position-2));
             }
             break;
             case TYPE_EXPLANATION:{
@@ -313,7 +313,7 @@ public class QuizItemCreationAdapter extends BaseAdapter {
                     }
                     break;
                     case TYPE_PHOTO: {
-                        quizItemObj.setPhotoDesc(!TextUtils.isEmpty(s) ? s.toString() : "");
+                        quizItemObj.setItemDesc(!TextUtils.isEmpty(s) ? s.toString() : "");
                         //Toast.makeText(context, quizItemObj.getQuiz_desc(), Toast.LENGTH_SHORT).show();
                     }
                     break;

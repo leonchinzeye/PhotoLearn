@@ -62,9 +62,9 @@ public class QuizItemBO extends ItemBO {
         this.quizAttemptBO = quizAttemptBO;
     }
 
-//    public QuizAttemptBO getQuizAttemptBO(){
-//        return quizAttemptBO;
-//    }
+    public QuizAttemptBO getQuizAttemptBO(){
+        return quizAttemptBO;
+    }
 
     public List<String> getAnswer() {
         return answer;

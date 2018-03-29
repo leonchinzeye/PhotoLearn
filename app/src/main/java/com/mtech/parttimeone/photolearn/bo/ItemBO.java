@@ -50,7 +50,7 @@ public abstract class ItemBO {
         return itemDesc;
     }
 
-    public void setItemDesc(String photoDesc) {
+    public void setItemDesc(String itemDesc) {
         this.itemDesc = itemDesc;
     }
 

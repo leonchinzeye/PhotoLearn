@@ -54,7 +54,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
     @Override
     public int getCount(){
-        return 3 + quizItemObj.getOptions().size();
+        return 3 + quizItemObj.getAnswer().size();
     }
 
     @Override
@@ -88,11 +88,11 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
         if (type == TYPE_TITLE){
             return quizItemObj.getItemtitle();
         }else if (type == TYPE_PHOTO){
-            return quizItemObj.getPhotoDesc();
+            return quizItemObj.getItemDesc();
         }else if (position == TYPE_EXPLANATION){
             return quizItemObj.getDetailedSolution();
         }else {
-            return quizItemObj.getOptions().get(position - 2);
+            return quizItemObj.getAnswer().get(position - 2);
         }
 
     }
@@ -117,7 +117,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                     TextView textView = (TextView) convertView.findViewById(R.id.quiz_photo_desc);
                     ImageView imageView  = (ImageView) convertView.findViewById(R.id.photo_view);
                     imageView.setImageResource(R.drawable.pic2);
-                    textView.setText(quizItemObj.getPhotoDesc());
+                    textView.setText(quizItemObj.getItemDesc());
                 }
                 break;
                 case TYPE_OPTION:{
@@ -146,7 +146,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
         switch (type){
             case TYPE_OPTION:{
-                String optionStr = quizItemObj.getOptions().get(position-2);
+                String optionStr = quizItemObj.getAnswer().get(position-2);
                 optionHolder.optionTextView.setText(optionStr);
                 optionHolder.optionTextView.setTag(position);
                 optionHolder.optionTextView.setChecked(quizItemObj.getQuizAttemptBO().isAns(position-2));

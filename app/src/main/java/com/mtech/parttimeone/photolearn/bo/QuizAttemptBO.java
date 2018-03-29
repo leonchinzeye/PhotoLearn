@@ -25,9 +25,9 @@ public class QuizAttemptBO {
         this.answer = answer;
     }
 //
-//    public QuizAttemptBO(){
-//
-//    }
+    public QuizAttemptBO(){
+
+    }
 
     public String getQuizItemId() { return quizItemId; }
 

@@ -57,12 +57,12 @@ public class QuizItemDetailFragment extends Fragment  {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                if (position==0||position==1||position==itemObj.getOptions().size()+2){
+                if (position==0||position==1||position==itemObj.getAnswer().size()+2){
                     return;
                 }
                 CheckedTextView checkedTextView = view.findViewById(R.id.option_selection_text);
                 QuizAttemptBO attemptBO = itemObj.getQuizAttemptBO();
-                attemptBO.addAns(!checkedTextView.isChecked(),position-2,itemObj.getOptions().size());
+                attemptBO.addAns(!checkedTextView.isChecked(),position-2,itemObj.getAnswer().size());
                 checkedTextView.setChecked(!checkedTextView.isChecked());
                 adapter.notifyDataSetChanged();
                 ((QuizItemDetailActivity)getActivity()).updateData(itemObj, mParam1);
