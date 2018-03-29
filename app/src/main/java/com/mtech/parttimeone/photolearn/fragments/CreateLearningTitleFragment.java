@@ -65,7 +65,47 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_create_learning_title, container, false);
+
+        View view = inflater.inflate(R.layout.fragment_create_learning_title, container, false);
+
+        btnSave = view.findViewById(R.id.btnSaveLearningTitle);
+        txtLearningTitle = (EditText)view.findViewById(R.id.editTextLearningTitle);
+
+        FragmentSelf = this;
+
+        btnSave.setOnClickListener( new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                LearningTitleBO ltbo = new LearningTitleBO();
+
+
+                dummyDao dao = new dummyDao();
+
+                ltbo.setTitle(txtLearningTitle.getText().toString());
+                ltbo.setSessionId(mParam1);
+                ltbo.setCreatedBy(dao.getUserName(FragmentSelf));
+                ltbo.setTitleId(UUID.randomUUID().toString());
+
+
+                try {
+
+                    dao.createLearningTitle(FragmentSelf,ltbo);
+                    Toast.makeText(getActivity(),"Learning Title (" + ltbo.getTitle() +") created!",Toast.LENGTH_SHORT).show();
+                    txtLearningTitle.setText("");
+
+
+                } catch (Exception e) {
+                    Toast.makeText(getActivity(),"Error adding Learning Title!",Toast.LENGTH_SHORT).show();
+                    e.printStackTrace();
+                    return;
+                }
+
+            }
+        });
+
+        return view;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

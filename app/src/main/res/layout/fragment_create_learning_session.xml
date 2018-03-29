@@ -9,25 +9,13 @@
         android:layout_height="match_parent"
         android:orientation="vertical">
 
-        <EditText
-            android:id="@+id/editTextSessionID"
+        <TextView
+            android:id="@+id/create_SessionID"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Session ID"
-            android:inputType="textPersonName"
-            android:textStyle="italic"
-            tools:layout_editor_absoluteX="0dp"
-            tools:layout_editor_absoluteY="16dp" />
-
-        <EditText
-            android:id="@+id/editTextSessionCode"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:ems="10"
-            android:hint="Session Code"
-            android:inputType="textPersonName"
-            android:textStyle="italic" />
+            android:text="TextView"
+            android:textAlignment="center"
+            android:textAppearance="@style/TextAppearance.AppCompat.Large" />
 
         <EditText
             android:id="@+id/editTextModuleName"
@@ -53,8 +41,7 @@
             android:layout_height="wrap_content"
             android:ems="10"
             android:hint="Start Date"
-            android:inputType="textPersonName"
-            android:textStyle="italic" />
+            android:inputType="date" />
 
         <Button
             android:id="@+id/btnSaveLearningSession"
