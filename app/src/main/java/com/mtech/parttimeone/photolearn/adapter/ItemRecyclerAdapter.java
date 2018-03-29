@@ -44,10 +44,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 //        holder.description.setText(ItemList.get(position).getDescription());
 
         holder.title.setText(ItemList.get(position).getItemtitle());
-        holder.creator.setText(ItemList.get(position).getUserID());
+        //holder.creator.setText(ItemList.get(position).getUserID());
         //holder.location.setText(ItemList.get(position).getLocation());
         //holder.date.setText(ItemList.get(position).getDate());
-        holder.description.setText(ItemList.get(position).getPhotoDesc());
+        holder.description.setText(ItemList.get(position).getItemDesc());
 
         String mDrawableName = ItemList.get(position).getPhotoURL();
         Context c = holder.dispimage.getContext();

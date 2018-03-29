@@ -15,28 +15,26 @@ public abstract class ItemBO {
 //    private String itemLocation;
 //    private String itemDate;
 
-
-    private BigInteger titleId;
-    private String userID;
+    private String titleId;
     private String photoURL;
-    private String photoDesc;
+    private String itemDesc; //use common name so can be used for photo desc and item desc
 
     public ItemBO () {
 
     }
 
-    public ItemBO(String itemtitle, String userID, String photoURL, String photoDesc) {
+    public ItemBO(String itemtitle, String titleId, String photoURL, String itemDesc) {
         this.itemtitle = itemtitle;
-        this.userID = userID;
+        this.titleId = titleId;
         this.photoURL = photoURL;
-        this.photoDesc = photoDesc;
+        this.itemDesc = itemDesc;
     }
 
-    public BigInteger getTitleId() {
+    public String getTitleId() {
         return titleId;
     }
 
-    public void setTitleId(BigInteger titleId) {
+    public void setTitleId(String titleId) {
         this.titleId = titleId;
     }
 
@@ -48,20 +46,12 @@ public abstract class ItemBO {
         this.photoURL = photoURL;
     }
 
-    public String getPhotoDesc() {
-        return photoDesc;
+    public String getItemDesc() {
+        return itemDesc;
     }
 
-    public void setPhotoDesc(String photoDesc) {
-        this.photoDesc = photoDesc;
-    }
-
-    public String getUserID() {
-        return userID;
-    }
-
-    public void setUserID(String userID) {
-        this.userID = userID;
+    public void setItemDesc(String photoDesc) {
+        this.itemDesc = itemDesc;
     }
 
     //Added by Zhikai
@@ -73,4 +63,5 @@ public abstract class ItemBO {
     public void setItemtitle(String itemtitle) {
         this.itemtitle = itemtitle;
     }
+
 }

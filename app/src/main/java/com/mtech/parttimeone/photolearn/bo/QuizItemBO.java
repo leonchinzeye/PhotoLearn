@@ -18,23 +18,36 @@ public class QuizItemBO extends ItemBO {
 
     private QuizType type;
 
-    private String detailedSolution;
+    //private QuizType type; //don't need this, can determine from answer
+    private String itemId;
+    private String detailedSolution; //No need this, we just use the photo desc.
 
     /* An array list of answer. MCQ will have just 1 answer while MSQ can have up to 4 */
-    private List<String> answer = new ArrayList<>();
-
-    private List<String >options = new ArrayList<>();
+    private List<String> answer = new ArrayList<>(); //option
+    private List<String> answerOption = new ArrayList<>(); //isOptionAns
 
     private QuizAttemptBO quizAttemptBO = new QuizAttemptBO("",new ArrayList<>());
 
-    private String itemDescription;
+   // private String itemDescription;
 
-    public QuizType getType() {
-        return type;
+    public QuizItemBO() {
+
     }
 
-    public void setType(QuizType type) {
-        this.type = type;
+    public QuizItemBO(String itemId, String itemtitle, String titleId, String photoURL, String itemDesc, List<String> answer, List<String> answerOption, String detailedSolution) {
+        super(itemtitle, titleId, photoURL, itemDesc);
+        this.itemId = itemId;
+        this.answer = answer;
+        this.answerOption = answerOption;
+        this.detailedSolution = detailedSolution;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public String getDetailedSolution() {
@@ -49,9 +62,9 @@ public class QuizItemBO extends ItemBO {
         this.quizAttemptBO = quizAttemptBO;
     }
 
-    public QuizAttemptBO getQuizAttemptBO(){
-        return quizAttemptBO;
-    }
+//    public QuizAttemptBO getQuizAttemptBO(){
+//        return quizAttemptBO;
+//    }
 
     public List<String> getAnswer() {
         return answer;
@@ -61,27 +74,23 @@ public class QuizItemBO extends ItemBO {
         this.answer = answer;
     }
 
-    public List<String>getOptions(){
-        return this.options;
+//    public String getItemDescription() {
+//        return itemDescription;
+//    }
+
+    public List<String> getAnswerOption() {
+        return answerOption;
     }
 
-    public void setOptions(List<String>options){
-        this.options = options;
-    }
-
-    public String getItemDescription() {
-        return itemDescription;
-    }
-
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription = itemDescription;
+    public void setAnswerOption(List<String> answerOption) {
+        this.answerOption = answerOption;
     }
 
     public Boolean isAns(int index){
-        if (answer.isEmpty()){
+        if (answerOption.isEmpty()){
             return false;
         }else {
-            String value = answer.get(index);
+            String value = answerOption.get(index);
             Boolean isAns = Boolean.valueOf(value);
             return isAns;
         }
@@ -105,20 +114,20 @@ public class QuizItemBO extends ItemBO {
     public void updateAns(int index){
         boolean value = Boolean.valueOf(answer.get(index));
         String isAns = String.valueOf(!value);
-        answer.set(index,isAns);
+        answerOption.set(index,isAns);
     }
 
     public void addOption(String option){
-        options.add(option);
-        answer.add(FALSE);
+        answer.add(option);
+        answerOption.add(FALSE);
     }
 
     public void updateOption(String option,int index){
-        options.set(index,option);
+        answer.set(index,option);
     }
 
     public void deleteOptionAndAnswer(int i){
-        options.remove(i);
         answer.remove(i);
+        answerOption.remove(i);
     }
 }

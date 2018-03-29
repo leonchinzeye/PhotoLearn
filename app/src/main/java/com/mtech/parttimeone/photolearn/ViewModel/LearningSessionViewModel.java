@@ -3,6 +3,7 @@ package com.mtech.parttimeone.photolearn.ViewModel;
 import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -87,7 +88,7 @@ public class LearningSessionViewModel extends ViewModel {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
@@ -174,10 +175,34 @@ public class LearningSessionViewModel extends ViewModel {
     // TODO
     // This is for trainers to update a learning session
     public LearningSessionBO updateLearningSession(LearningSessionBO learningSessionBO, String sessionId , String userId) {
-        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-
         //since the actual changes are not specified so update entire node
+
+        //update main session data
+        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
         mLearningSession.child(sessionId).setValue(learningSessionBO);
+
+        //update trainer session data
+        mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
+        mUserLearningSession.child("trainers").child(userId).child(sessionId).setValue(learningSessionBO);
+
+       //update participant session data
+        mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
+        mUserLearningSession.child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
+                        if(sessionSnapshot.hasChild(sessionId)) {
+                            sessionSnapshot.child(sessionId).getRef().setValue(learningSessionBO);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
 
         return learningSessionBO;
     }
@@ -198,7 +223,7 @@ public class LearningSessionViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
@@ -218,7 +243,7 @@ public class LearningSessionViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
         //learningSessions = DummyUtils.populateDummyLearningBOs();
@@ -246,7 +271,7 @@ public class LearningSessionViewModel extends ViewModel {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
         //learningSessions = DummyUtils.populateDummyLearningBOs();
@@ -259,8 +284,8 @@ public class LearningSessionViewModel extends ViewModel {
         LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
         eLearningSession = learningSessionMapper.mapFrom(learningSessionBO);
 
-        this.mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        this.mLearningSession.child(sessionId).setValue(eLearningSession);
+        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+        mLearningSession.child(sessionId).setValue(eLearningSession);
 
         return true;
     }
@@ -311,8 +336,22 @@ public class LearningSessionViewModel extends ViewModel {
 
         //remove enrolled participants
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child("participants").child(userId).child(sessionId).removeValue();
-
+        mUserLearningSession.child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
+                        if(sessionSnapshot.hasChild(sessionId)) {
+                            sessionSnapshot.child(sessionId).getRef().setValue(null);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
         return true;
     }
 }
