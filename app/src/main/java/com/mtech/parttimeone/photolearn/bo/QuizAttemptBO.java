@@ -13,7 +13,21 @@ public class QuizAttemptBO {
     final static String TRUUE = "true";
     final static String FALSE = "false";
 
+    private String quizItemId;
     private List<String> answer = new ArrayList<>();
+
+    public void QuizAttemptBO() {
+
+    }
+
+    public QuizAttemptBO(String quizItemId, List<String> answer) {
+        this.quizItemId = quizItemId;
+        this.answer = answer;
+    }
+
+    public String getQuizItemId() { return quizItemId; }
+
+    public void setQuizItemId(String quizItemId) {this.quizItemId = quizItemId; }
 
     public List<String> getAnswer() {
         return answer;

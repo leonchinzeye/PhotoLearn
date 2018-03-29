@@ -8,29 +8,21 @@ import java.util.List;
  */
 
 public class QuizAttemptEntity {
-    private String attemptId;
-    private String quizItemId;
-    private String userId;
+    String quizItemId;
     List<String> answer = new ArrayList<>();
 
-    public QuizAttemptEntity(String attemptId, String quizItemId, String userId, List<String> answer) {
-        this.attemptId = attemptId;
-        this.quizItemId = quizItemId;
-        this.userId = userId;
-        this.answer = answer;
+    public QuizAttemptEntity() {
+
     }
 
-    public String getAttemptId() { return attemptId; }
-
-    public void setAttemptId(String attemptId) { this.attemptId = attemptId; }
+    public QuizAttemptEntity(String quizItemId, List<String> answer) {
+        this.quizItemId = quizItemId;
+        this.answer = answer;
+    }
 
     public String getQuizItemId() { return quizItemId; }
 
     public void setQuizItemId(String quizItemId) { this.quizItemId = quizItemId; }
-
-    public String getUserId() { return userId; }
-
-    public void setUserId(String userId) { this.userId = userId; }
 
     public List<String> getAnswer() { return answer; }
 
