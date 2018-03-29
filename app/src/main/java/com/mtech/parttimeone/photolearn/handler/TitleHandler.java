@@ -55,7 +55,7 @@ public class TitleHandler {
     }
 
     private QuizTitleBO createQuizTitle(Context context) {
-        QuizTitleBO quizTitle = new QuizTitleBO("default","default");
+        QuizTitleBO quizTitle = new QuizTitleBO("default","default", "", "");
 
         // TODO
         // Assume that all the necessary information for the quiz item is set
@@ -66,7 +66,7 @@ public class TitleHandler {
     }
 
     private LearningTitleBO createLearningTitle(Context context) {
-        LearningTitleBO learningTitle = new LearningTitleBO("default","default");
+        LearningTitleBO learningTitle = new LearningTitleBO("default","default","","");
 
         // TODO
         // Assume that all the necessary information for the quiz item is set

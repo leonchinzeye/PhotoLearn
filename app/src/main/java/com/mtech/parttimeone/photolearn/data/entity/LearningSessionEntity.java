@@ -11,7 +11,11 @@ public class LearningSessionEntity {
     private String startDate;
     private String createdDate;
 
-    public LearningSessionEntity(String sessionId, String courseTitle, String moduleName, String startDate, String createdDate) {
+    public LearningSessionEntity() {
+
+    }
+
+    public LearningSessionEntity(String courseTitle, String moduleName, String startDate) {
         this.sessionId = sessionId;
         this.courseTitle = courseTitle;
         this.moduleName = moduleName;

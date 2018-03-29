@@ -1,8 +1,9 @@
 package com.mtech.parttimeone.photolearn.data.mapper;
 
-import com.mtech.parttimeone.photolearn.bo.TitleBO;
-import com.mtech.parttimeone.photolearn.data.entity.QuizItemEntity;
+import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.data.entity.QuizTitleEntity;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,16 +12,51 @@ import java.util.List;
  * Created by karen on 23/3/2018.
  */
 
-public class QuizTitleMapper extends FirebaseMapper<TitleBO, QuizTitleEntity> {
+public class QuizTitleMapper extends FirebaseMapper<QuizTitleEntity, QuizTitleBO> {
     @Override
-    public QuizTitleEntity map(TitleBO TitleBO) {
-        List<QuizItemEntity> quizitementity = new ArrayList();
-        QuizTitleEntity quiztitleentity = new QuizTitleEntity("","","","",quizitementity);
-        quiztitleentity.setSessionId(TitleBO.getSessionId());
-        //quiztitleentity.setTitleId(TitleBO.getTitleId());
-        quiztitleentity.setTitle(TitleBO.getTitle());
-        //quiztitleentity.setCreatedDate(QuizTitleBO.getCreatedDate);
-        //quiztitleentity.setQuizItemEntities(TitleBO.getItems());
-        return quiztitleentity;
+    public QuizTitleBO map(QuizTitleEntity eLearningTitle) {
+        QuizTitleBO titleBO = new QuizTitleBO();
+
+        if (StringUtils.isNotEmpty(eLearningTitle.getSessionId())) {
+            titleBO.setSessionId(eLearningTitle.getSessionId());
+        }
+
+        if (StringUtils.isNotEmpty(eLearningTitle.getTitleId())) {
+            titleBO.setTitleId(eLearningTitle.getTitleId());
+        }
+
+        if (StringUtils.isNotEmpty(eLearningTitle.getTitle())) {
+            titleBO.setTitle(eLearningTitle.getTitle());
+        }
+
+        if (StringUtils.isNotEmpty(eLearningTitle.getCreatedBy())) {
+            titleBO.setCreatedBy(eLearningTitle.getCreatedBy());
+        }
+
+        return titleBO;
+    }
+
+    @Override
+    public QuizTitleEntity mapFrom(QuizTitleBO titleBO) {
+        QuizTitleEntity eQuizTitle = new QuizTitleEntity();
+
+        if (StringUtils.isNotEmpty(titleBO.getSessionId())) {
+            eQuizTitle.setSessionId(titleBO.getSessionId());
+        }
+
+        if (StringUtils.isNotEmpty(titleBO.getTitleId())) {
+            eQuizTitle.setTitleId(titleBO.getTitleId());
+        }
+
+        if (StringUtils.isNotEmpty(titleBO.getTitle())) {
+            eQuizTitle.setTitle(titleBO.getTitle());
+        }
+
+        if (StringUtils.isNotEmpty(titleBO.getCreatedBy())) {
+            eQuizTitle.setCreatedBy(titleBO.getCreatedBy());
+        }
+
+
+        return eQuizTitle;
     }
 }

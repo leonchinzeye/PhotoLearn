@@ -1,48 +1,69 @@
 {
   "accounts": [
     {
-      "G123": {
-        "user_name": "Boon Kui",
-        "email": "boonkui@nus.edu.sg",
+      "J6PDZgmAcjcjfVdoB9vH34Fom7z2": {
+        "user_name": "Lim Zhi Kai",
+        "email": "limzhikai@gmail.com",
         "last_active": "trainer"
-      },
-      "G567": {
-        "user_name": "Swarna Ashok",
-        "email": "swarna@nus.edu.sg",
-        "last_active": "trainer"
-      },
-      "G789": {
+      }
+    },
+    {
+      "aLCdVf9RvDMGqwSD1DV5drRZuNk1": {
         "user_name": "Karen Athaide",
-        "email": "karenathaide@nus.edu.sg",
+        "email": "karenathaide@gmail.com",
         "last_active": "participant"
-      },
-      "F234": {
-        "user_name": "Boon Kui",
-        "email": "boonkui@nus.edu.sg",
-        "last_active": "trainer"
       }
     }
   ],
   "learning_sessions": [
     {
+      "20180301-IOT-M01": {
+        "session_id": "20180301-IOT-M01",
+        "course_title": "Internet of Things",
+        "module_name": "Overview",
+        "start_date": "01/02/2018",
+        "created_date": "12/03/2018"
+      }
+    },
+    {
+      "20180212-SRE-M01": {
+        "session_id": "20180212-SRE-M01",
+        "course_title": "Software Requirements Eng",
+        "module_name": "Overview",
+        "start_date": "01/04/2018",
+        "created_date": "12/03/2018"
+      }
+    }
+  ],
+  "user_learning_sessions": [
+    {
       "trainers": [
         {
-          "G123": [
+          "J6PDZgmAcjcjfVdoB9vH34Fom7z2": [
             {
-              "session_id": "20180301-IOT-M01",
-              "course_title": "Internet of Things",
-              "module_name": "Overview",
-              "start_date": "01/02/2018",
-              "created_date": "12/03/2018"
+              "20180301-IOT-M01": {
+                "course_title": "Internet of Things",
+                "module_name": "Overview",
+                "start_date": "01/02/2018"
+              }
+            },
+            {
+              "20180212-SRE-M01": {
+                "course_title": "Software Requirements Eng",
+                "module_name": "Overview",
+                "start_date": "01/04/2018"
+              }
             }
-          ],
-          "G567": [
+          ]
+        },
+        {
+          "aLCdVf9RvDMGqwSD1DV5drRZuNk1": [
             {
-              "session_id": "20180212-SRE-M01",
-              "course_title": "Software Requirements Eng",
-              "module_name": "Overview",
-              "start_date": "01/04/2018",
-              "created_date": "12/03/2018"
+              "20180212-SRE-M01": {
+                "course_title": "Software Requirements Eng",
+                "module_name": "Overview",
+                "start_date": "01/04/2018"
+              }
             }
           ]
         }
@@ -51,24 +72,82 @@
     {
       "participants": [
         {
-          "F234": [
+          "aLCdVf9RvDMGqwSD1DV5drRZuNk1": [
             {
-              "session_id": "20180301-IOT-M01",
-              "course_title": "Internet of Things",
-              "module_name": "Overview",
-              "start_date": "01/02/2018",
-              "created_date": "12/03/2018"
+              "20180301-IOT-M01": {
+                "course_title": "Internet of Things",
+                "module_name": "Overview",
+                "start_date": "01/02/2018"
+              }
             }
           ]
         },
         {
-          "G789": [
+          "J6PDZgmAcjcjfVdoB9vH34Fom7z2": [
             {
-              "session_id": "20180212-SRE-M01",
-              "course_title": "Software Requirements Eng",
-              "module_name": "Overview",
-              "start_date": "01/04/2018",
-              "created_date": "12/03/2018"
+              "20180212-SRE-M01": {
+                "course_title": "Software Requirements Eng",
+                "module_name": "Overview",
+                "start_date": "01/04/2018"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  ],
+  "user_titles": [
+    {
+      "trainers": [
+        {
+          "J6PDZgmAcjcjfVdoB9vH34Fom7z2": [
+            {
+              "20180318-IOT-M01": {
+                "session_id": "20180318-IOT-M01",
+                "title_id": "20180312-SensorMotorola",
+                "title": "Sensors from Motorola",
+                "created_by": "J6PDZgmAcjcjfVdoB9vH34Fom7z2"
+              }
+            }
+          ]
+        },
+        {
+          "aLCdVf9RvDMGqwSD1DV5drRZuNk1": [
+            {
+              "20180212-SRE-M01": {
+                "session_id": "20180212-SRE-M01",
+                "title_id": "20180312-AgileRequirements",
+                "title": "Agile Scrum",
+                "created_by": "aLCdVf9RvDMGqwSD1DV5drRZuNk1"
+              }
+            }
+          ]
+        }
+      ]
+    },
+    {
+      "participants": [
+        {
+          "aLCdVf9RvDMGqwSD1DV5drRZuNk1": [
+            {
+              "20180318-IOT-M01": {
+                "session_id": "20180318-IOT-M01",
+                "title_id": "20180312-SensorMotorola",
+                "title": "Sensors from Motorola",
+                "created_by": "J6PDZgmAcjcjfVdoB9vH34Fom7z2"
+              }
+            }
+          ]
+        },
+        {
+          "J6PDZgmAcjcjfVdoB9vH34Fom7z2": [
+            {
+              "20180212-SRE-M01": {
+                "session_id": "20180212-SRE-M01",
+                "title_id": "20180312-AgileRequirements",
+                "title": "Agile Scrum",
+                "created_by": "aLCdVf9RvDMGqwSD1DV5drRZuNk1"
+              }
             }
           ]
         }
@@ -77,122 +156,110 @@
   ],
   "learning_titles": [
     {
-      "20180318-IOT-M01": [
-        {
-          "title_id": "20180312-SensorMotorola",
-          "title": "Sensors from Motorola",
-          "created_date": "12/03/2018",
-          "created_by": "G789",
-          "learning_items": [
-            {
-              "MotionSensor": [
-                {
-                  "title_id": "20180312-SensorMotorola",
-                  "photo_URL": "http://googledrive.com",
-                  "photo_desc": "Image by Motorola",
-                  "GPS": "1.2311 1.2351"
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "20180318-IOT-M01": {
+        "session_id": "20180318-IOT-M01",
+        "title_id": "20180312-SensorMotorola",
+        "title": "Sensors from Motorola",
+        "created_by": "J6PDZgmAcjcjfVdoB9vH34Fom7z2"
+      }
     },
     {
-      "20180212-SRE-M01": [
-        {
-          "title_id": "20180312-AgileRequirements",
-          "title": "Agile Scrum",
-          "created_date": "12/03/2018",
-          "created_by": "G789",
-          "learning_items": [
-            {
-              "Agile": [
-                {
-                  "title-id": "20180312-Agile",
-                  "photo_URL": "http://googledrive.com",
-                  "photo_desc": "Image by SafeAgile",
-                  "GPS": "1.2311 1.2351"
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "20180212-SRE-M01": {
+        "session_id": "20180212-SRE-M01",
+        "title_id": "20180312-AgileRequirements",
+        "title": "Agile Scrum",
+        "created_by": "aLCdVf9RvDMGqwSD1DV5drRZuNk1"
+      }
+    }
+  ],
+  "learning_items": [
+    {
+      "20180312-SensorMotorola": {
+        "item_id": "MotionSensor",
+        "title_id": "20180312-SensorMotorola",
+        "photo_URL": "http://googledrive.com",
+        "photo_desc": "Image by Motorola",
+        "GPS": "1.2311 1.2351"
+      }
+    },
+    {
+      "20180312-Agile": {
+        "item_id": "Agile",
+        "title-id": "20180312-Agile",
+        "photo_URL": "http://googledrive.com",
+        "photo_desc": "Image by SafeAgile",
+        "GPS": "1.2311 1.2351"
+      }
     }
   ],
   "quiz_titles": [
     {
-      "20180318-IOT-M01": [
-        {
-          "title_id": "20180312-Quiz1",
-          "title": "Quiz on SensorMotorola",
-          "created_date": "12/03/2018",
-          "quiz_items": [
-            {
-              "20180312-QuizItem1": [
-                {
-                  "title": "QuizMotionSensor",
-                  "photo_URL": "http://googledrive.com",
-                  "option": [
-                    "Select this option",
-                    "Select this option",
-                    "Select this option",
-                    "Select this option"
-                  ],
-                  "is_option_ans": [
-                    true,
-                    false,
-                    false,
-                    false
-                  ],
-                  "solution": ""
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "20180318-IOT-M01": {
+        "session_id": "20180318-IOT-M01",
+        "title_id": "20180312-Quiz1",
+        "title": "Quiz on SensorMotorola",
+        "created_date": "12/03/2018",
+        "created_by": "J6PDZgmAcjcjfVdoB9vH34Fom7z2"
+      }
     },
     {
-      "20180318-SRE-M01": [
-        {
-          "title_id": "20180312-Quiz1",
-          "title": "Quiz on SensorMotorola",
-          "created_date": "12/03/2018",
-          "quiz_items": [
-            {
-              "20180312-QuizItem1": [
-                {
-                  "title": "QuizMotionSensor",
-                  "photo_URL": "http://googledrive.com",
-                  "option": [
-                    "Select this option",
-                    "Select this option",
-                    "Select this option",
-                    "Select this option"
-                  ],
-                  "is_option_ans": [
-                    true,
-                    true,
-                    false,
-                    false
-                  ],
-                  "solution": ""
-                }
-              ]
-            }
-          ]
-        }
-      ]
+      "20180318-SRE-M01": {
+        "session_id": "20180318-SRE-M01",
+        "title_id": "20180312-Quiz1",
+        "title": "Quiz on SensorMotorola",
+        "created_date": "12/03/2018",
+        "created_by": "aLCdVf9RvDMGqwSD1DV5drRZuNk1"
+      }
+    }
+  ],
+  "quiz_items": [
+    {
+      "20180312-QuizItem1": {
+        "item_id": "20180312-QuizItem1",
+        "title": "QuizMotionSensor",
+        "photo_URL": "http://googledrive.com",
+        "photo_desc": "",
+        "option": [
+          "Select this option",
+          "Select this option",
+          "Select this option",
+          "Select this option"
+        ],
+        "is_option_ans": [
+          "true",
+          "false",
+          "false",
+          "false"
+        ],
+        "solution": ""
+      }
+    },
+    {
+      "20180312-QuizItem1": {
+        "item_id": "20180312-QuizItem1",
+        "title": "QuizMotionSensor",
+        "photo_URL": "http://googledrive.com",
+        "option": [
+          "Select this option",
+          "Select this option",
+          "Select this option",
+          "Select this option"
+        ],
+        "is_option_ans": [
+          "true",
+          "true",
+          "false",
+          "false"
+        ],
+        "solution": ""
+      }
     }
   ],
   "user_quiz_attempts": [
     {
-      "G789": [
+      "J6PDZgmAcjcjfVdoB9vH34Fom7z2": [
         {
           "attempt_id": "Q-01",
-          "quiz_item_id": "20180312-QuizItem1",
           "quiz_items": [
             {
               "20180312-QuizItem1": [
@@ -212,10 +279,9 @@
       ]
     },
     {
-      "F234": [
+      "aLCdVf9RvDMGqwSD1DV5drRZuNk1": [
         {
           "attempt_id": "Q-02",
-          "quiz_item_id": "20180312-QuizItem1",
           "quiz_items": [
             {
               "20180312-QuizItem1": [
@@ -234,23 +300,5 @@
         }
       ]
     }
-  ],
-  "master_learning_sessions": {
-    "20180301-IOT-M01": true,
-    "20180212-SRE-M01": true
-  },
-  "master_learning_titles": {
-    "20180312-SensorMotorola": true,
-    "20180312-AgileRequirements": true
-  },
-  "master_learning_items": {
-    "MotionSensor": true,
-    "Agile": true
-  },
-  "master_quiz_titles": {
-    "20180312-Quiz1": true
-  },
-  "master_quiz_items": {
-    "20180312-QuizItem1": true
-  }
+  ]
 }

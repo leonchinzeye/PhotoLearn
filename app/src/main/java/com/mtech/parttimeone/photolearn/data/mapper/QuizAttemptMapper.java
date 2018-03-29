@@ -21,4 +21,9 @@ public class QuizAttemptMapper extends FirebaseMapper<QuizAttemptBO, QuizAttempt
         quizattemptentity.setAnswer(QuizAttemptBO.getAnswer());
         return quizattemptentity;
     }
+
+    @Override
+    public QuizAttemptBO mapFrom(QuizAttemptEntity quizAttemptEntity) {
+        return null;
+    }
 }

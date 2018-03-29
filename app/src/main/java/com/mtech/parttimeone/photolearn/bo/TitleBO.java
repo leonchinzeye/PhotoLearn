@@ -11,15 +11,22 @@ import java.util.List;
 public abstract class TitleBO {
 
     private String sessionId;
+    private String titleId;
     private String title;
-    private List<ItemBO> items = new ArrayList<>();
+    private String createdBy;
 
     //Constructor by zhikai. can delete once the model is completed
     //Question. Who is the creator of the title? How do I get that?
 
-    public TitleBO(String sessionId, String title) {
+    public TitleBO () {
+
+    }
+
+    public TitleBO(String sessionId, String titleId, String title, String createdBy) {
         this.sessionId = sessionId;
+        this.titleId = titleId;
         this.title = title;
+        this.createdBy = createdBy;
     }
 
     public String getSessionId() {
@@ -30,6 +37,10 @@ public abstract class TitleBO {
         this.sessionId = sessionId;
     }
 
+    public String getTitleId() { return titleId; }
+
+    public void setTitleId(String titleId) { this.titleId = titleId; }
+
     public String getTitle() {
         return title;
     }
@@ -38,11 +49,7 @@ public abstract class TitleBO {
         this.title = title;
     }
 
-    public List<ItemBO> getItems() {
-        return items;
-    }
+    public String getCreatedBy() { return createdBy; }
 
-    public void setItems(List<ItemBO> items) {
-        this.items = items;
-    }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 }

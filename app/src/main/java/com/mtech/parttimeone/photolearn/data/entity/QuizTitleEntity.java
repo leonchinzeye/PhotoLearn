@@ -11,16 +11,17 @@ public class QuizTitleEntity {
     private String sessionId;
     private String titleId;
     private String title;
-    private String createdDate;
+    private String createdBy;
 
-    private List<QuizItemEntity> quizItemEntities = new ArrayList<>();
+    public QuizTitleEntity() {
 
-    public QuizTitleEntity (String sessionId, String titleId, String title, String createdDate, List<QuizItemEntity> quizItemEntities) {
+    }
+
+    public QuizTitleEntity (String sessionId, String titleId, String title, String createdBy, List<QuizItemEntity> quizItemEntities) {
         this.sessionId = sessionId;
         this.titleId = titleId;
         this.title = title;
-        this.createdDate = createdDate;
-        this.quizItemEntities = quizItemEntities;
+        this.createdBy = createdBy;
     }
 
     public String getSessionId() { return sessionId; }
@@ -35,12 +36,8 @@ public class QuizTitleEntity {
 
     public void setTitle(String title) { this.title = title; }
 
-    public String getCreatedDate() { return createdDate; }
+    public String getCreatedBy() { return createdBy; }
 
-    public void setCreatedDate(String createdDate) { this.createdDate = createdDate; }
-
-    public List<QuizItemEntity> getQuizItemEntities() { return quizItemEntities; }
-
-    public void setQuizItemEntities(List<QuizItemEntity> quizItemEntities) { this.quizItemEntities = quizItemEntities; }
+    public void setCreatedBy(String createdBy) { this.createdBy = createdBy; }
 
 }
