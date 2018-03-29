@@ -182,7 +182,7 @@ public class dummyDao {
 
 //        for (int i=0;i<100;i++){
 
-            lst=lModel.loadLearningSessions(userName, UserType.TRAINER);
+//            lst=lModel.getLearningSessions(userName, UserType.TRAINER);
 //
 //
 //            if (lst==null){

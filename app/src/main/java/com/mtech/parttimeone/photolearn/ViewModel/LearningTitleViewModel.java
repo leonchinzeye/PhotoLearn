@@ -2,6 +2,7 @@ package com.mtech.parttimeone.photolearn.ViewModel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,7 +54,7 @@ public class LearningTitleViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
@@ -130,9 +131,24 @@ public class LearningTitleViewModel extends ViewModel {
         //since the actual changes are not specified so update the entire node
         mLearningTitleRef.child(sessionId).setValue(learningTitleBO);
 
+        //update participant session data
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        //since the actual changes are not specified so update the entire node
-        mUserTitleRef.child("participants").child(userId).child(sessionId).setValue(learningTitleBO);
+        mUserTitleRef.child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
+                        if(sessionSnapshot.hasChild(sessionId)) {
+                            sessionSnapshot.child(sessionId).getRef().setValue(learningTitleBO);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
 
         return learningTitleBO;
     }
@@ -158,7 +174,7 @@ public class LearningTitleViewModel extends ViewModel {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
@@ -184,7 +200,7 @@ public class LearningTitleViewModel extends ViewModel {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
@@ -225,10 +241,24 @@ public class LearningTitleViewModel extends ViewModel {
         mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
         mLearningTitleRef.child(sessionId).removeValue();
 
-        //remove participant link
+        //remove participants links
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").child(userId).child(sessionId).removeValue();
-
+        mUserTitleRef.child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot titleSnapshot : dataSnapshot.getChildren()) {
+                        if(titleSnapshot.hasChild(sessionId)) {
+                            titleSnapshot.child(sessionId).getRef().setValue(null);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
         return true;
     }
 }
