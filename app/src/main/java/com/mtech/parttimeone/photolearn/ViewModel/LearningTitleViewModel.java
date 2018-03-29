@@ -1,5 +1,6 @@
 package com.mtech.parttimeone.photolearn.ViewModel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
@@ -24,10 +25,7 @@ import java.util.List;
 
 public class LearningTitleViewModel extends ViewModel {
     private MutableLiveData<List<LearningTitleBO>> learningTitleBOs;
-    private List<LearningTitleBO> learningTitles;
-    private LearningTitleBO learningTitle;
-    private boolean hasLoadedLearningTitles = false;
-    private boolean hasLoadedLearningTitle = false;
+    private MutableLiveData<LearningTitleBO> learningTitleBO;
 
     /** This points to the collection of learning titles **/
     private LearningTitleRepository learningTitleRepository = new LearningTitleRepository();
@@ -38,31 +36,17 @@ public class LearningTitleViewModel extends ViewModel {
     private DatabaseReference mLearningTitleRef;
     private DatabaseReference mUserTitleRef;
 
-    private void getLearningTitle(String sessionId) {
-        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        mLearningTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                LearningTitleEntity eLearningTitle = dataSnapshot.getValue(LearningTitleEntity.class);
-
-                if (eLearningTitle!= null) {
-                    LearningTitleMapper mapper = new LearningTitleMapper();
-                    learningTitle = mapper.map(eLearningTitle);
-                    hasLoadedLearningTitle = true;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
-            }
-        });
-    }
-
-    @Override
-    protected void onCleared() {
-        learningTitleRepository.removeListener();
-        userTitleRepository.removeListener();
+    /**
+     * This method loads just a single learning title
+     * @param sessionId
+     * @return learningtitleBO
+     */
+    public LiveData<LearningTitleBO> getLearningTitle(String sessionId) {
+        if (learningTitleBO == null) {
+            learningTitleBO = new MutableLiveData<LearningTitleBO>();
+            loadLearningTitle(sessionId);
+        }
+        return learningTitleBO;
     }
 
     /**
@@ -71,37 +55,40 @@ public class LearningTitleViewModel extends ViewModel {
      * @param sessionId
      * @return list of learningtitleBO
      */
-    public List<LearningTitleBO> loadLearningTitles(String sessionId, String userId) {
+    public LiveData<List<LearningTitleBO>> getLearningTitles(String sessionId, String userId) {
         if (sessionId!=""){
             loadAllLearningTitles(sessionId);
         } else {
             loadParticipantLearningTitles(userId);
         }
 
-        if (hasLoadedLearningTitles) {
-            hasLoadedLearningTitles = false;
-            return this.learningTitles;
-      }
-      else {
-          return null;
-      }
+        return learningTitleBOs;
     }
 
-    /**
-     * This method loads just a single learning title
-     * @param userId
-     * @param sessionId
-     * @return learningtitleBO
-     */
-    public LearningTitleBO loadLearningTitle(String userId, String sessionId) {
-        getLearningTitle(sessionId);
+    @Override
+    protected void onCleared() {
+        learningTitleRepository.removeListener();
+        userTitleRepository.removeListener();
+    }
 
-        if (hasLoadedLearningTitle) {
-            hasLoadedLearningTitle = false;
-            return this.learningTitle;
-        } else {
-            return null;
-        }
+    private void loadLearningTitle(String sessionId) {
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+        mLearningTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                LearningTitleEntity eLearningTitle = dataSnapshot.getValue(LearningTitleEntity.class);
+
+                if (eLearningTitle!= null) {
+                    LearningTitleMapper mapper = new LearningTitleMapper();
+                    learningTitleBO.setValue(mapper.map(eLearningTitle));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
     }
 
     /**
@@ -156,7 +143,7 @@ public class LearningTitleViewModel extends ViewModel {
     //this loads all titles based on sessionId
     private void loadAllLearningTitles(String sessionId) {
         mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        mLearningTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mLearningTitleRef.child(sessionId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -168,7 +155,6 @@ public class LearningTitleViewModel extends ViewModel {
                         LearningTitleBO learningTitleBO = mapper.map(entity);
                         listLearningTitles.add(learningTitleBO);
                     }
-
                     learningTitleBOs.setValue(listLearningTitles);
                 }
             }
@@ -182,7 +168,7 @@ public class LearningTitleViewModel extends ViewModel {
     //this loads titles based on userId - required in participant edit mode
     private void loadParticipantLearningTitles(String userId) {
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserTitleRef.child("participants").child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -194,7 +180,6 @@ public class LearningTitleViewModel extends ViewModel {
                         LearningTitleBO learningTitleBO = mapper.map(entity);
                         listLearningTitles.add(learningTitleBO);
                     }
-
                     learningTitleBOs.setValue(listLearningTitles);
                 }
             }
@@ -219,22 +204,6 @@ public class LearningTitleViewModel extends ViewModel {
         mUserTitleRef.child("participants").child(userId).child(sessionId).setValue(learningTitleBO);
 
         return true;
-    }
-
-    public boolean isHasLeadedLearningTitles() {
-        return hasLoadedLearningTitles;
-    }
-
-    public void setHasLoadedLearningTitles(boolean hasLoadedLearningTitles) {
-        this.hasLoadedLearningTitle = hasLoadedLearningTitle;
-    }
-
-    public boolean isHasLoadedLearningTitle() {
-        return hasLoadedLearningTitle;
-    }
-
-    public void setHasLoadedLearningTitle(boolean hasLoadedLearningTitle) {
-        this.hasLoadedLearningTitle = hasLoadedLearningTitle;
     }
 
     public boolean removeLearningTitle(String sessionId, String userId) {
