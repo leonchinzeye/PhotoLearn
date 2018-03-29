@@ -11,7 +11,7 @@ public class QuizTitleBO extends TitleBO {
 
     }
 
-    public QuizTitleBO(String s, String s1, String s2, String s3) {
-        super(s,s1, s2, s3);
+    public QuizTitleBO(String sessionId, String titleId, String title, String createdBy) {
+        super(sessionId, titleId, title, createdBy);
     }
 }

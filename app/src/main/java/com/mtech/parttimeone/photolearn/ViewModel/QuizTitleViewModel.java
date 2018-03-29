@@ -2,6 +2,7 @@ package com.mtech.parttimeone.photolearn.ViewModel;
 
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -53,7 +54,7 @@ public class QuizTitleViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
@@ -104,37 +105,52 @@ public class QuizTitleViewModel extends ViewModel {
     }
 
     /**
-     * Creates a Quiz title as a participant
-     * @param QuizTitleBO
+     * Creates a Quiz title
+     * @param quizTitleBO
      * @param userId
      * @throws Exception if the Quiz session is not a unique session ID
      */
-    public void createQuizTitle(QuizTitleBO QuizTitleBO, String sessionId, String userId) throws Exception {
+    public void createQuizTitle(QuizTitleBO quizTitleBO, String sessionId, String userId) throws Exception {
         //inserts Quiz_titles
-        setQuizTitle(QuizTitleBO, sessionId);
-        //inserts user_titles -> participants
-        setParticipantQuizTitle(QuizTitleBO, sessionId, userId);
+        setQuizTitle(quizTitleBO, sessionId);
+        //inserts user_titles -> trainers
+        setTrainerQuizTitle(quizTitleBO, sessionId, userId);
     }
 
     // This method is for trainers to delete a Quiz title
     public void deleteQuizTitle(String sessionId, String userId) {
         //deletes Quiz_titles
-        //deletes user_titles -> participants
+        //deletes user_titles -> trainers
         removeQuizTitle(sessionId, userId);
     }
 
     // TODO
     // This is for trainers to update a Quiz session
-    public QuizTitleBO updateQuizTitle(QuizTitleBO QuizTitleBO, String sessionId , String userId) {
+    public QuizTitleBO updateQuizTitle(QuizTitleBO quizTitleBO, String sessionId , String userId) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
         //since the actual changes are not specified so update the entire node
-        mQuizTitleRef.child(sessionId).setValue(QuizTitleBO);
+        mQuizTitleRef.child(sessionId).setValue(quizTitleBO);
 
+        //update trainer session data
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        //since the actual changes are not specified so update the entire node
-        mUserTitleRef.child("participants").child(userId).child(sessionId).setValue(QuizTitleBO);
+        mUserTitleRef.child("trainers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
+                        if(sessionSnapshot.hasChild(sessionId)) {
+                            sessionSnapshot.child(sessionId).getRef().setValue(quizTitleBO);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
 
-        return QuizTitleBO;
+        return quizTitleBO;
     }
 
     //this loads all titles based on sessionId
@@ -158,15 +174,14 @@ public class QuizTitleViewModel extends ViewModel {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
 
-    //this loads titles based on userId - required in participant edit mode
     private void loadParticipantQuizTitles(String userId) {
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserTitleRef.child("trainers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -184,23 +199,23 @@ public class QuizTitleViewModel extends ViewModel {
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
 
     //creates Quiz titles filtered by session Id
-    public boolean setQuizTitle(QuizTitleBO QuizTitleBO, String sessionId) {
+    public boolean setQuizTitle(QuizTitleBO quizTitleBO, String sessionId) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        mQuizTitleRef.child(sessionId).setValue(QuizTitleBO);
+        mQuizTitleRef.child(sessionId).setValue(quizTitleBO);
 
         return true;
     }
 
-    //creates Quiz titles filtered by participant user Id and stores the session Id
-    public boolean setParticipantQuizTitle(QuizTitleBO QuizTitleBO, String sessionId, String userId) {
+    //creates Quiz titles filtered by trainer user Id and stores the session Id
+    public boolean setTrainerQuizTitle(QuizTitleBO quizTitleBO, String sessionId, String userId) {
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").child(userId).child(sessionId).setValue(QuizTitleBO);
+        mUserTitleRef.child("trainers").child(userId).child(sessionId).setValue(quizTitleBO);
 
         return true;
     }
@@ -225,10 +240,24 @@ public class QuizTitleViewModel extends ViewModel {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
         mQuizTitleRef.child(sessionId).removeValue();
 
-        //remove participant link
+        //remove trainer links
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").child(userId).child(sessionId).removeValue();
-
+        mUserTitleRef.child("trainers").addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot titleSnapshot : dataSnapshot.getChildren()) {
+                        if(titleSnapshot.hasChild(sessionId)) {
+                            titleSnapshot.child(sessionId).getRef().setValue(null);
+                        }
+                    }
+                }
+            }
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
         return true;
     }
 }
