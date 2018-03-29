@@ -10,6 +10,9 @@ import java.util.List;
 
 public class QuizAttemptBO {
 
+    final static String TRUUE = "true";
+    final static String FALSE = "false";
+
     private List<String> answer = new ArrayList<>();
 
     public List<String> getAnswer() {
@@ -18,5 +21,30 @@ public class QuizAttemptBO {
 
     public void setAnswer(List<String> answer) {
         this.answer = answer;
+    }
+
+    public Boolean isAns(int index){
+        if (answer.isEmpty()){
+            return false;
+        }else {
+            String value = answer.get(index);
+            Boolean isAns = Boolean.valueOf(value);
+            return isAns;
+        }
+    }
+
+    public void addAns(boolean value,int index,int size){
+        String isAns = String.valueOf(value);
+        if (answer.isEmpty()){
+            for (int i = 0;i<size;i++){
+                if (i==index){
+                    answer.add(TRUUE);
+                }else {
+                    answer.add(FALSE);
+                }
+            }
+        }else{
+            answer.set(index,isAns);
+        }
     }
 }

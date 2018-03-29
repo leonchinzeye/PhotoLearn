@@ -20,7 +20,7 @@ import java.util.Random;
 
 public class QuizItemDetailViewPagerAdapter extends FragmentStatePagerAdapter {
 
-    public List<Fragment> list;
+    //public List<Fragment> list;
     private int size;
 
     public  QuizItemDetailViewPagerAdapter(FragmentManager fm, int size) {

@@ -24,6 +24,7 @@ import android.widget.Toast;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.QuizItemDetailActivity;
+import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 
 /**
  * Created by changling on 18/3/18.
@@ -41,10 +42,11 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
     private Context context;
 
-    private QuizItemObj quizItemObj = new QuizItemObj();
+    //private QuizItemObj quizItemObj = new QuizItemObj();
+    private QuizItemBO quizItemObj = new QuizItemBO();
     private int currentPage;
 
-    public QuizItemDetailAdapter(Context context, QuizItemObj obj, int page){
+    public QuizItemDetailAdapter(Context context, QuizItemBO obj, int page){
         this.context = context;
         this.quizItemObj = obj;
         this.currentPage = page;
@@ -52,7 +54,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
     @Override
     public int getCount(){
-        return 3 + quizItemObj.options.size();
+        return 3 + quizItemObj.getOptions().size();
     }
 
     @Override
@@ -84,13 +86,13 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
         int type = getItemViewType(position);
 
         if (type == TYPE_TITLE){
-            return quizItemObj.getQuiz_title();
+            return quizItemObj.getItemtitle();
         }else if (type == TYPE_PHOTO){
-            return quizItemObj.getQuiz_desc();
+            return quizItemObj.getPhotoDesc();
         }else if (position == TYPE_EXPLANATION){
-            return quizItemObj.getExplanation();
+            return quizItemObj.getDetailedSolution();
         }else {
-            return quizItemObj.options.get(position - 2);
+            return quizItemObj.getOptions().get(position - 2);
         }
 
     }
@@ -106,7 +108,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                     convertView = LayoutInflater.from(context).inflate(
                             R.layout.quiz_title_item_layout,parent,false);
                     TextView titleText = (TextView)convertView.findViewById(R.id.text_quiz_title);
-                    titleText.setText(quizItemObj.getQuiz_title());
+                    titleText.setText(quizItemObj.getItemtitle());
                 }
                 break;
                 case TYPE_PHOTO:{
@@ -115,7 +117,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                     TextView textView = (TextView) convertView.findViewById(R.id.quiz_photo_desc);
                     ImageView imageView  = (ImageView) convertView.findViewById(R.id.photo_view);
                     imageView.setImageResource(R.drawable.pic2);
-                    textView.setText(quizItemObj.getQuiz_desc());
+                    textView.setText(quizItemObj.getPhotoDesc());
                 }
                 break;
                 case TYPE_OPTION:{
@@ -129,7 +131,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                     convertView = LayoutInflater.from(context).inflate(
                             R.layout.quizitem_explanation_layout,parent,false);
                     TextView explanationText = (TextView)convertView.findViewById(R.id.quiz_explanation_desc);
-                    explanationText.setText(quizItemObj.getQuiz_desc());
+                    explanationText.setText(quizItemObj.getDetailedSolution());
                 }
                 break;
             }
@@ -144,10 +146,10 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
         switch (type){
             case TYPE_OPTION:{
-                OptionItem item = quizItemObj.options.get(position-2);
-                optionHolder.optionTextView.setText(item.getOptionDetail());
+                String optionStr = quizItemObj.getOptions().get(position-2);
+                optionHolder.optionTextView.setText(optionStr);
                 optionHolder.optionTextView.setTag(position);
-                optionHolder.optionTextView.setChecked(item.getAns());
+                optionHolder.optionTextView.setChecked(quizItemObj.getQuizAttemptBO().isAns(position-2));
 
 //                optionHolder.optionTextView.setOnClickListener(new View.OnClickListener() {
 //                    @Override
@@ -165,7 +167,6 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
         return convertView;
     }
-
 
 
 
