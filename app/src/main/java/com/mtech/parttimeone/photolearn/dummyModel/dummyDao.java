@@ -123,6 +123,7 @@ public class dummyDao {
             //ItemBO ls3 = (ItemBO) new LearningItemBO("Top countries for IOT","Lim Zhi Kai","pic3","Countries with the most IoT devices. Korea Demark Swizerland United States Netherlands Germany Sweden Spain Francce Portugal Belgium United Kingdom 37.9 32.7 29 24.9 24.7 22.4 21.9 19.9 17.6 16.2 15.6 13 Devices online per 100 ... Chart Appears In. Coming soon: The internet of clothes — Quartz(qz.com). The top-country early-adopters of the Internet of Things, ranked - Quartz(qz.com). The top-country early-adopters of the Internet of Things","Serangoon North 12345","2018/07/23");
             //ItemBO ls4 = (ItemBO) new LearningItemBO("Top skills for IOT","Lim Zhi Kai","pic4","One of the top factors slowing down IoT implementations is the talent gap: Existing market supply just cannot keep up with the demand for engineers with IoT skills. Some 68% of companies are struggling to hire developers for their IoT projects, according to research from Canonical. But the flipside to the skills shortage is that career prospects are bright for professionals with in-demand skills.","Serangoon North 12345","2018/07/23");
 
+            /**
             ItemBO ls1 = (ItemBO) new LearningItemBO("What is Internet of things?","Lim Zhi Kai","pic1","The Internet of things is the network of physical devices, vehicles, home appliances and other items embedded with electronics, software, sensors, actuators, and connectivity which enables these objects to connect and exchange data");
             ItemBO ls2 = (ItemBO) new LearningItemBO("How does IOT work","Lim Zhi Kai","pic2","IoT in transport. Having been woken by your smart alarm, you're now driving to work. On comes the engine light. You'd rather not head straight to the garage, but what if it's something urgent? In a connected car, the sensor that triggered the check engine light would communicate with others in the car. A component called the diagnostic bus collects data from these sensors and passes it to a gateway in the car, which sends the most relevant information to");
             ItemBO ls3 = (ItemBO) new LearningItemBO("Top countries for IOT","Lim Zhi Kai","pic3","Countries with the most IoT devices. Korea Demark Swizerland United States Netherlands Germany Sweden Spain Francce Portugal Belgium United Kingdom 37.9 32.7 29 24.9 24.7 22.4 21.9 19.9 17.6 16.2 15.6 13 Devices online per 100 ... Chart Appears In. Coming soon: The internet of clothes — Quartz(qz.com). The top-country early-adopters of the Internet of Things, ranked - Quartz(qz.com). The top-country early-adopters of the Internet of Things");
@@ -132,7 +133,7 @@ public class dummyDao {
             lsl.add(ls2);
             lsl.add(ls3);
             lsl.add(ls4);
-
+            **/
         }
 
         return lsl;

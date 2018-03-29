@@ -9,19 +9,21 @@ import java.util.List;
 
 public class QuizItemEntity {
     private String titleId;
-    private String quizItemId;
+    private String itemId;
     private String quizTitle;
     private String photoURL;
-    private String option;
+    private String itemDesc;
+    private List<String> answer = new ArrayList<>();
     private List<String> isOptionAns = new ArrayList<>();
     private String solution;
 
-    private void QuizItemEntity(String titleId, String quizItemId, String quizTitle, String photoURL, String option, List<String> isOptionAns, String solution) {
+    private void QuizItemEntity(String titleId, String itemId, String quizTitle, String photoURL, String itemDesc, List<String> answer, List<String> isOptionAns, String solution) {
         this.titleId = titleId;
-        this.quizItemId = quizItemId;
+        this.itemId = itemId;
         this.quizTitle = quizTitle;
         this.photoURL = photoURL;
-        this.option = option;
+        this.itemDesc = itemDesc;
+        this.answer = answer;
         this.isOptionAns = isOptionAns;
         this.solution = solution;
     }
@@ -30,9 +32,9 @@ public class QuizItemEntity {
 
     public void setTitleId(String titleId) { this.titleId = titleId; }
 
-    public String getQuizItemId() { return quizItemId; }
+    public String getItemId() { return itemId; }
 
-    public void setQuizItemId(String quizItemId) { this.quizItemId = quizItemId; }
+    public void setItemId(String itemId) { this.itemId = itemId; }
 
     public String getQuizTitle() { return quizTitle; }
 
@@ -42,9 +44,17 @@ public class QuizItemEntity {
 
     public void setPhotoURL(String photoURL) { this.photoURL = photoURL; }
 
-    public String getOption() { return option; }
+    public String getItemDesc() {
+        return itemDesc;
+    }
 
-    public void setOption(String option) { this.option = option; }
+    public void setItemDesc(String itemDesc) {
+        this.itemDesc = itemDesc;
+    }
+
+    public List<String> getAnswer() { return answer; }
+
+    public void setAnswer(List<String> answer) { this.answer = answer; }
 
     public List<String> getIsOptionAns() { return isOptionAns; }
 

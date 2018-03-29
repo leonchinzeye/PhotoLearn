@@ -54,7 +54,7 @@ public class ItemHandler {
     private LearningItemBO createLearningItem() {
 
         //Changed by ZK
-        LearningItemBO learningItem = new LearningItemBO("DEFAULT","DEFAULT","DEFAULT","DEFAULT");
+        LearningItemBO learningItem = new LearningItemBO();
 
         // TODO
         // Assume that all the necessary information for the quiz item is set
