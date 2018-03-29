@@ -25,7 +25,7 @@ public class QuizItemBO extends ItemBO {
 
     private List<String >options = new ArrayList<>();
 
-    private QuizAttemptBO quizAttemptBO = new QuizAttemptBO();
+    private QuizAttemptBO quizAttemptBO = new QuizAttemptBO("",new ArrayList<>());
 
     private String itemDescription;
 
@@ -87,18 +87,38 @@ public class QuizItemBO extends ItemBO {
         }
     }
 
-    public void addAns(boolean value,int index){
-        String isAns = String.valueOf(value);
-        if (answer.isEmpty()){
-            for (int i = 0;i<answer.size();i++){
-                if (i==index){
-                    answer.add(TRUUE);
-                }else {
-                    answer.add(FALSE);
-                }
-            }
-        }else{
-            answer.set(index,isAns);
-        }
+//    public void addAns(boolean value,int index){
+//        String isAns = String.valueOf(value);
+//        if (answer.isEmpty()){
+//            for (int i = 0;i<answer.size();i++){
+//                if (i==index){
+//                    answer.add(TRUUE);
+//                }else {
+//                    answer.add(FALSE);
+//                }
+//            }
+//        }else{
+//            answer.set(index,isAns);
+//        }
+//    }
+
+    public void updateAns(int index){
+        boolean value = Boolean.valueOf(answer.get(index));
+        String isAns = String.valueOf(!value);
+        answer.set(index,isAns);
+    }
+
+    public void addOption(String option){
+        options.add(option);
+        answer.add(FALSE);
+    }
+
+    public void updateOption(String option,int index){
+        options.set(index,option);
+    }
+
+    public void deleteOptionAndAnswer(int i){
+        options.remove(i);
+        answer.remove(i);
     }
 }

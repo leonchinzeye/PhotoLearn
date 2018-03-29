@@ -88,7 +88,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist.add("true");
         anslist.add("false");
         obj_0.setOptions(anslist);
-        QuizAttemptBO attemptBO_0 = new QuizAttemptBO();
+        QuizAttemptBO attemptBO_0 = new QuizAttemptBO("",new ArrayList<>());
         attemptBO_0.setAnswer(anslist);
         //obj_0.setQuizAttemptBO(attemptBO_0);
         List<String> optionList = new ArrayList<>();
@@ -109,7 +109,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist1.add("true");
         anslist1.add("false");
         obj_1.setOptions(anslist);
-        QuizAttemptBO attemptBO_01 = new QuizAttemptBO();
+        QuizAttemptBO attemptBO_01 = new QuizAttemptBO("",new ArrayList<>());;
         attemptBO_01.setAnswer(anslist1);
         //obj_1.setQuizAttemptBO(attemptBO_01);
         List<String> optionList1 = new ArrayList<>();
@@ -130,7 +130,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist2.add("true");
         anslist2.add("false");
         obj_2.setOptions(anslist2);
-        QuizAttemptBO attemptBO_02 = new QuizAttemptBO();
+        QuizAttemptBO attemptBO_02 = new QuizAttemptBO("",new ArrayList<>());;
         attemptBO_02.setAnswer(anslist2);
        // obj_2.setQuizAttemptBO(attemptBO_02);
         List<String> optionList2 = new ArrayList<>();
@@ -154,7 +154,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist3.add("true");
         anslist3.add("false");
         obj_3.setOptions(anslist);
-        QuizAttemptBO attemptBO_03 = new QuizAttemptBO();
+        QuizAttemptBO attemptBO_03 = new QuizAttemptBO("",new ArrayList<>());;
         attemptBO_03.setAnswer(anslist3);
         //obj_3.setQuizAttemptBO(attemptBO_03);
         List<String> optionList3 = new ArrayList<>();
@@ -175,7 +175,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist4.add("true");
         anslist4.add("false");
         obj_4.setOptions(anslist);
-        QuizAttemptBO attemptBO_04 = new QuizAttemptBO();
+        QuizAttemptBO attemptBO_04 = new QuizAttemptBO("",new ArrayList<>());;
         attemptBO_04.setAnswer(anslist4);
        // obj_4.setQuizAttemptBO(attemptBO_04);
         List<String> optionList4 = new ArrayList<>();

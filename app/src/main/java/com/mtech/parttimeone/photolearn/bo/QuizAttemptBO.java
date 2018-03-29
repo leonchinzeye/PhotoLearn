@@ -24,6 +24,10 @@ public class QuizAttemptBO {
         this.quizItemId = quizItemId;
         this.answer = answer;
     }
+//
+//    public QuizAttemptBO(){
+//
+//    }
 
     public String getQuizItemId() { return quizItemId; }
 
