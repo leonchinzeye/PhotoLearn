@@ -41,7 +41,7 @@ public class QuizTitleViewModel extends ViewModel {
      * @param sessionId
      * @return QuiztitleBO
      */
-    private LiveData<QuizTitleBO> getQuizTitle(String sessionId) {
+    public LiveData<QuizTitleBO> getQuizTitle(String sessionId) {
         if (quizTitleBO == null) {
             quizTitleBO = new MutableLiveData<QuizTitleBO>();
             loadQuizTitle(sessionId);
