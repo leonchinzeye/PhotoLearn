@@ -28,9 +28,6 @@ public class LearningItemViewModel extends ViewModel {
     private MutableLiveData<List<LearningItemBO>> learningItemBOs;
     private MutableLiveData<LearningItemBO> learningItemBO;
 
-    private List<LearningItemBO> learningItems = new ArrayList<>();
-    private LearningItemBO learningItem;
-
     /** This points to the collection of learning titles **/
     private LearningItemRepository learningItemRepository = new LearningItemRepository();
 
