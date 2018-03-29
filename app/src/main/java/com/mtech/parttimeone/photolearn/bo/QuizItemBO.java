@@ -12,22 +12,32 @@ import java.util.List;
  */
 
 public class QuizItemBO extends ItemBO {
-
-    private QuizType type;
-
+    //private QuizType type; //don't need this, can determine from answer
+    private String itemId;
     private String detailedSolution;
 
     /* An array list of answer. MCQ will have just 1 answer while MSQ can have up to 4 */
-    private List<String> answer = new ArrayList<>();
+    private List<String> answer = new ArrayList<>(); //option
+    private List<String> answerOption = new ArrayList<>(); //isOptionAns
 
-    private String itemDescription;
+    public QuizItemBO() {
 
-    public QuizType getType() {
-        return type;
     }
 
-    public void setType(QuizType type) {
-        this.type = type;
+    public QuizItemBO(String itemId, String itemtitle, String titleId, String photoURL, String itemDesc, List<String> answer, List<String> answerOption, String detailedSolution) {
+        super(itemtitle, titleId, photoURL, itemDesc);
+        this.itemId = itemId;
+        this.answer = answer;
+        this.answerOption = answerOption;
+        this.detailedSolution = detailedSolution;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
     }
 
     public String getDetailedSolution() {
@@ -46,11 +56,11 @@ public class QuizItemBO extends ItemBO {
         this.answer = answer;
     }
 
-    public String getItemDescription() {
-        return itemDescription;
+    public List<String> getAnswerOption() {
+        return answerOption;
     }
 
-    public void setItemDescription(String itemDescription) {
-        this.itemDescription = itemDescription;
+    public void setAnswerOption(List<String> answerOption) {
+        this.answerOption = answerOption;
     }
 }
