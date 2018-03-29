@@ -71,6 +71,7 @@ public class LearningSessionViewModel extends ViewModel {
                     participantSessions = new MutableLiveData<List<LearningSessionBO>>();
                     loadParticipantSessions(userId);
                 }
+                return participantSessions;
             default:
                 return new MutableLiveData<>();
         }
