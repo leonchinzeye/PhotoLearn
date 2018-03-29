@@ -27,9 +27,6 @@ public class QuizTitleViewModel extends ViewModel {
     private MutableLiveData<List<QuizTitleBO>> quizTitleBOs;
     private MutableLiveData<QuizTitleBO> quizTitleBO;
 
-    private List<QuizTitleBO> quizTitles;
-    private QuizTitleBO quizTitle;
-
     /** This points to the collection of Quiz titles **/
     private QuizTitleRepository quizTitleRepository = new QuizTitleRepository();
 
