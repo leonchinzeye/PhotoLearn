@@ -1,5 +1,6 @@
 package com.mtech.parttimeone.photolearn.ViewModel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
 import android.util.Log;
@@ -24,10 +25,10 @@ import java.util.List;
 
 public class QuizTitleViewModel extends ViewModel {
     private MutableLiveData<List<QuizTitleBO>> quizTitleBOs;
+    private MutableLiveData<QuizTitleBO> quizTitleBO;
+
     private List<QuizTitleBO> quizTitles;
     private QuizTitleBO quizTitle;
-    private boolean hasLoadedQuizTitles = false;
-    private boolean hasLoadedQuizTitle = false;
 
     /** This points to the collection of Quiz titles **/
     private QuizTitleRepository quizTitleRepository = new QuizTitleRepository();
@@ -38,31 +39,17 @@ public class QuizTitleViewModel extends ViewModel {
     private DatabaseReference mQuizTitleRef;
     private DatabaseReference mUserTitleRef;
 
-    private void getQuizTitle(String sessionId) {
-        mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        mQuizTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                QuizTitleEntity eQuizTitle = dataSnapshot.getValue(QuizTitleEntity.class);
-
-                if (eQuizTitle!= null) {
-                    QuizTitleMapper mapper = new QuizTitleMapper();
-                    quizTitle = mapper.map(eQuizTitle);
-                    hasLoadedQuizTitle = true;
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
-            }
-        });
-    }
-
-    @Override
-    protected void onCleared() {
-        quizTitleRepository.removeListener();
-        userTitleRepository.removeListener();
+    /**
+     * This method loads just a single Quiz title
+     * @param sessionId
+     * @return QuiztitleBO
+     */
+    private LiveData<QuizTitleBO> getQuizTitle(String sessionId) {
+        if (quizTitleBO == null) {
+            quizTitleBO = new MutableLiveData<QuizTitleBO>();
+            loadQuizTitle(sessionId);
+        }
+        return quizTitleBO;
     }
 
     /**
@@ -71,37 +58,39 @@ public class QuizTitleViewModel extends ViewModel {
      * @param sessionId
      * @return list of QuiztitleBO
      */
-    public List<QuizTitleBO> loadQuizTitles(String sessionId, String userId) {
+    public LiveData<List<QuizTitleBO>> getQuizTitles(String sessionId, String userId) {
         if (sessionId!=""){
             loadAllQuizTitles(sessionId);
         } else {
-            loadParticipantQuizTitles(userId);
+            loadTrainerQuizTitles(userId);
         }
-
-        if (hasLoadedQuizTitles) {
-            hasLoadedQuizTitles = false;
-            return this.quizTitles;
-        }
-        else {
-            return null;
-        }
+        return quizTitleBOs;
     }
 
-    /**
-     * This method loads just a single Quiz title
-     * @param userId
-     * @param sessionId
-     * @return QuiztitleBO
-     */
-    public QuizTitleBO loadQuizTitle(String userId, String sessionId) {
-        getQuizTitle(sessionId);
+    @Override
+    protected void onCleared() {
+        quizTitleRepository.removeListener();
+        userTitleRepository.removeListener();
+    }
 
-        if (hasLoadedQuizTitle) {
-            hasLoadedQuizTitle = false;
-            return this.quizTitle;
-        } else {
-            return null;
-        }
+    public void loadQuizTitle(String sessionId) {
+        mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
+        mQuizTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                QuizTitleEntity eQuizTitle = dataSnapshot.getValue(QuizTitleEntity.class);
+
+                if (eQuizTitle!= null) {
+                    QuizTitleMapper mapper = new QuizTitleMapper();
+                    quizTitleBO.setValue(mapper.map(eQuizTitle));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
     }
 
     /**
@@ -156,7 +145,7 @@ public class QuizTitleViewModel extends ViewModel {
     //this loads all titles based on sessionId
     private void loadAllQuizTitles(String sessionId) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        mQuizTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mQuizTitleRef.child(sessionId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -168,7 +157,6 @@ public class QuizTitleViewModel extends ViewModel {
                         QuizTitleBO QuizTitleBO = mapper.map(entity);
                         listQuizTitles.add(QuizTitleBO);
                     }
-
                     quizTitleBOs.setValue(listQuizTitles);
                 }
             }
@@ -179,9 +167,9 @@ public class QuizTitleViewModel extends ViewModel {
         });
     }
 
-    private void loadParticipantQuizTitles(String userId) {
+    private void loadTrainerQuizTitles(String userId) {
         mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("trainers").child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserTitleRef.child("trainers").child(userId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -193,7 +181,6 @@ public class QuizTitleViewModel extends ViewModel {
                         QuizTitleBO QuizTitleBO = mapper.map(entity);
                         listQuizTitles.add(QuizTitleBO);
                     }
-
                     quizTitleBOs.setValue(listQuizTitles);
                 }
             }
@@ -218,22 +205,6 @@ public class QuizTitleViewModel extends ViewModel {
         mUserTitleRef.child("trainers").child(userId).child(sessionId).setValue(quizTitleBO);
 
         return true;
-    }
-
-    public boolean isHasLeadedQuizTitles() {
-        return hasLoadedQuizTitles;
-    }
-
-    public void setHasLoadedQuizTitles(boolean hasLoadedQuizTitles) {
-        this.hasLoadedQuizTitle = hasLoadedQuizTitle;
-    }
-
-    public boolean isHasLoadedQuizTitle() {
-        return hasLoadedQuizTitle;
-    }
-
-    public void setHasLoadedQuizTitle(boolean hasLoadedQuizTitle) {
-        this.hasLoadedQuizTitle = hasLoadedQuizTitle;
     }
 
     public boolean removeQuizTitle(String sessionId, String userId) {
