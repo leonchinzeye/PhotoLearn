@@ -17,6 +17,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.Switch;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.facebook.login.LoginManager;
@@ -34,6 +35,9 @@ import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 
 import java.util.ArrayList;
 
+import static com.mtech.parttimeone.photolearn.enumeration.UserType.PARTICIPANT;
+import static com.mtech.parttimeone.photolearn.enumeration.UserType.TRAINER;
+
 public class MeFragment extends Fragment implements AdapterView.OnItemClickListener {
 
    // private OnFragmentInteractionListener mListener;
@@ -42,6 +46,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
    private ListView listView;
    private GlobalPhotoLearn globalPhotoLearn;
    private FirebaseAuth mAuth;
+   private TextView tvMode;
 
     public MeFragment() {
         // Required empty public constructor
@@ -51,23 +56,7 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
 
-        infoList  = new ArrayList();
-        ListModel itemmodel = new ListModel();
-        globalPhotoLearn = (GlobalPhotoLearn)getActivity().getApplicationContext();
-        mAuth = globalPhotoLearn.getmAuth();
-        userName = mAuth.getCurrentUser().getDisplayName();
 
-        ListModel itemmodel0 = new ListModel();
-        itemmodel.setTitle("Trainer");
-        Drawable d0 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
-        itemmodel.setImage(d0);
-        infoList.add(itemmodel0);
-
-
-        itemmodel.setTitle("Logout");
-        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
-        itemmodel.setImage(d);
-        infoList.add(itemmodel);
     }
 
     @Override
@@ -76,6 +65,36 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
         // Inflate the layout for this fragment
         View view = inflater.inflate(R.layout.fragment_me, container, false);
         listView = (ListView) view.findViewById(R.id.me_list);
+        tvMode = (TextView) view.findViewById(R.id.textViewMode);
+
+        infoList  = new ArrayList();
+        ListModel itemmodel = new ListModel();
+        globalPhotoLearn = (GlobalPhotoLearn)getActivity().getApplicationContext();
+        mAuth = globalPhotoLearn.getmAuth();
+        userName = mAuth.getCurrentUser().getDisplayName();
+
+        ListModel itemmodel0 = new ListModel();
+        String s="Current Mode : ";
+        switch (globalPhotoLearn.getmUserType()){
+            case PARTICIPANT:
+                s=s+"PARTICIPANT";
+                break;
+            case TRAINER:
+                s=s+"TRAINER";
+                break;
+        }
+
+        tvMode.setText(s);
+
+
+        itemmodel0.setTitle("(Tap here to switch mode)");
+        infoList.add(itemmodel0);
+
+
+        itemmodel.setTitle("Logout");
+        Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
+        itemmodel.setImage(d);
+        infoList.add(itemmodel);
         return view;
     }
 
@@ -93,13 +112,15 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
         switch (position){
             case 1:
                 changeMode();
+                break;
             case 2:
             //logout function.
             onClicklogout();
+            break;
             default:
             break;
         }
-        Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
+        //Toast.makeText(getActivity(), "Item: " + position, Toast.LENGTH_SHORT).show();
     }
 
     private void onClicklogout(){
@@ -121,6 +142,24 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
 
 
     private void changeMode(){
+        globalPhotoLearn = (GlobalPhotoLearn)getActivity().getApplicationContext();
+
+        String s="Current Mode : ";
+        String strmode="";
+        switch (globalPhotoLearn.getmUserType()){
+            case PARTICIPANT:
+                globalPhotoLearn.setmUserType(TRAINER);
+                strmode="TRAINER";
+                break;
+            case TRAINER:
+                globalPhotoLearn.setmUserType(PARTICIPANT);
+                strmode="PARTICIPANT";
+                break;
+        }
+
+        s = s + strmode;
+        tvMode.setText(s);
+        Toast.makeText(getActivity(),"Mode switched to " + strmode,Toast.LENGTH_SHORT).show();
 
     }
 

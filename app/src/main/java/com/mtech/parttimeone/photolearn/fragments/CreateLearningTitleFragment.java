@@ -7,8 +7,16 @@ import android.app.Fragment;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
+import android.widget.EditText;
+import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
+import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
+import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
+
+import java.util.UUID;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,8 +33,12 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
     private static final String ARG_PARAM2 = "param2";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
+    private String mParam1; //SessionID
     private String mParam2;
+
+    private EditText txtLearningTitle;
+    Button btnSave;
+    android.support.v4.app.Fragment FragmentSelf;
 
     private OnFragmentInteractionListener mListener;
 
@@ -91,7 +103,9 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
 
                 try {
 
+
                     dao.createLearningTitle(FragmentSelf,ltbo);
+
                     Toast.makeText(getActivity(),"Learning Title (" + ltbo.getTitle() +") created!",Toast.LENGTH_SHORT).show();
                     txtLearningTitle.setText("");
 

@@ -198,23 +198,25 @@ public class dummyDao {
 
     public void createLearningTitle(Fragment f, LearningTitleBO learningTitleBO) throws Exception {
 
+
         LearningTitleViewModel lModel = ViewModelProviders.of(f).get(LearningTitleViewModel.class);
 
         String userName =getUserName(f);
+
         lModel.createLearningTitle(learningTitleBO);
 
     }
 
-    public void createQuizTitle(Fragment f, QuizTitleBO QuizTitleBO,String sessionID) throws Exception {
+    public void createQuizTitle(Fragment f, QuizTitleBO QuizTitleBO) throws Exception {
 
         QuizTitleViewModel lModel = ViewModelProviders.of(f).get(QuizTitleViewModel.class);
 
         String userName =getUserName(f);
+
         lModel.createQuizTitle(QuizTitleBO);
 
     }
-
-
+    
     public ArrayList<LearningSessionBO> GetLearningSessionByUser(Fragment f, String userID) throws InterruptedException {
         //Dummy, To replace with real filter
 
