@@ -70,7 +70,7 @@ public class QuizTitleViewModel extends ViewModel {
         userTitleRepository.removeListener();
     }
 
-    public void loadQuizTitle(String sessionId) {
+    private void loadQuizTitle(String sessionId) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
         mQuizTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
