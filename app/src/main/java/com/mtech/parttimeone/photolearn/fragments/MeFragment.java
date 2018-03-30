@@ -30,7 +30,9 @@ import com.mtech.parttimeone.photolearn.Adapter.ListModel;
 import com.mtech.parttimeone.photolearn.Adapter.MeListAdapter;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
+import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.MainActivity;
+import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 
 import java.util.ArrayList;
@@ -74,6 +76,9 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
         userName = mAuth.getCurrentUser().getDisplayName();
 
         ListModel itemmodel0 = new ListModel();
+        itemmodel0.setTitle("Trainer");
+        Drawable d0 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
+        itemmodel0.setImage(d0);
         String s="Current Mode : ";
         switch (globalPhotoLearn.getmUserType()){
             case PARTICIPANT:
@@ -89,7 +94,6 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
 
         itemmodel0.setTitle("(Tap here to switch mode)");
         infoList.add(itemmodel0);
-
 
         itemmodel.setTitle("Logout");
         Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
@@ -142,6 +146,8 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
 
 
     private void changeMode(){
+//        Intent createLearningItem = new Intent(getActivity(),LearnItemCreationActivity.class);
+//        getActivity().startActivity(createLearningItem);
         globalPhotoLearn = (GlobalPhotoLearn)getActivity().getApplicationContext();
 
         String s="Current Mode : ";

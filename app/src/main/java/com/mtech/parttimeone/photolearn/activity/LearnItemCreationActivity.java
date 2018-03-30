@@ -1,5 +1,8 @@
 package com.mtech.parttimeone.photolearn.activity;
 
+import android.arch.lifecycle.ViewModel;
+import android.arch.lifecycle.ViewModelProviders;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.util.Log;
@@ -8,12 +11,16 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Adapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.LearningItemCreationAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningItemViewModel;
+import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 import com.mtech.parttimeone.photolearn.asyncTask.UploadAsyncTask;
+import com.mtech.parttimeone.photolearn.handler.LifeCycleHandler;
 
 import org.apache.commons.lang3.StringUtils;
 
@@ -27,18 +34,15 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
 
     private static final String LEARNING_TYPE = "LEARNING";
 
-    public String getTitleId() {
-        return titleId;
-    }
-
-    public void setTitleId(String titleId) {
-        this.titleId = titleId;
-    }
-
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_learn_item_creation);
+
+        Intent intent = getIntent();
+       // it.putExtra("TitleID", mParam2);
+
+         titleId = intent.getStringExtra("TitleID");
 
         intheView();
     }
@@ -81,6 +85,8 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
             Toast toast = Toast.makeText(LearnItemCreationActivity.this, "Title should not be blank.", Toast.LENGTH_LONG);
         } else {
             new UploadAsyncTask((LearnItemCreationActivity) this).execute(file);
+
+
         }
 
 
@@ -118,6 +124,23 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
     public void saveItemImagePath(Uri downloadUrl) {
         //Call View Model
         Log.d(TAG, "saveItem for Learn:Call ViewModel to save Item!" + downloadUrl);
+        //if (downloadUrl.toString() != null&&!downloadUrl.toString().isEmpty()){
+            adapter.itemBO.setPhotoURL(downloadUrl.toString());
+       // }
+        adapter.itemBO.setGPS("NUS ISS");
+        adapter.itemBO.setTitleId(titleId);
+        adapter.itemBO.setUserId(LifeCycleHandler.getInstance().getAccountBO().getUid());
+        LearningItemViewModel vmlearningItemViewModel = ViewModelProviders.of(this).get(LearningItemViewModel.class);
+        try {
+            vmlearningItemViewModel.createLearningItem(adapter.itemBO);
+            Toast.makeText(this,"Add Learning Item Successfully!",Toast.LENGTH_SHORT).show();
+            this.onBackPressed();
+
+        } catch (Exception e) {
+            e.printStackTrace();
+            Toast.makeText(this,"Error adding Learning Item!",Toast.LENGTH_SHORT).show();
+        }
+
     }
 
 }

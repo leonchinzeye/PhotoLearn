@@ -129,7 +129,7 @@ public class LearningItemCreationAdapter extends BaseAdapter {
         }
 
         if (position ==0){
-            holder.editText.setText(!TextUtils.isEmpty(itemBO.getItemtitle()) ? itemBO.getItemDesc():"");
+            holder.editText.setText(!TextUtils.isEmpty(itemBO.getItemtitle()) ? itemBO.getItemtitle():"");
         }else if(position==1){
             holder.editText.setText(!TextUtils.isEmpty(itemBO.getItemDesc()) ? itemBO.getItemDesc():"");
         }

@@ -18,6 +18,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
 
+
+        <activity android:name=".activity.QuizItemCreationActivity" />
         <activity android:name=".activity.MainActivity">
         <intent-filter>
             <action android:name="android.intent.action.MAIN" />
@@ -32,9 +34,6 @@
         </activity>
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.BaseActivity" />
-        <activity android:name=".activity.QuizItemCreationActivity" >
-
-        </activity>
         <activity android:name=".activity.BottomBarActivity" />
         <activity android:name=".activity.LearnItemCreationActivity">
             <intent-filter>
