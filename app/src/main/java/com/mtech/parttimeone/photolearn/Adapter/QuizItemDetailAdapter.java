@@ -38,7 +38,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
     private static final int TYPE_EXPLANATION = 3;
 
 
-    private boolean isReview = true;
+    public boolean isReview;
 
     private Context context;
 
@@ -54,7 +54,12 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
     @Override
     public int getCount(){
-        return 3 + quizItemObj.getAnswer().size();
+        if (isReview){
+            return 3 + quizItemObj.getAnswer().size();
+        }else{
+            return 2 + quizItemObj.getAnswer().size();
+        }
+
     }
 
     @Override
@@ -64,19 +69,35 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 
     @Override
     public int getViewTypeCount(){
-        return 4;
+        if (isReview){
+            return 4;
+        }else{
+            return 3;
+        }
+
     }
 
     @Override
     public int getItemViewType(int position){
-        if (position ==0){
-            return TYPE_TITLE;
-        }else if (position == 1){
-            return TYPE_PHOTO;
-        }else if (position == getCount()-1){
-            return TYPE_EXPLANATION;
-        }else {
-            return TYPE_OPTION;
+
+        if (isReview){
+            if (position ==0){
+                return TYPE_TITLE;
+            }else if (position == 1){
+                return TYPE_PHOTO;
+            }else if (position == getCount()-1){
+                return TYPE_EXPLANATION;
+            }else {
+                return TYPE_OPTION;
+            }
+        }else{
+            if (position ==0){
+                return TYPE_TITLE;
+            }else if (position == 1){
+                return TYPE_PHOTO;
+            }else {
+                return TYPE_OPTION;
+            }
         }
 
     }
@@ -121,10 +142,31 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                 }
                 break;
                 case TYPE_OPTION:{
-                    convertView = LayoutInflater.from(context).inflate(
-                            R.layout.quiz_option_selection_layout,parent,false);
-                    optionHolder = new ViewHolder(convertView,R.id.option_selection_text);
-                    convertView.setTag(optionHolder);
+
+                    if (!isReview){
+                        convertView = LayoutInflater.from(context).inflate(
+                                R.layout.quiz_option_selection_layout,parent,false);
+                        optionHolder = new ViewHolder(convertView,R.id.option_selection_text);
+                        convertView.setTag(optionHolder);
+                    }else {
+                        convertView = LayoutInflater.from(context).inflate(
+                                R.layout.quiz_option_item_read_only_layout,parent,false);
+                        TextView optionText = (TextView)convertView.findViewById(R.id.text_quiz_option_readonly);
+                        optionText.setText(quizItemObj.getAnswer().get(position-2));
+                        if (quizItemObj.isAnsCorrect()){
+                            if (quizItemObj.getQuizAttemptBO().isAns(position-2)) {
+                                optionText.setTextColor(Color.parseColor("#0B6623")); // green
+                            }else {
+                                optionText.setTextColor(Color.parseColor("#FF000000")); // black
+                            }
+                        }else{
+                            if (quizItemObj.isAns(position-2)){
+                                optionText.setTextColor(Color.parseColor("#FF4040")); // red
+                            }else {
+                                optionText.setTextColor(Color.parseColor("#FF000000")); // black
+                            }
+                        }
+                    }
                 }
                 break;
                 case TYPE_EXPLANATION:{
@@ -136,21 +178,24 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                 break;
             }
         }else{
-            switch (type){
-                case TYPE_OPTION:{
-                  optionHolder  = (ViewHolder) convertView.getTag();
+
+            if (!isReview){
+                switch (type){
+                    case TYPE_OPTION:{
+                        optionHolder  = (ViewHolder) convertView.getTag();
+                    }
+                    break;
                 }
-                break;
             }
         }
 
-        switch (type){
-            case TYPE_OPTION:{
-                String optionStr = quizItemObj.getAnswer().get(position-2);
-                optionHolder.optionTextView.setText(optionStr);
-                optionHolder.optionTextView.setTag(position);
-                optionHolder.optionTextView.setChecked(quizItemObj.getQuizAttemptBO().isAns(position-2));
-
+        if (!isReview){
+            switch (type){
+                case TYPE_OPTION:{
+                    String optionStr = quizItemObj.getAnswer().get(position-2);
+                    optionHolder.optionTextView.setText(optionStr);
+                    optionHolder.optionTextView.setTag(position);
+                    optionHolder.optionTextView.setChecked(quizItemObj.getQuizAttemptBO().isAns(position-2));
 //                optionHolder.optionTextView.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {
@@ -162,7 +207,9 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
 //                        ((QuizItemDetailActivity)context).updateData(quizItemObj, currentPage);
 //                    }
 //                });
-            }
+                }
+         }
+
         }
 
         return convertView;

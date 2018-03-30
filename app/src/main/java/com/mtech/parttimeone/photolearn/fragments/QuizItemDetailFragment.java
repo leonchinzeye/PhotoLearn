@@ -30,6 +30,7 @@ public class QuizItemDetailFragment extends Fragment  {
     QuizItemBO itemObj;
     private int mParam1;
     QuizItemDetailAdapter adapter;
+    Boolean isReview;
 
     public QuizItemDetailFragment() {
         // Required empty public constructor
@@ -57,7 +58,7 @@ public class QuizItemDetailFragment extends Fragment  {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
-                if (position==0||position==1||position==itemObj.getAnswer().size()+2){
+                if (isReview||position==0||position==1){
                     return;
                 }
                 CheckedTextView checkedTextView = view.findViewById(R.id.option_selection_text);
@@ -69,9 +70,10 @@ public class QuizItemDetailFragment extends Fragment  {
             }
         });
         adapter  = new QuizItemDetailAdapter(getActivity(),itemObj,mParam1);
+        adapter.isReview = isReview;
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-         return view;
+        return view;
     }
 
     @Override
@@ -81,6 +83,7 @@ public class QuizItemDetailFragment extends Fragment  {
             mParam1 = getArguments().getInt(ARG_PARAM1);
         }
         itemObj = ((QuizItemDetailActivity)getActivity()).getItemArray().get(mParam1);
+        isReview = ((QuizItemDetailActivity)getActivity()).isReview;
     }
 
     @Override

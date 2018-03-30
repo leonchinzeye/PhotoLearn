@@ -130,4 +130,11 @@ public class QuizItemBO extends ItemBO {
         answer.remove(i);
         answerOption.remove(i);
     }
+
+    public Boolean isAnsCorrect(){
+        // isAns option should be true.
+        return answerOption.equals(quizAttemptBO.getAnswer());//containsAll(quizAttemptBO.getAnswer());
+
+    }
+
 }
