@@ -95,10 +95,7 @@ public class QuizTitleViewModel extends ViewModel {
      * @throws Exception if the Quiz session is not a unique session ID
      */
     public boolean createQuizTitle(QuizTitleBO quizTitleBO) throws Exception {
-        QuizTitleEntity eQuizTitle = new QuizTitleEntity();
-        eQuizTitle = mapper.mapFrom(quizTitleBO);
-
-        setQuizTitle(eQuizTitle);
+        setQuizTitle(quizTitleBO);
         return true;
     }
 
@@ -132,7 +129,7 @@ public class QuizTitleViewModel extends ViewModel {
         QuizTitleEntity eQuizTitle = mapper.mapFrom(quizTitleBO);
 
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        mQuizTitleRef.child(eQuizTitle.getSessionId()).child(eQuizTitle.getTitleId()).setValue(eQuizTitle);
+        mQuizTitleRef.child(eQuizTitle.getSessionId()).child(quizTitleBO.getUuid()).setValue(eQuizTitle);
 
         return quizTitleBO;
     }
@@ -226,14 +223,14 @@ public class QuizTitleViewModel extends ViewModel {
         });
     }
 
-    public boolean setQuizTitle(QuizTitleEntity eQuizTitle) {
+    public boolean setQuizTitle(QuizTitleBO quizTitleBO) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
+        QuizTitleEntity eQuizTitle = new QuizTitleEntity();
+        eQuizTitle = mapper.mapFrom(quizTitleBO);
 
         //get a unique key from firebase
         String key = mQuizTitleRef.child(eQuizTitle.getSessionId()).push().getKey();
-        //set titleId to generated key
-        eQuizTitle.setTitleId(key);
-        mQuizTitleRef.child(eQuizTitle.getSessionId()).child(eQuizTitle.getTitleId()).setValue(eQuizTitle);
+        mQuizTitleRef.child(eQuizTitle.getSessionId()).child(key).setValue(eQuizTitle);
 
         return true;
     }
