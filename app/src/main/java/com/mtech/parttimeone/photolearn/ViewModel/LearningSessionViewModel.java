@@ -15,6 +15,7 @@ import com.mtech.parttimeone.photolearn.data.entity.LearningSessionEntity;
 import com.mtech.parttimeone.photolearn.data.mapper.LearningSessionMapper;
 import com.mtech.parttimeone.photolearn.data.repository.LearningSessionRepository;
 import com.mtech.parttimeone.photolearn.data.repository.UserLearningSessionRepository;
+import com.mtech.parttimeone.photolearn.dummyModel.LearningSession;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
 import java.util.ArrayList;
@@ -46,6 +47,7 @@ public class LearningSessionViewModel extends ViewModel {
     private MutableLiveData<List<LearningSessionBO>> trainerSessions;
     private MutableLiveData<List<LearningSessionBO>> participantSessions;
     private MutableLiveData<LearningSessionBO> learningSessionBO;
+    private MutableLiveData<LearningSessionBO> enrollSessionBO;
 
     @Override
     protected void onCleared() {
@@ -149,16 +151,27 @@ public class LearningSessionViewModel extends ViewModel {
         setTrainerLearningSession(learningSessionBO, userId);
     }
 
-    /**
-     * Enrolls a participant into a learning session
-     * @param sessionId
-     * @param userId
-     */
-    public void enrollLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) {
-        //writes user_learning_sessions -> participants
-        setParticipantLearningSession(learningSessionBO, sessionId, userId);
-    }
+    public MutableLiveData<LearningSessionBO> enrollLearningSession(String sessionId, String userId) {
+        enrollSessionBO = null;
+        mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
+        mLearningSession.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                LearningSessionEntity eLearningSession = dataSnapshot.getValue(LearningSessionEntity.class);
 
+                if (eLearningSession != null) {
+                    setParticipantLearningSession(eLearningSession, sessionId, userId);
+                    enrollSessionBO.setValue(mapper.map(eLearningSession));
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
+        return enrollSessionBO;
+    }
 
     // This method is for trainers to delete a learning session
     public void deleteLearningSession(String sessionId, String userId) {
@@ -244,8 +257,7 @@ public class LearningSessionViewModel extends ViewModel {
     }
 
     //creates learning sessions filtered by participant user Id and stores the session Id
-    public boolean setParticipantLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) {
-        LearningSessionEntity eLearningSession = mapper.mapFrom(learningSessionBO);
+    public boolean setParticipantLearningSession(LearningSessionEntity eLearningSession, String sessionId, String userId) {
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
         mUserLearningSession.child(KEY_PARTICIPANT).child(userId).child(sessionId).setValue(eLearningSession);
 
