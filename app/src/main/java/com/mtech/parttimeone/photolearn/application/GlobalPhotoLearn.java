@@ -4,6 +4,7 @@ import android.app.Application;
 
 import com.google.android.gms.auth.api.signin.GoogleSignInClient;
 import com.google.firebase.auth.FirebaseAuth;
+import com.mtech.parttimeone.photolearn.bo.AccountBO;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
 /**
@@ -14,6 +15,8 @@ public class GlobalPhotoLearn extends Application {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
+    private UserType mUserType;
+    private AccountBO accountBO;
 
     public UserType getmUserType() {
         return mUserType;
@@ -22,8 +25,6 @@ public class GlobalPhotoLearn extends Application {
     public void setmUserType(UserType mUserType) {
         this.mUserType = mUserType;
     }
-
-    private UserType mUserType;
 
     public void setmAuth(FirebaseAuth mAuth) {
         this.mAuth = mAuth;
@@ -39,5 +40,13 @@ public class GlobalPhotoLearn extends Application {
 
     public GoogleSignInClient getmGoogleSignInClient() {
         return mGoogleSignInClient;
+    }
+
+    public AccountBO getAccountBO() {
+        return accountBO;
+    }
+
+    public void setAccountBO(AccountBO accountBO) {
+        this.accountBO = accountBO;
     }
 }

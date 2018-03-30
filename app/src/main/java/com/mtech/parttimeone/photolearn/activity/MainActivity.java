@@ -1,9 +1,11 @@
 package com.mtech.parttimeone.photolearn.activity;
 
+import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
+import android.support.annotation.Nullable;
 import android.util.Log;
 import android.view.View;
 import android.widget.Toast;
@@ -31,16 +33,19 @@ import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
+import com.mtech.parttimeone.photolearn.bo.AccountBO;
 import com.mtech.parttimeone.photolearn.data.entity.AccountEntity;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
-public class MainActivity extends BaseActivity implements View.OnClickListener{
+public class MainActivity extends BaseActivity implements View.OnClickListener {
 
     private FirebaseAuth mAuth;
     private GoogleSignInClient mGoogleSignInClient;
     private CallbackManager mCallbackManager;
 
     private static final String TAG = "PhotoLearn";
+    private static final String KEY_PARTICIPANT = "PARTICIPANT";
+    private static final String KEY_TRAINER = "TRAINER";
 
     private static final int RESULT_CODE_SIGN_IN = 1981;
 
@@ -56,7 +61,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         GoogleSignInOptions googleSignInOptions = new GoogleSignInOptions.Builder(GoogleSignInOptions.DEFAULT_SIGN_IN)
                 .requestIdToken(getString(R.string.default_web_client_id)).requestEmail().build();
 
-        mGoogleSignInClient = GoogleSignIn.getClient(this,googleSignInOptions);
+        mGoogleSignInClient = GoogleSignIn.getClient(this, googleSignInOptions);
 
         mAuth = FirebaseAuth.getInstance();
 
@@ -95,27 +100,28 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
         FirebaseUser currentUser = mAuth.getCurrentUser();
         //updateUI(currentUser);
 
-        if(currentUser == null){
+        if (currentUser == null) {
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.button_facebook_login).setVisibility(View.VISIBLE);
-        }else{
-            Log.d(TAG, "onStart uesr id:"+currentUser.getUid()+"::display name:"+currentUser.getDisplayName());
+        } else {
+            Log.d(TAG, "onStart uesr id:" + currentUser.getUid() + "::display name:" + currentUser.getDisplayName());
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
             updateUI(currentUser);
         }
     }
 
-    public void onClick(View view){
+    public void onClick(View view) {
         int i = view.getId();
 
         if (i == R.id.sign_in_button) {
 
             Intent signInIntent = mGoogleSignInClient.getSignInIntent();
-            startActivityForResult(signInIntent,RESULT_CODE_SIGN_IN);
+            startActivityForResult(signInIntent, RESULT_CODE_SIGN_IN);
 
         }
     }
+
     @Override
 
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
@@ -147,76 +153,81 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
                     @Override
                     public void onComplete(@NonNull Task<AuthResult> task) {
 
-                            if (task.isSuccessful()) {
+                        if (task.isSuccessful()) {
 
-                                // Sign in success, update UI with the signed-in user's information
-                                FirebaseUser user = mAuth.getCurrentUser();
+                            // Sign in success, update UI with the signed-in user's information
+                            FirebaseUser user = mAuth.getCurrentUser();
 
-                                updateUI(user);
-                            } else {
-                                // If sign in fails, display a message to the user.
-                                Log.w(TAG, "signInWithCredential:failure", task.getException());
-                                findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
+                            updateUI(user);
+                        } else {
+                            // If sign in fails, display a message to the user.
+                            Log.w(TAG, "signInWithCredential:failure", task.getException());
+                            findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
 
-                                Toast.makeText(MainActivity.this, task.getException().getMessage(),Toast.LENGTH_LONG).show();
-                                Toast.makeText(MainActivity.this, "Facebook Authentication failed.",
-                                        Toast.LENGTH_SHORT).show();
-                                //updateUI(null);
-                            }
+                            Toast.makeText(MainActivity.this, task.getException().getMessage(), Toast.LENGTH_LONG).show();
+                            Toast.makeText(MainActivity.this, "Facebook Authentication failed.",
+                                    Toast.LENGTH_SHORT).show();
+                            //updateUI(null);
                         }
+                    }
                 });
     }
 
     private void firebaseAuthWithGoogle(GoogleSignInAccount acct) {
         Log.d(TAG, "firebaseAuthWithGoogle:" + acct.getId());
 
-
         AuthCredential credential = GoogleAuthProvider.getCredential(acct.getIdToken(), null);
 
         mAuth.signInWithCredential(credential).addOnCompleteListener(this, new OnCompleteListener<AuthResult>() {
 
-                    @Override
-                    public void onComplete(@NonNull Task<AuthResult> task) {
+            @Override
+            public void onComplete(@NonNull Task<AuthResult> task) {
+                if (task.isSuccessful()) {
+                    // Sign in success, update UI with the signed-in user's information
+                    Log.d(TAG, "signInWithCredential:success");
+                    FirebaseUser user = mAuth.getCurrentUser();
+                    updateUI(user);
 
-                        if (task.isSuccessful()) {
-                            // Sign in success, update UI with the signed-in user's information
-                            Log.d(TAG, "signInWithCredential:success");
-                            FirebaseUser user = mAuth.getCurrentUser();
-                            updateUI(user);
-
-                        } else {
-                            Log.w(TAG, "signInWithCredential:failure", task.getException());
-                            updateUI(null);
-                        }
-
-                    }
-                });
+                } else {
+                    Log.w(TAG, "signInWithCredential:failure", task.getException());
+                    updateUI(null);
+                }
+            }
+        });
     }
 
     private void updateUI(FirebaseUser user) {
-
         if (user != null) {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
 
-            AccountEntity UserAccount = new AccountEntity(user.getUid(),user.getDisplayName(),user.getEmail(),"");
-            AccountViewModel model = ViewModelProviders.of(this).get(AccountViewModel.class);
-            LearningSessionViewModel lModel = ViewModelProviders.of(this).get(LearningSessionViewModel.class);
+            AccountViewModel accModel = ViewModelProviders.of(this).get(AccountViewModel.class);
+            accModel.getAccount(user).observe(this, new Observer<AccountBO>() {
+                @Override
+                public void onChanged(@Nullable AccountBO accountBO) {
+                    GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn) getApplicationContext();
+                    globalPhotoLearn.setmAuth(mAuth);
+                    globalPhotoLearn.setmGoogleSignInClient(mGoogleSignInClient);
+                    globalPhotoLearn.setAccountBO(accountBO);
 
-            model.signIn(user);
+                    switch (accountBO.getLastActive()) {
+                        case KEY_PARTICIPANT:
+                            globalPhotoLearn.setmUserType(UserType.PARTICIPANT);
+                            break;
+                        case KEY_TRAINER:
+                            globalPhotoLearn.setmUserType(UserType.TRAINER);
+                            break;
+                        default:
+                            globalPhotoLearn.setmUserType(UserType.TRAINER);
+                            break;
+                    }
+                }
+            });
 
-//            model.setAccount(UserAccount);
+            Log.d(TAG, "signInWithCredential:success:Display Name:" + user.getDisplayName() + ":Email:"
+                    + user.getEmail() + ":Uid:" + user.getUid());
 
-            Log.d(TAG, "signInWithCredential:success:Display Name:"+user.getDisplayName()+":Email:"
-                    +user.getEmail()+":Uid:"+user.getUid());
-
-            GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)getApplicationContext();
-            globalPhotoLearn.setmAuth(mAuth);
-            globalPhotoLearn.setmGoogleSignInClient(mGoogleSignInClient);
-            //Added by Zhikai for mode settings
-            globalPhotoLearn.setmUserType(UserType.TRAINER);
-
-            Intent learningSessionIntent = new Intent(this,BottomBarActivity.class);
+            Intent learningSessionIntent = new Intent(this, BottomBarActivity.class);
             startActivity(learningSessionIntent);
         } else {
 
@@ -225,14 +236,11 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.button_facebook_login).setVisibility(View.VISIBLE);
         }
-
     }
-
 
     @Override
     public void onStop() {
         super.onStop();
 
     }
-
 }
