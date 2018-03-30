@@ -1,21 +1,43 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
+
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
+
+import android.app.DatePickerDialog;
+import android.app.Fragment;
+import android.content.Context;
+import android.net.Uri;
+import android.os.Bundle;
+
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mtech.parttimeone.photolearn.Adapter.LearningSessionListAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
+
+
+import java.util.List;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,8 +50,8 @@ import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
 public class CreateLearningSessionFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "param1"; //SessionID
+    private static final String ARG_PARAM2 = "param2"; //Update/New
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -75,6 +97,46 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
         }
     }
 
+    Calendar myCalendar = Calendar.getInstance();
+
+    public void getDate(View view) {
+
+
+        EditText edittext = (EditText) view.findViewById(R.id.editTextStartDate);
+        DatePickerDialog.OnDateSetListener date = new DatePickerDialog.OnDateSetListener() {
+
+            @Override
+            public void onDateSet(DatePicker view, int year, int monthOfYear,
+                                  int dayOfMonth) {
+                // TODO Auto-generated method stub
+                myCalendar.set(Calendar.YEAR, year);
+                myCalendar.set(Calendar.MONTH, monthOfYear);
+                myCalendar.set(Calendar.DAY_OF_MONTH, dayOfMonth);
+                updateLabel(edittext);
+            }
+
+        };
+
+
+        edittext.setOnClickListener(new View.OnClickListener() {
+
+            @Override
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                new DatePickerDialog(getActivity(), date, myCalendar
+                        .get(Calendar.YEAR), myCalendar.get(Calendar.MONTH),
+                        myCalendar.get(Calendar.DAY_OF_MONTH)).show();
+            }
+        });
+    }
+
+    private void updateLabel(EditText edittext) {
+        String myFormat = "yyyy-MM-dd"; //In which you need put here
+        SimpleDateFormat sdf = new SimpleDateFormat(myFormat, Locale.UK);
+
+        edittext.setText(sdf.format(myCalendar.getTime()));
+    }
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -84,15 +146,39 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
         btnSave = view.findViewById(R.id.btnSaveLearningSession);
 
         FragmentSelf = this;
+        getDate(view);
+        txtCourseCode = (EditText) view.findViewById(R.id.editTextModuleCode);
+        txtCourseModule = (EditText) view.findViewById(R.id.editTextModuleName);
+        txtCourseDate = (EditText) view.findViewById(R.id.editTextStartDate);
+        txtSessionID = (TextView) view.findViewById(R.id.create_SessionID);
 
-        txtCourseCode = (EditText)view.findViewById(R.id.editTextModuleCode);
-        txtCourseModule = (EditText)view.findViewById(R.id.editTextModuleName);
-        txtCourseDate = (EditText)view.findViewById(R.id.editTextStartDate);
-        txtSessionID = (TextView)view.findViewById(R.id.create_SessionID);
+        switch (mParam2){
+            case "NEW":
+                txtSessionID.setText("Create New");
+                break;
 
-        txtSessionID.setText("Create New");
+            case "UPDATE":
+                txtSessionID.setText("Updating "+mParam1);
+                dummyDao dao = new dummyDao();
+                LearningSessionViewModel vmLearningSession = ViewModelProviders.of(this).get(LearningSessionViewModel.class);
+                vmLearningSession.getLearningSession(mParam1).observe(this, new Observer<LearningSessionBO>() {
+                    @Override
+                    public void onChanged(@Nullable LearningSessionBO learningSessionBOS) {
+                        txtCourseCode.setText(learningSessionBOS.getCourseCode());
+                        txtCourseModule.setText(learningSessionBOS.getCourseModule());
+                        txtCourseDate.setText(learningSessionBOS.getCourseDate());
 
-        btnSave.setOnClickListener( new View.OnClickListener() {
+                    }
+                });
+                break;
+
+            default:
+                break;
+
+        }
+
+
+        btnSave.setOnClickListener(new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
@@ -100,26 +186,36 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
                 LearningSessionBO lsbo = new LearningSessionBO();
 
 
-
                 lsbo.setCourseCode(txtCourseCode.getText().toString());
                 lsbo.setCourseModule(txtCourseModule.getText().toString());
-                lsbo.setCourseDate(txtCourseDate.getText().toString());
-                lsbo.setSessionId(lsbo.getCourseDate()+"-"+lsbo.getCourseCode()+"-M"+lsbo.getCourseModule());
+                lsbo.setCourseDate(txtCourseDate.getText().toString().replace("-", ""));
+                lsbo.setSessionId(lsbo.getCourseDate() + "-" + lsbo.getCourseCode() + "-M" + lsbo.getCourseModule());
 
                 dummyDao dao = new dummyDao();
 
                 try {
 
-                    dao.createLearningSession(FragmentSelf,lsbo);
-                    Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") created!",Toast.LENGTH_SHORT).show();
-                    txtCourseCode.setText("");
-                    txtCourseModule.setText("");
-                    txtCourseDate.setText("");
+                    switch (mParam2){
+                        case "NEW":
+                            dao.createLearningSession(FragmentSelf,lsbo);
+                            Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") created!",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case "UPDATE":
+                            dao.updateLearningSession(FragmentSelf,lsbo,lsbo.getSessionId());
+                            Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") updated!",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        default:
+                            break;
+
+                    }
+
                     BottomBarActivity act = (BottomBarActivity)getActivity();
-                    act.setCreateLearningSessionFragment();
+                    act.setLearningSessionListFragment();
 
                 } catch (Exception e) {
-                    Toast.makeText(getActivity(),"Learning Session already exists!",Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getActivity(), "Learning Session already exists!", Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
                     return;
                 }
