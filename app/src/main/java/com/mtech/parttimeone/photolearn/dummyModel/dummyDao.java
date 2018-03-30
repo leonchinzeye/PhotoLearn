@@ -186,12 +186,12 @@ public class dummyDao {
         return ut;
     }
 
-    public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO,String sessionID) throws Exception {
+    public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO) throws Exception {
 
         LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
 
         String userName =getUserName(f);
-        lModel.createLearningSession(learningSessionBO,sessionID,userName);
+        lModel.createLearningSession(learningSessionBO,userName);
 
     }
 

@@ -109,7 +109,7 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
 
                 try {
 
-                    dao.createLearningSession(FragmentSelf,lsbo,txtSessionID.getText().toString());
+                    dao.createLearningSession(FragmentSelf,lsbo);
                     Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") created!",Toast.LENGTH_SHORT).show();
                     txtCourseCode.setText("");
                     txtCourseModule.setText("");
