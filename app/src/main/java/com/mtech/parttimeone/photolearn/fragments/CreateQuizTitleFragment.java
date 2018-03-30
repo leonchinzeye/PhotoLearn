@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
 import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
@@ -106,7 +107,8 @@ public class CreateQuizTitleFragment extends android.support.v4.app.Fragment {
                     dao.createQuizTitle(FragmentSelf,ltbo);
                     Toast.makeText(getActivity(),"Quiz Title (" + ltbo.getTitle() +") created!",Toast.LENGTH_SHORT).show();
                     txtQuizTitle.setText("");
-                    getActivity().onBackPressed();
+                    BottomBarActivity act = (BottomBarActivity)getActivity();
+                    act.setTitleListFragment(ltbo.getSessionId());
 
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Error adding Quiz Title!",Toast.LENGTH_SHORT).show();

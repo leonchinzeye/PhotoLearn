@@ -21,10 +21,6 @@ public class QuizTitleMapper extends FirebaseMapper<QuizTitleEntity, QuizTitleBO
             titleBO.setSessionId(eLearningTitle.getSessionId());
         }
 
-        if (StringUtils.isNotEmpty(eLearningTitle.getTitleId())) {
-            titleBO.setTitleId(eLearningTitle.getTitleId());
-        }
-
         if (StringUtils.isNotEmpty(eLearningTitle.getTitle())) {
             titleBO.setTitle(eLearningTitle.getTitle());
         }
@@ -42,10 +38,6 @@ public class QuizTitleMapper extends FirebaseMapper<QuizTitleEntity, QuizTitleBO
 
         if (StringUtils.isNotEmpty(titleBO.getSessionId())) {
             eQuizTitle.setSessionId(titleBO.getSessionId());
-        }
-
-        if (StringUtils.isNotEmpty(titleBO.getTitleId())) {
-            eQuizTitle.setTitleId(titleBO.getTitleId());
         }
 
         if (StringUtils.isNotEmpty(titleBO.getTitle())) {
