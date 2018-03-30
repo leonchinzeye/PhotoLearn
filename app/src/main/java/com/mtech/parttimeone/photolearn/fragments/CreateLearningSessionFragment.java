@@ -13,6 +13,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
 
@@ -114,7 +115,8 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
                     txtCourseCode.setText("");
                     txtCourseModule.setText("");
                     txtCourseDate.setText("");
-                    getActivity().onBackPressed();
+                    BottomBarActivity act = (BottomBarActivity)getActivity();
+                    act.setCreateLearningSessionFragment();
 
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Learning Session already exists!",Toast.LENGTH_SHORT).show();
