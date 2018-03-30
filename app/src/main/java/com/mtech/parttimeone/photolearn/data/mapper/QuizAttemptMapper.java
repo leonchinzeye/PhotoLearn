@@ -15,10 +15,18 @@ public class QuizAttemptMapper extends FirebaseMapper<QuizAttemptEntity, QuizAtt
     @Override
     public QuizAttemptBO map(QuizAttemptEntity eQuizAttempt) {
         List<String> answer = new ArrayList<>();
-        QuizAttemptBO quizAttemptBO = new QuizAttemptBO("", answer);
+        QuizAttemptBO quizAttemptBO = new QuizAttemptBO("","","",answer);
 
-        if (StringUtils.isNotEmpty(eQuizAttempt.getQuizItemId())) {
-            quizAttemptBO.setQuizItemId(eQuizAttempt.getQuizItemId());
+        if (StringUtils.isNotEmpty(eQuizAttempt.getAttemptId())) {
+            quizAttemptBO.setAttemptId(eQuizAttempt.getAttemptId());
+        }
+
+        if (StringUtils.isNotEmpty(eQuizAttempt.getItemId())) {
+            quizAttemptBO.setItemId(eQuizAttempt.getItemId());
+        }
+
+        if (StringUtils.isNotEmpty(eQuizAttempt.getUserId())) {
+            quizAttemptBO.setUserId(eQuizAttempt.getUserId());
         }
 
         if (StringUtils.isNotEmpty(eQuizAttempt.getAnswer().toString())) {
@@ -32,8 +40,16 @@ public class QuizAttemptMapper extends FirebaseMapper<QuizAttemptEntity, QuizAtt
     public QuizAttemptEntity mapFrom(QuizAttemptBO quizAttemptBO) {
         QuizAttemptEntity  eQuizAttempt = new QuizAttemptEntity();
 
-        if (StringUtils.isNotEmpty(quizAttemptBO.getQuizItemId())) {
-            eQuizAttempt.setQuizItemId(quizAttemptBO.getQuizItemId());
+        if (StringUtils.isNotEmpty(quizAttemptBO.getAttemptId())) {
+            eQuizAttempt.setAttemptId(quizAttemptBO.getAttemptId());
+        }
+
+        if (StringUtils.isNotEmpty(quizAttemptBO.getItemId())) {
+            eQuizAttempt.setItemId(quizAttemptBO.getItemId());
+        }
+
+        if (StringUtils.isNotEmpty(quizAttemptBO.getUserId())) {
+            eQuizAttempt.setUserId(quizAttemptBO.getUserId());
         }
 
         if (StringUtils.isNotEmpty(quizAttemptBO.getAnswer().toString())) {

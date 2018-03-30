@@ -9,19 +9,22 @@ import java.util.List;
  */
 
 public class QuizAttemptBO {
-
-    final static String TRUUE = "true";
+    final static String TRUE = "true";
     final static String FALSE = "false";
 
-    private String quizItemId;
+    private String attemptId;
+    private String userId;
+    private String itemId;
     private List<String> answer = new ArrayList<>();
 
     public void QuizAttemptBO() {
 
     }
 
-    public QuizAttemptBO(String quizItemId, List<String> answer) {
-        this.quizItemId = quizItemId;
+    public QuizAttemptBO(String attemptId, String userId, String itemId, List<String> answer) {
+        this.attemptId = attemptId;
+        this.userId = userId;
+        this.itemId = itemId;
         this.answer = answer;
     }
 //
@@ -29,9 +32,29 @@ public class QuizAttemptBO {
 
     }
 
-    public String getQuizItemId() { return quizItemId; }
+    public String getAttemptId() {
+        return attemptId;
+    }
 
-    public void setQuizItemId(String quizItemId) {this.quizItemId = quizItemId; }
+    public void setAttemptId(String attemptId) {
+        this.attemptId = attemptId;
+    }
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
+
+    public String getItemId() {
+        return itemId;
+    }
+
+    public void setItemId(String itemId) {
+        this.itemId = itemId;
+    }
 
     public List<String> getAnswer() {
         return answer;
