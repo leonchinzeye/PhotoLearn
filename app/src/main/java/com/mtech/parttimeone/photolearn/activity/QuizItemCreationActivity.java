@@ -134,13 +134,18 @@ public class QuizItemCreationActivity extends ItemCreationActivity {
         QuizItemViewModel vmquizItemViewModel = ViewModelProviders.of(this).get(QuizItemViewModel.class);
         try {
             vmquizItemViewModel.createQuizItem(adapter.quizItemObj);
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             Toast.makeText(this,"Add Quiz Item Successfully!",Toast.LENGTH_SHORT).show();
             this.onBackPressed();
 
         } catch (Exception e) {
             e.printStackTrace();
             Toast.makeText(this,"Error adding Quiz Item!",Toast.LENGTH_SHORT).show();
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+
         }
+
+
 
     }
 
