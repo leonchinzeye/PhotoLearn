@@ -8,28 +8,18 @@ import java.util.List;
  */
 
 public class QuizAttemptEntity {
-    private String attemptId;
     private String userId;
-    private String itemId;
-    List<String> answer = new ArrayList<>();
+    private String saveState;
+    private List<QuizItemAttemptEntity> attemptEntityList;
 
     public QuizAttemptEntity() {
 
     }
 
-    public QuizAttemptEntity(String quizItemId, List<String> answer) {
-        this.attemptId = attemptId;
+    public QuizAttemptEntity(String userId, String saveState, List<QuizItemAttemptEntity> attemptEntityList) {
         this.userId = userId;
-        this.itemId = itemId;
-        this.answer = answer;
-    }
-
-    public String getAttemptId() {
-        return attemptId;
-    }
-
-    public void setAttemptId(String attemptId) {
-        this.attemptId = attemptId;
+        this.saveState = saveState;
+        this.attemptEntityList = attemptEntityList;
     }
 
     public String getUserId() {
@@ -40,19 +30,19 @@ public class QuizAttemptEntity {
         this.userId = userId;
     }
 
-    public String getItemId() {
-        return itemId;
+    public String getSaveState() {
+        return saveState;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public void setSaveState(String saveState) {
+        this.saveState = saveState;
     }
 
-    public List<String> getAnswer() {
-        return answer;
+    public List<QuizItemAttemptEntity> getAttemptEntityList() {
+        return attemptEntityList;
     }
 
-    public void setAnswer(List<String> answer) {
-        this.answer = answer;
+    public void setAttemptEntityList(List<QuizItemAttemptEntity> attemptEntityList) {
+        this.attemptEntityList = attemptEntityList;
     }
 }

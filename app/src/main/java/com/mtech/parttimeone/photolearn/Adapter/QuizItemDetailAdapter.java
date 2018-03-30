@@ -153,6 +153,8 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                                 R.layout.quiz_option_item_read_only_layout,parent,false);
                         TextView optionText = (TextView)convertView.findViewById(R.id.text_quiz_option_readonly);
                         optionText.setText(quizItemObj.getAnswer().get(position-2));
+                        //TODO
+                        /*
                         if (quizItemObj.isAnsCorrect()){
                             if (quizItemObj.getQuizAttemptBO().isAns(position-2)) {
                                 optionText.setTextColor(Color.parseColor("#0B6623")); // green
@@ -166,6 +168,7 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                                 optionText.setTextColor(Color.parseColor("#FF000000")); // black
                             }
                         }
+                        */
                     }
                 }
                 break;
@@ -195,7 +198,8 @@ public class QuizItemDetailAdapter extends BaseAdapter  {
                     String optionStr = quizItemObj.getAnswer().get(position-2);
                     optionHolder.optionTextView.setText(optionStr);
                     optionHolder.optionTextView.setTag(position);
-                    optionHolder.optionTextView.setChecked(quizItemObj.getQuizAttemptBO().isAns(position-2));
+                    //TODO
+                    //optionHolder.optionTextView.setChecked(quizItemObj.getQuizAttemptBO().isAns(position-2));
 //                optionHolder.optionTextView.setOnClickListener(new View.OnClickListener() {
 //                    @Override
 //                    public void onClick(View v) {

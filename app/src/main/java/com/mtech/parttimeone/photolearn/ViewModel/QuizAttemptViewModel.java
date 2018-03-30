@@ -10,6 +10,8 @@ import com.google.firebase.database.DatabaseError;
 import com.google.firebase.database.DatabaseReference;
 import com.google.firebase.database.FirebaseDatabase;
 import com.google.firebase.database.ValueEventListener;
+import com.mtech.parttimeone.photolearn.bo.QuizItemAttemptBO;
+import com.mtech.parttimeone.photolearn.data.entity.QuizItemAttemptEntity;
 import com.mtech.parttimeone.photolearn.data.mapper.QuizAttemptMapper;
 import com.mtech.parttimeone.photolearn.data.repository.QuizAttemptRepository;
 import com.mtech.parttimeone.photolearn.data.entity.QuizAttemptEntity;
@@ -55,14 +57,14 @@ public class QuizAttemptViewModel extends ViewModel {
     /**
      * This method loads all Quiz attempts belonging to a title
      *
-     * @param sessionId
+     * @param titleId
      * @return QuiztitleBO
      */
-    public LiveData<List<QuizAttemptBO>> getQuizAttempts(String sessionId) {
+    public LiveData<List<QuizAttemptBO>> getQuizAttempts(String titleId) {
         if (quizAttemptBOs == null) {
             quizAttemptBOs = new MutableLiveData<>();
         }
-        loadQuizAttempts(sessionId,null);
+        loadQuizAttempts(titleId,null);
 
         return quizAttemptBOs;
     }
@@ -71,14 +73,14 @@ public class QuizAttemptViewModel extends ViewModel {
      * This method loads all Quiz attempts that the user created belonging to {@Code sessionId
      *
      * @param userId
-     * @param sessionId
+     * @param titleId
      * @return list of QuiztitleBO
      */
-    public LiveData<List<QuizAttemptBO>> getQuizAttempts(String sessionId, String userId) {
+    public LiveData<List<QuizAttemptBO>> getQuizAttempts(String titleId, String userId) {
         if (quizAttemptBOs == null) {
             quizAttemptBOs = new MutableLiveData<>();
         }
-        loadQuizAttempts(sessionId, userId);
+        loadQuizAttempts(titleId, userId);
 
         return quizAttemptBOs;
     }
@@ -98,13 +100,28 @@ public class QuizAttemptViewModel extends ViewModel {
     }
 
     /**
+     * Creates a list of Quiz Attempts as a participant
+     * @param quizAttemptBOs
+     * @throws Exception if the Quiz session is not a unique session ID
+     */
+    public void createQuizAttempt(List<QuizAttemptBO> quizAttemptBOs) throws Exception {
+        for (int i = 0; i < quizAttemptBOs.size(); i++) {
+            setQuizAttempt(quizAttemptBOs.get(i));
+        }
+    }
+
+    /**
      * Deletes a Quiz attempt
      *
      * @param quizAttemptBO
      * @throws Exception if the Quiz session is not a unique session ID
      */
-    public void deleteQuizAttempt(QuizAttemptBO quizAttemptBO) {
-        removeQuizAttempt(quizAttemptBO.getItemId(), quizAttemptBO.getAttemptId());
+    public void deleteQuizAttempts(QuizAttemptBO quizAttemptBO) {
+        QuizItemAttemptBO quizItemAttemptBO = new QuizItemAttemptBO();
+        for (int i = 0; i < quizAttemptBO.getAttemptBOList().size() ; i++) {
+            quizItemAttemptBO = quizAttemptBO.getAttemptBOList().get(i);
+            removeQuizAttempt(quizItemAttemptBO.getItemId(), quizItemAttemptBO.getAttemptId());
+        }
     }
 
     /**
@@ -125,10 +142,13 @@ public class QuizAttemptViewModel extends ViewModel {
      */
     public QuizAttemptBO updateQuizAttempt(QuizAttemptBO quizAttemptBO) {
         QuizAttemptEntity eQuizAttempt = mapper.mapFrom(quizAttemptBO);
+        QuizItemAttemptEntity eQuizItemAttempt = new QuizItemAttemptEntity();
 
         mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
-        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).child(quizAttemptBO.getAttemptId()).setValue(quizAttemptBO);
-
+        for (int i = 0; i < eQuizAttempt.getAttemptEntityList().size() ; i++) {
+            eQuizItemAttempt = eQuizAttempt.getAttemptEntityList().get(i);
+            mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizItemAttempt.getItemId()).child(eQuizItemAttempt.getAttemptId()).setValue(quizAttemptBO);
+        }
         return quizAttemptBO;
     }
 
@@ -167,12 +187,16 @@ public class QuizAttemptViewModel extends ViewModel {
                 if (dataSnapshot.getValue() != null) {
                     List<QuizAttemptBO> listQuizTitles = new ArrayList<>();
 
+                    QuizItemAttemptEntity eItemAttempt = new QuizItemAttemptEntity();
                     for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
                         QuizAttemptEntity eAttempt = snapshot.getValue(QuizAttemptEntity.class);
-                        if (StringUtils.equals(itemId, eAttempt.getItemId())) {
-                            QuizAttemptBO eQuizAttempt = mapper.map(eAttempt);
-                            eQuizAttempt.setItemId(snapshot.getKey());
-                            listQuizTitles.add(eQuizAttempt);
+                        for (int i = 0; i < eAttempt.getAttemptEntityList().size(); i++) {
+                            eItemAttempt = eAttempt.getAttemptEntityList().get(i);
+                            if (StringUtils.equals(itemId, eItemAttempt.getItemId())) {
+                                QuizAttemptBO eQuizAttempt = mapper.map(eAttempt);
+                                eItemAttempt.setItemId(snapshot.getKey());
+                                listQuizTitles.add(eQuizAttempt);
+                            }
                         }
                     }
                     quizAttemptBOs.setValue(listQuizTitles);
@@ -181,7 +205,7 @@ public class QuizAttemptViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
     }
@@ -191,12 +215,15 @@ public class QuizAttemptViewModel extends ViewModel {
     public boolean setQuizAttempt(QuizAttemptBO quizAttemptBO) {
         mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
         QuizAttemptEntity eQuizAttempt = new QuizAttemptEntity();
+        QuizItemAttemptEntity eItemAttempt = new QuizItemAttemptEntity();
         eQuizAttempt = mapper.mapFrom(quizAttemptBO);
 
         //get a unique key from firebase
         String key = mQuizAttemptRef.child(eQuizAttempt.getUserId()).push().getKey();
-        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).child(key).setValue(eQuizAttempt);
-
+        for (int i = 0; i < eQuizAttempt.getAttemptEntityList().size(); i++) {
+            eItemAttempt = eQuizAttempt.getAttemptEntityList().get(i);
+            mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eItemAttempt.getItemId()).child(key).setValue(eQuizAttempt);
+        }
         return true;
     }
 
