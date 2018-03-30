@@ -84,6 +84,8 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
         if (StringUtils.isBlank(title)) {
             Toast toast = Toast.makeText(LearnItemCreationActivity.this, "Title should not be blank.", Toast.LENGTH_LONG);
         } else {
+
+            findViewById(R.id.loadingPanel).setVisibility(View.VISIBLE);
             new UploadAsyncTask((LearnItemCreationActivity) this).execute(file);
 
 
@@ -133,11 +135,13 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
         LearningItemViewModel vmlearningItemViewModel = ViewModelProviders.of(this).get(LearningItemViewModel.class);
         try {
             vmlearningItemViewModel.createLearningItem(adapter.itemBO);
-            Toast.makeText(this,"Add Learning Item Successfully!",Toast.LENGTH_SHORT).show();
             this.onBackPressed();
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
+            Toast.makeText(this,"Add Learning Item Successfully!",Toast.LENGTH_SHORT).show();
 
         } catch (Exception e) {
             e.printStackTrace();
+            findViewById(R.id.loadingPanel).setVisibility(View.GONE);
             Toast.makeText(this,"Error adding Learning Item!",Toast.LENGTH_SHORT).show();
         }
 

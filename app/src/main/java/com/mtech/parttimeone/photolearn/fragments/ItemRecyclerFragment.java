@@ -173,7 +173,7 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
                         recyclerView.setItemAnimator(new DefaultItemAnimator());
                         recyclerView.setAdapter(mAdapter);
                         SnapHelper helper = new LinearSnapHelper();
-                        helper.attachToRecyclerView(recyclerView);
+               //         helper.attachToRecyclerView(recyclerView);
                         mAdapter.notifyDataSetChanged();
                     }
                 });
@@ -190,7 +190,7 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
                         recyclerView.setItemAnimator(new DefaultItemAnimator());
                         recyclerView.setAdapter(mAdapter);
                         SnapHelper helper = new LinearSnapHelper();
-                        helper.attachToRecyclerView(recyclerView);
+                       // helper.attachToRecyclerView(recyclerView);
                         mAdapter.notifyDataSetChanged();
                     }
                 });

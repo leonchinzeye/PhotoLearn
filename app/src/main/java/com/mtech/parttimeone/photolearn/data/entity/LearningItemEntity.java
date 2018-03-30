@@ -43,7 +43,7 @@ public class LearningItemEntity {
 
     public String getItemDesc() { return itemDesc; }
 
-    public void setItemDesc(String photoDesc) { this.itemDesc = itemDesc; }
+    public void setItemDesc(String itemDesc) { this.itemDesc = itemDesc; }
 
     public String getGPS() { return GPS; }
 
