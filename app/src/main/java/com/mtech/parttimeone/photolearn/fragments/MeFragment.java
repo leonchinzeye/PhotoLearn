@@ -58,11 +58,10 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
         userName = mAuth.getCurrentUser().getDisplayName();
 
         ListModel itemmodel0 = new ListModel();
-        itemmodel.setTitle("Trainer");
+        itemmodel0.setTitle("Trainer");
         Drawable d0 = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
-        itemmodel.setImage(d0);
+        itemmodel0.setImage(d0);
         infoList.add(itemmodel0);
-
 
         itemmodel.setTitle("Logout");
         Drawable d = ContextCompat.getDrawable(getActivity(), R.drawable.ic_home_black_24dp);
