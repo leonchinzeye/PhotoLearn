@@ -1,5 +1,6 @@
 package com.mtech.parttimeone.photolearn.activity;
 
+import android.net.Uri;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.view.ContextMenu;
@@ -9,13 +10,18 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ListView;
+import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.QuizItemCreationAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.asyncTask.UploadAsyncTask;
 
-public class QuizItemCreationActivity extends BaseActivity  {
+import org.apache.commons.lang3.StringUtils;
+
+public class QuizItemCreationActivity extends ItemCreationActivity  {
 
     private ListView listView;
+    QuizItemCreationAdapter adapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -36,7 +42,7 @@ public class QuizItemCreationActivity extends BaseActivity  {
     private void initView(){
         super.setPageTitle("Create Quiz Item");
         listView = findViewById(R.id.quiz_creation_list);
-        QuizItemCreationAdapter adapter = new  QuizItemCreationAdapter(this);
+        adapter = new  QuizItemCreationAdapter(this);
         listView.setAdapter(adapter);
     }
 
@@ -44,15 +50,17 @@ public class QuizItemCreationActivity extends BaseActivity  {
     public boolean onOptionsItemSelected(MenuItem item) {
 
         if (item.getItemId() == R.id.action_done) {
-            submitQuizItem();
+            submitQuizItem(getFilePath());
             return true;
         } else {
             return true;
         }
     }
 
-    public void submitQuizItem(){
-
+    public void submitQuizItem(Uri file){
+        //TO DO - need to put logic to derive Item id
+        setItemId("quiz_1");
+        new UploadAsyncTask(this).execute(file);
     }
 
     @Override
@@ -81,18 +89,8 @@ public class QuizItemCreationActivity extends BaseActivity  {
         return super.onOptionsItemSelected(item);
     }
 
-    public void takePhoto(){
 
-    }
 
-    public void selectPhotofromLibrary(){
 
-    }
-
-    // add button call back function - v = addBtn.
-    public void addPhoto(View v){
-        registerForContextMenu(v);
-        openContextMenu(v);
-    }
 
 }
