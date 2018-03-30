@@ -182,7 +182,7 @@ public class QuizTitleViewModel extends ViewModel {
                     for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
                         QuizTitleEntity eQuizTitle = sessionSnapshot.getValue(QuizTitleEntity.class);
                         QuizTitleBO QuizTitleBO = mapper.map(eQuizTitle);
-                        QuizTitleBO.setUuid(dataSnapshot.getKey());
+                        QuizTitleBO.setUuid(sessionSnapshot.getKey());
                         listQuizTitles.add(QuizTitleBO);
                     }
                     quizTitleBOs.setValue(listQuizTitles);
