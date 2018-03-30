@@ -16,6 +16,8 @@ import com.mtech.parttimeone.photolearn.data.mapper.LearningTitleMapper;
 import com.mtech.parttimeone.photolearn.data.repository.LearningTitleRepository;
 import com.mtech.parttimeone.photolearn.data.repository.UserTitleRepository;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -24,45 +26,204 @@ import java.util.List;
  */
 
 public class LearningTitleViewModel extends ViewModel {
+
+    /* For front end usage */
     private MutableLiveData<List<LearningTitleBO>> learningTitleBOs;
     private MutableLiveData<LearningTitleBO> learningTitleBO;
 
-    /** This points to the collection of learning titles **/
+    /* Global mapper */
+    private LearningTitleMapper mapper = new LearningTitleMapper();
+
+    /* This points to the collection of learning titles */
     private LearningTitleRepository learningTitleRepository = new LearningTitleRepository();
 
-    /** This points to the collection of user titles **/
+    /* This points to the collection of user titles */
     private UserTitleRepository userTitleRepository = new UserTitleRepository();
 
     private DatabaseReference mLearningTitleRef;
-    private DatabaseReference mUserTitleRef;
 
     /**
      * This method loads just a single learning title
-     * @param sessionId
+     *
+     * @param id
      * @return learningtitleBO
      */
-    public LiveData<LearningTitleBO> getLearningTitle(String sessionId) {
+    public LiveData<LearningTitleBO> getLearningTitle(String id) {
         if (learningTitleBO == null) {
             learningTitleBO = new MutableLiveData<LearningTitleBO>();
-            loadLearningTitle(sessionId);
+            loadLearningTitle(id);
         }
         return learningTitleBO;
     }
 
     /**
-     * This method loads just all learning titles
+     * For loading all the titles belonging to a session
+     *
+     * @param sessionId
+     * @return
+     */
+    public LiveData<List<LearningTitleBO>> getLearningTitles(String sessionId) {
+        if (learningTitleBOs == null) {
+            learningTitleBOs = new MutableLiveData<>();
+            loadLearningTitles(sessionId, null);
+        }
+        return learningTitleBOs;
+    }
+
+    /**
+     * This method loads all the titles that the user created belonging to {@code sessionId}
+     *
      * @param userId
      * @param sessionId
      * @return list of learningtitleBO
      */
     public LiveData<List<LearningTitleBO>> getLearningTitles(String sessionId, String userId) {
-        if (sessionId!=""){
-            loadAllLearningTitles(sessionId);
-        } else {
+        if (learningTitleBOs == null) {
+            learningTitleBOs = new MutableLiveData<>();
+            loadLearningTitles(sessionId, userId);
+        }
+        return learningTitleBOs;
+    }
+
+    /**
+     * Creates a learning title as a participant
+     *
+     * @param learningTitleBO
+     */
+    public void createLearningTitle(LearningTitleBO learningTitleBO) {
+        addLearningTitle(learningTitleBO);
+    }
+
+    /**
+     * For participant to delete learning title
+     *
+     * @param titleBO
+     */
+    public void deleteLearningTitle(LearningTitleBO titleBO) {
+        removeLearningTitle(titleBO.getSessionId(), titleBO.getUuid());
+    }
+
+    /**
+     * For deletion of entire session
+     *
+     * @param sessionId
+     */
+    public void deleteFromSession(String sessionId) {
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+        mLearningTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot entity : dataSnapshot.getChildren()) {
+                        String titleId = entity.getKey();
+                        LearningItemViewModel itemVM = new LearningItemViewModel();
+//                        itemVM.deleteFromTitle(titleId);
+                    }
+                }
+                mLearningTitleRef.child(sessionId).removeValue();
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+
+            }
+        });
+    }
+
+    /**
+     * For user to update the learning title
+     *
+     * @param learningTitleBO
+     * @return
+     */
+    public LearningTitleBO updateLearningTitle(LearningTitleBO learningTitleBO) {
+        LearningTitleEntity eTitle = mapper.mapFrom(learningTitleBO);
+
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+        mLearningTitleRef.child(learningTitleBO.getSessionId()).child(learningTitleBO.getUuid()).setValue(eTitle);
+
+        return learningTitleBO;
+    }
+
+    private void loadLearningTitles(String sessionId, String userId) {
+        if (StringUtils.isEmpty(sessionId) && StringUtils.isNotEmpty(userId)) {
             loadParticipantLearningTitles(userId);
+            return;
         }
 
-        return learningTitleBOs;
+        if (StringUtils.isNotEmpty(sessionId) && StringUtils.isEmpty(userId)) {
+            loadSessionLearningTitles(sessionId);
+            return;
+        }
+
+        if (StringUtils.isNotEmpty(sessionId) && StringUtils.isNotEmpty(userId)) {
+            loadSessionUserLearningTitles(sessionId, userId);
+        }
+
+        if (StringUtils.isEmpty(sessionId) && StringUtils.isEmpty(userId)) {
+            learningTitleBOs = new MutableLiveData<List<LearningTitleBO>>();
+            return;
+        }
+    }
+
+    private void loadSessionLearningTitles(String sessionId) {
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+        mLearningTitleRef.child(sessionId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    List<LearningTitleBO> listTitles = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        LearningTitleEntity eTitle = snapshot.getValue(LearningTitleEntity.class);
+                        LearningTitleBO titleBO = mapper.map(eTitle);
+                        titleBO.setUuid(snapshot.getKey());
+                        listTitles.add(titleBO);
+                    }
+                    learningTitleBOs.setValue(listTitles);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ", databaseError.getMessage());
+            }
+        });
+    }
+
+    private void addLearningTitle(LearningTitleBO learningTitleBO) {
+        LearningTitleEntity eTitle = mapper.mapFrom(learningTitleBO);
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+
+        String uuid = mLearningTitleRef.push().getKey();
+        mLearningTitleRef.child(uuid).setValue(eTitle);
+    }
+
+    private void loadSessionUserLearningTitles(String sessionId, String userId) {
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+        mLearningTitleRef.child(sessionId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    List<LearningTitleBO> listTitles = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        LearningTitleEntity eTitle = snapshot.getValue(LearningTitleEntity.class);
+                        if (StringUtils.equals(userId, eTitle.getCreatedBy())) {
+                            LearningTitleBO titleBO = mapper.map(eTitle);
+                            titleBO.setUuid(snapshot.getKey());
+                            listTitles.add(titleBO);
+                        }
+                    }
+                    learningTitleBOs.setValue(listTitles);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ", databaseError.getMessage());
+            }
+        });
     }
 
     @Override
@@ -71,163 +232,65 @@ public class LearningTitleViewModel extends ViewModel {
         userTitleRepository.removeListener();
     }
 
-    private void loadLearningTitle(String sessionId) {
+    private void loadLearningTitle(String id) {
         mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        mLearningTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mLearningTitleRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 LearningTitleEntity eLearningTitle = dataSnapshot.getValue(LearningTitleEntity.class);
 
-                if (eLearningTitle!= null) {
-                    LearningTitleMapper mapper = new LearningTitleMapper();
-                    learningTitleBO.setValue(mapper.map(eLearningTitle));
+                if (eLearningTitle != null) {
+                    LearningTitleBO titleBO = mapper.map(eLearningTitle);
+                    titleBO.setUuid(id);
+                    learningTitleBO.setValue(titleBO);
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
     }
 
     /**
-     * Creates a learning title as a participant
-     * @param learningTitleBO
+     * generic loading of ALL the titles that the user created irregardless of the session
+     *
      * @param userId
-     * @throws Exception if the learning session is not a unique session ID
      */
-    public void createLearningTitle(LearningTitleBO learningTitleBO, String sessionId, String userId) throws Exception {
-        //inserts learning_titles
-        setLearningTitle(learningTitleBO, sessionId);
-        //inserts user_titles -> participants
-        setParticipantLearningTitle(learningTitleBO, sessionId, userId);
-    }
-
-    // This method is for trainers to delete a learning title
-    public void deleteLearningTitle(String sessionId, String userId) {
-        //deletes learning_titles
-        //deletes user_titles -> participants
-        removeLearningTitle(sessionId, userId);
-    }
-
-    // TODO
-    // This is for trainers to update a learning session
-    public LearningTitleBO updateLearningTitle(LearningTitleBO learningTitleBO, String sessionId , String userId) {
-        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        //since the actual changes are not specified so update the entire node
-        mLearningTitleRef.child(sessionId).setValue(learningTitleBO);
-
-        //update participant session data
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                        if(sessionSnapshot.hasChild(sessionId)) {
-                            sessionSnapshot.child(sessionId).getRef().setValue(learningTitleBO);
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
-            }
-        });
-
-        return learningTitleBO;
-    }
-
-    //this loads all titles based on sessionId
-    private void loadAllLearningTitles(String sessionId) {
-        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        mLearningTitleRef.child(sessionId).addValueEventListener(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    List<LearningTitleBO> listLearningTitles = new ArrayList<>();
-                    LearningTitleMapper mapper = new LearningTitleMapper();
-
-                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                        LearningTitleEntity entity = sessionSnapshot.getValue(LearningTitleEntity.class);
-                        LearningTitleBO learningTitleBO = mapper.map(entity);
-                        listLearningTitles.add(learningTitleBO);
-                    }
-                    learningTitleBOs.setValue(listLearningTitles);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
-            }
-        });
-    }
-
-    //this loads titles based on userId - required in participant edit mode
     private void loadParticipantLearningTitles(String userId) {
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").child(userId).addValueEventListener(new ValueEventListener() {
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+        mLearningTitleRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
-                    List<LearningTitleBO> listLearningTitles = new ArrayList<>();
-                    LearningTitleMapper mapper = new LearningTitleMapper();
+                    List<LearningTitleBO> titles = new ArrayList<>();
 
-                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                        LearningTitleEntity entity = sessionSnapshot.getValue(LearningTitleEntity.class);
-                        LearningTitleBO learningTitleBO = mapper.map(entity);
-                        listLearningTitles.add(learningTitleBO);
-                    }
-                    learningTitleBOs.setValue(listLearningTitles);
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
-            }
-        });
-    }
-
-    //creates learning titles filtered by session Id
-    public boolean setLearningTitle(LearningTitleBO learningTitleBO, String sessionId) {
-        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        mLearningTitleRef.child(sessionId).setValue(learningTitleBO);
-
-        return true;
-    }
-
-    //creates learning titles filtered by participant user Id and stores the session Id
-    public boolean setParticipantLearningTitle(LearningTitleBO learningTitleBO, String sessionId, String userId) {
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").child(userId).child(sessionId).setValue(learningTitleBO);
-
-        return true;
-    }
-
-    public boolean removeLearningTitle(String sessionId, String userId) {
-        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        mLearningTitleRef.child(sessionId).removeValue();
-
-        //remove participants links
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    for (DataSnapshot titleSnapshot : dataSnapshot.getChildren()) {
-                        if(titleSnapshot.hasChild(sessionId)) {
-                            titleSnapshot.child(sessionId).getRef().setValue(null);
+                    for (DataSnapshot sessionTitles : dataSnapshot.getChildren()) {
+                        if (sessionTitles.getValue() != null) {
+                            for (DataSnapshot title : sessionTitles.getChildren()) {
+                                LearningTitleEntity eTitle = title.getValue(LearningTitleEntity.class);
+                                if (StringUtils.equals(eTitle.getCreatedBy(), userId)) {
+                                    LearningTitleBO titleBO = mapper.map(eTitle);
+                                    titleBO.setUuid(title.getKey());
+                                    titles.add(titleBO);
+                                }
+                            }
                         }
                     }
+                    learningTitleBOs.setValue(titles);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
-        return true;
+    }
+
+    private void removeLearningTitle(String sessionId, String titleId) {
+        mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
+        mLearningTitleRef.child(sessionId).child(titleId).removeValue();
     }
 }

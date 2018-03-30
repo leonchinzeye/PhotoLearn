@@ -10,6 +10,7 @@ import java.util.List;
 
 public abstract class TitleBO {
 
+    private String uuid;
     private String sessionId;
     private String titleId;
     private String title;
@@ -27,6 +28,14 @@ public abstract class TitleBO {
         this.titleId = titleId;
         this.title = title;
         this.createdBy = createdBy;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getSessionId() {
