@@ -26,7 +26,9 @@ public abstract class FirebaseDatabaseRepository<Model> {
     }
 
     public void removeListener() {
-        databaseReference.removeEventListener(listener);
+        if (listener != null) {
+            databaseReference.removeEventListener(listener);
+        }
     }
 
     public interface FirebaseDatabaseRepositoryCallback<T> {

@@ -108,7 +108,7 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
 
                     Toast.makeText(getActivity(),"Learning Title (" + ltbo.getTitle() +") created!",Toast.LENGTH_SHORT).show();
                     txtLearningTitle.setText("");
-
+                    getActivity().onBackPressed();
 
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Error adding Learning Title!",Toast.LENGTH_SHORT).show();
