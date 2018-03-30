@@ -15,6 +15,8 @@ public abstract class ItemBO {
 //    private String itemLocation;
 //    private String itemDate;
 
+    private String uuid;
+
     private String titleId;
     private String photoURL;
     private String itemDesc; //use common name so can be used for photo desc and item desc
@@ -28,6 +30,14 @@ public abstract class ItemBO {
         this.titleId = titleId;
         this.photoURL = photoURL;
         this.itemDesc = itemDesc;
+    }
+
+    public String getUuid() {
+        return uuid;
+    }
+
+    public void setUuid(String uuid) {
+        this.uuid = uuid;
     }
 
     public String getTitleId() {
