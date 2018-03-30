@@ -124,7 +124,9 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
     public void saveItemImagePath(Uri downloadUrl) {
         //Call View Model
         Log.d(TAG, "saveItem for Learn:Call ViewModel to save Item!" + downloadUrl);
-        adapter.itemBO.setPhotoURL(downloadUrl.toString());
+        //if (downloadUrl.toString() != null&&!downloadUrl.toString().isEmpty()){
+            adapter.itemBO.setPhotoURL(downloadUrl.toString());
+       // }
         adapter.itemBO.setGPS("NUS ISS");
         adapter.itemBO.setTitleId(titleId);
         adapter.itemBO.setUserId(LifeCycleHandler.getInstance().getAccountBO().getUid());

@@ -35,7 +35,7 @@ public class QuizItemDetailActivity extends BaseActivity {
     private FragmentManager mFragmentManager;
     private ViewPager viewPager;
     private List<QuizItemBO> itemArray = new ArrayList<>();
-    public Boolean isReview = true;
+    public Boolean isReview = false;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
