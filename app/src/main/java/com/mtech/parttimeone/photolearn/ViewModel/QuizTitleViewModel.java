@@ -231,7 +231,7 @@ public class QuizTitleViewModel extends ViewModel {
         //get a unique key from firebase
         String key = mQuizTitleRef.child(eQuizTitle.getSessionId()).push().getKey();
         mQuizTitleRef.child(eQuizTitle.getSessionId()).child(key).setValue(eQuizTitle);
-
+        quizTitleBO.setUuid(key);
         return true;
     }
 

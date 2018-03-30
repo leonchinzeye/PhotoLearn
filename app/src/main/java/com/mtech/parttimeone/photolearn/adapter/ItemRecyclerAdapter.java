@@ -22,9 +22,9 @@ import java.util.List;
  */
 
 public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapter.ItemViewHolder> {
-    private List<ItemBO> ItemList;
+    private List<? extends ItemBO> ItemList;
 
-    public ItemRecyclerAdapter(List<ItemBO> itemList) {
+    public ItemRecyclerAdapter(List<? extends ItemBO> itemList) {
         ItemList = itemList;
     }
 

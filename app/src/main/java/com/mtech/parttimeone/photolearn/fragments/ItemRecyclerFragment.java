@@ -23,13 +23,17 @@ import android.view.ViewGroup;
 import com.mtech.parttimeone.photolearn.Adapter.TitleListAdapter;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.Adapter.ItemRecyclerAdapter;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningItemViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.QuizItemViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
+import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
+import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.bo.TitleBO;
 import com.mtech.parttimeone.photolearn.dummyModel.Item;
@@ -54,9 +58,9 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
     private static final String ARG_PARAM3 = "param3";
 
     // TODO: Rename and change types of parameters
-    private String mParam1;
-    private String mParam2;
-    private String mParam3;
+    private String mParam1; //Sessionid
+    private String mParam2; //titleid
+    private String mParam3; //Type
 
     private List<ItemBO> itemList;
     private RecyclerView recyclerView;
@@ -151,22 +155,45 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
 
         dummyDao dao = new dummyDao();
 
-        itemList = dao.GetLearningItemList(mParam1,mParam2);
-        mAdapter = new ItemRecyclerAdapter(itemList);
-        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(container.getContext(),LinearLayoutManager.HORIZONTAL, false);
-        recyclerView.setLayoutManager(mLayoutManager);
-        recyclerView.setItemAnimator(new DefaultItemAnimator());
-        recyclerView.setAdapter(mAdapter);
+        //itemList = dao.GetLearningItemList(mParam1,mParam2);
 
-        SnapHelper helper = new LinearSnapHelper();
-        helper.attachToRecyclerView(recyclerView);
+
+
 
         switch (mParam3){
             case "TITLE":
                 getActivity().setTitle("Learning Title:" + mParam2 );
+                LearningItemViewModel vmLearningItem = ViewModelProviders.of(this).get(LearningItemViewModel.class);
+                vmLearningItem.getLearningItems(mParam2).observe(this, new Observer<List<LearningItemBO>>() {
+                    @Override
+                    public void onChanged(@Nullable List<LearningItemBO> learningItemBOS) {
+                        mAdapter = new ItemRecyclerAdapter(learningItemBOS);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(container.getContext(),LinearLayoutManager.HORIZONTAL, false);
+                        recyclerView.setLayoutManager(mLayoutManager);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(mAdapter);
+                        SnapHelper helper = new LinearSnapHelper();
+                        helper.attachToRecyclerView(recyclerView);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
                 break;
             case "QUIZ":
                 getActivity().setTitle("Quiz Title:"+ mParam2);
+                QuizItemViewModel vmQuizItem = ViewModelProviders.of(this).get(QuizItemViewModel.class);
+                vmQuizItem.getQuizItems(mParam2).observe(this, new Observer<List<QuizItemBO>>() {
+                    @Override
+                    public void onChanged(@Nullable List<QuizItemBO> QuizItemBOS) {
+                        mAdapter = new ItemRecyclerAdapter(QuizItemBOS);
+                        RecyclerView.LayoutManager mLayoutManager = new LinearLayoutManager(container.getContext(),LinearLayoutManager.HORIZONTAL, false);
+                        recyclerView.setLayoutManager(mLayoutManager);
+                        recyclerView.setItemAnimator(new DefaultItemAnimator());
+                        recyclerView.setAdapter(mAdapter);
+                        SnapHelper helper = new LinearSnapHelper();
+                        helper.attachToRecyclerView(recyclerView);
+                        mAdapter.notifyDataSetChanged();
+                    }
+                });
                 break;
             default:
                 getActivity().setTitle("Unknown");
@@ -213,5 +240,13 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
         void onFragmentInteraction(Uri uri);
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        if (mAdapter!=null)
+            mAdapter.notifyDataSetChanged();
     }
 }

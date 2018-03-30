@@ -77,7 +77,8 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
     // INIT the UI
     private void intheView(Fragment targetFragment){
         mFragmentManager = getSupportFragmentManager();
-        meFragment = new MeFragment();
+        if (meFragment==null)
+            meFragment = new MeFragment();
         //mainFragment = new Fragment();
         //mainFragment = (Fragment) ItemRecyclerFragment.newInstance("MTECH-ORO-002","All about IOT", "TITLE");
         //mainFragment = (Fragment) LearningSessionListFragment.newInstance("DUMMY ACCOUNT","LEARNING SESSION ID");
@@ -106,7 +107,7 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction1 = mFragmentManager.beginTransaction();
          if (fragment.isAdded()) {
-                    fragmentTransaction1.hide(currentFragment).show(fragment);
+                    initView();
                 } else {
 
                     //fragmentTransaction1.hide(currentFragment).add(R.id.fragment_content, fragment);
