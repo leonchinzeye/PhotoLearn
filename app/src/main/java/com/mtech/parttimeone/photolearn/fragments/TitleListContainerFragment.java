@@ -106,6 +106,19 @@ public class TitleListContainerFragment extends android.support.v4.app.Fragment 
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_title_list_fragment, menu);
 
+        dummyDao dao = new dummyDao();
+
+        switch (dao.getMode(this)){
+            case PARTICIPANT:
+                break;
+
+            case TRAINER:
+                menu.getItem(0).setEnabled(false);
+                menu.getItem(1).setEnabled(false);
+                break;
+
+        }
+
     }
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
@@ -117,7 +130,7 @@ public class TitleListContainerFragment extends android.support.v4.app.Fragment 
                 // Not implemented here
                 return false;
             case R.id.action_add_learningitem:
-                act.setCreateLearningTitleFragment(mParam1);
+                act.setCreateLearningTitleFragment("","NEW",mParam1);
                 // Not implemented here
                 return false;
             default:
@@ -171,29 +184,6 @@ public class TitleListContainerFragment extends android.support.v4.app.Fragment 
         void onFragmentInteraction(Uri uri);
     }
 
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-    {
-        super.onCreateContextMenu(menu, v, menuInfo);
-
-        //menu.setHeaderTitle("Select The Action");
-        menu.add(0, v.getId(), 0, "Update");//groupId, itemId, order, title
-        menu.add(0, v.getId(), 0, "Delete");
-
-
-    }
-
-    @Override
-    public boolean onContextItemSelected(MenuItem item){
-        if(item.getTitle()=="Update"){
-            Toast.makeText(getContext(),"Update Called",Toast.LENGTH_LONG).show();
-        }
-        else if(item.getTitle()=="Delete"){
-            Toast.makeText(getContext(),"Delete Called",Toast.LENGTH_LONG).show();
-        }else{
-            return false;
-        }
-        return true;
-    }
 
     @Override
     public void onResume() {

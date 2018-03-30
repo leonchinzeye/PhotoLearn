@@ -141,6 +141,21 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_add_search, menu);
+
+        dummyDao dao = new dummyDao();
+
+        switch (dao.getMode(this)){
+            case PARTICIPANT:
+                menu.getItem(0).setEnabled(false);
+                menu.getItem(1).setEnabled(true);
+                break;
+
+            case TRAINER:
+                menu.getItem(0).setEnabled(true);
+                menu.getItem(1).setEnabled(false);
+                break;
+
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event

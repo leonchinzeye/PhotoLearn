@@ -7,12 +7,15 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.LearningSessionListAdapter;
 import com.mtech.parttimeone.photolearn.R;
@@ -252,4 +255,52 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
         if (TitleAdapter != null)
             TitleAdapter.notifyDataSetChanged();
     }
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        //menu.setHeaderTitle("Select The Action");
+        menu.add(0, v.getId(), 0, "Update");//groupId, itemId, order, title
+        menu.add(0, v.getId(), 0, "Delete");
+
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+
+
+
+        if(item.getTitle()=="Update"){
+            BottomBarActivity act = (BottomBarActivity)getActivity();
+
+            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+
+            switch (mParam2) {
+                case "TITLE":
+                    LearningTitleBO lbo = (LearningTitleBO) TitleAdapter.getItem(info.position);
+                    act.setCreateLearningTitleFragment(lbo.getUuid(),"UPDATE",mParam1);
+                    break;
+                case "QUIZ":
+                    QuizTitleBO qbo = (QuizTitleBO) TitleAdapter.getItem(info.position);
+                    break;
+
+                default:
+                    break;
+
+            }
+
+
+
+            Toast.makeText(getContext(),"Update Called",Toast.LENGTH_LONG).show();
+        }
+        else if(item.getTitle()=="Delete"){
+            Toast.makeText(getContext(),"Delete Called",Toast.LENGTH_LONG).show();
+        }else{
+            return false;
+        }
+        return true;
+    }
+
 }
