@@ -37,13 +37,11 @@ public class LearningTitleViewModel extends ViewModel {
     /* This points to the collection of learning titles */
     private LearningTitleRepository learningTitleRepository = new LearningTitleRepository();
 
-    /* This points to the collection of user titles */
-    private UserTitleRepository userTitleRepository = new UserTitleRepository();
-
     private DatabaseReference mLearningTitleRef;
 
     /**
      * This method loads just a single learning title
+     *
      * @param sessionId
      * @param titleId
      * @return
@@ -51,8 +49,8 @@ public class LearningTitleViewModel extends ViewModel {
     public LiveData<LearningTitleBO> getLearningTitle(String sessionId, String titleId) {
         if (learningTitleBO == null) {
             learningTitleBO = new MutableLiveData<LearningTitleBO>();
-            loadLearningTitle(sessionId, titleId);
         }
+        loadLearningTitle(sessionId, titleId);
         return learningTitleBO;
     }
 
@@ -65,8 +63,8 @@ public class LearningTitleViewModel extends ViewModel {
     public LiveData<List<LearningTitleBO>> getLearningTitles(String sessionId) {
         if (learningTitleBOs == null) {
             learningTitleBOs = new MutableLiveData<>();
-            loadLearningTitles(sessionId, null);
         }
+        loadLearningTitles(sessionId, null);
         return learningTitleBOs;
     }
 
@@ -80,8 +78,8 @@ public class LearningTitleViewModel extends ViewModel {
     public LiveData<List<LearningTitleBO>> getLearningTitles(String sessionId, String userId) {
         if (learningTitleBOs == null) {
             learningTitleBOs = new MutableLiveData<>();
-            loadLearningTitles(sessionId, userId);
         }
+        loadLearningTitles(sessionId, userId);
         return learningTitleBOs;
     }
 
@@ -117,7 +115,7 @@ public class LearningTitleViewModel extends ViewModel {
                     for (DataSnapshot entity : dataSnapshot.getChildren()) {
                         String titleId = entity.getKey();
                         LearningItemViewModel itemVM = new LearningItemViewModel();
-//                        itemVM.deleteFromTitle(titleId);
+                        itemVM.deleteFromTitle(titleId);
                     }
                 }
                 mLearningTitleRef.child(sessionId).removeValue();
@@ -125,7 +123,7 @@ public class LearningTitleViewModel extends ViewModel {
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
     }
@@ -158,6 +156,7 @@ public class LearningTitleViewModel extends ViewModel {
 
         if (StringUtils.isNotEmpty(sessionId) && StringUtils.isNotEmpty(userId)) {
             loadSessionUserLearningTitles(sessionId, userId);
+            return;
         }
 
         if (StringUtils.isEmpty(sessionId) && StringUtils.isEmpty(userId)) {
@@ -195,8 +194,9 @@ public class LearningTitleViewModel extends ViewModel {
         LearningTitleEntity eTitle = mapper.mapFrom(learningTitleBO);
         mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
 
-        String uuid = mLearningTitleRef.push().getKey();
-        mLearningTitleRef.child(uuid).setValue(eTitle);
+        String uuid = mLearningTitleRef.child(learningTitleBO.getSessionId()).push().getKey();
+        mLearningTitleRef.child(learningTitleBO.getSessionId()).child(uuid).setValue(eTitle);
+        learningTitleBO.setUuid(uuid);
     }
 
     private void loadSessionUserLearningTitles(String sessionId, String userId) {
@@ -229,7 +229,6 @@ public class LearningTitleViewModel extends ViewModel {
     @Override
     protected void onCleared() {
         learningTitleRepository.removeListener();
-        userTitleRepository.removeListener();
     }
 
     private void loadLearningTitle(String sessionId, String titleId) {
