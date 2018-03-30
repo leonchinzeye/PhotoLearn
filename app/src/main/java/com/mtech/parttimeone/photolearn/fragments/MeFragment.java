@@ -29,7 +29,9 @@ import com.mtech.parttimeone.photolearn.Adapter.ListModel;
 import com.mtech.parttimeone.photolearn.Adapter.MeListAdapter;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
+import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.MainActivity;
+import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 
 import java.util.ArrayList;
@@ -92,9 +94,11 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
         switch (position){
             case 1:
                 changeMode();
+                break;
             case 2:
             //logout function.
             onClicklogout();
+            break;
             default:
             break;
         }
@@ -120,6 +124,8 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
 
 
     private void changeMode(){
+        Intent createLearningItem = new Intent(getActivity(),LearnItemCreationActivity.class);
+        getActivity().startActivity(createLearningItem);
 
     }
 
