@@ -126,7 +126,7 @@ public class TitleListContainerFragment extends android.support.v4.app.Fragment 
 
         switch(item.getItemId()){
             case R.id.action_add_quizitem:
-                act.setCreateQuizTitleFragment(mParam1);
+                act.setCreateQuizTitleFragment("","NEW",mParam1);
                 // Not implemented here
                 return false;
             case R.id.action_add_learningitem:

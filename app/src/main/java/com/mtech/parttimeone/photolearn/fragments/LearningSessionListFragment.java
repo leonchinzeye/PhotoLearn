@@ -184,19 +184,24 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
                 final EditText input = new EditText(getContext());
                 alert.setView(input);
 
-                alert.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton("Enroll", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
                         // Filter the BO for the specific learning session
                         dummyDao dao = new dummyDao();
                         LearningSessionViewModel vmLearningSession = ViewModelProviders.of(FragmentSelf).get(LearningSessionViewModel.class);
-                        vmLearningSession.getLearningSession(value).observe(FragmentSelf, new Observer<LearningSessionBO>() {
+                        vmLearningSession.enrollLearningSession(value,dao.getUserName(FragmentSelf)).observe(FragmentSelf, new Observer<LearningSessionBO>() {
                             @Override
                             public void onChanged(@Nullable LearningSessionBO learningSessionBOS) {
-                                List<LearningSessionBO> lst = new ArrayList<LearningSessionBO>();
-                                lst.add(learningSessionBOS);
-                                lslAdap.setDataSource(lst);
-                                lslAdap.notifyDataSetChanged();
+                                if (learningSessionBOS.getSessionId() == "THIS IS A HACK") {
+
+                                    Toast.makeText(getContext(),"Learning session not found",Toast.LENGTH_LONG).show();
+
+                                }else {
+                                    //Enroll
+                                    vmLearningSession.enrollLearningSession(learningSessionBOS.getSessionId(),dao.getUserName(FragmentSelf));
+                                    Toast.makeText(getContext(),"Learning session enrolled successfully",Toast.LENGTH_LONG).show();
+                                }
                             }
                         });
 

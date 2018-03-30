@@ -129,7 +129,7 @@ public class LearningSessionViewModel extends ViewModel {
                         listLearningSessions.add(learningSessionBO);
                     }
 
-                    trainerSessions.setValue(listLearningSessions);
+                    participantSessions.setValue(listLearningSessions);
                 }
             }
             @Override
@@ -152,7 +152,14 @@ public class LearningSessionViewModel extends ViewModel {
     }
 
     public MutableLiveData<LearningSessionBO> enrollLearningSession(String sessionId, String userId) {
-        enrollSessionBO = null;
+        if (enrollSessionBO == null) {
+            enrollSessionBO = new MutableLiveData<LearningSessionBO>();
+            enroll(sessionId, userId);
+        }
+
+        return enrollSessionBO;
+    }
+    public void enroll(String sessionId, String userId) {
         mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
         mLearningSession.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -162,6 +169,10 @@ public class LearningSessionViewModel extends ViewModel {
                 if (eLearningSession != null) {
                     setParticipantLearningSession(eLearningSession, sessionId, userId);
                     enrollSessionBO.setValue(mapper.map(eLearningSession));
+                } else {
+                    LearningSessionBO hackBO = new LearningSessionBO();
+                    hackBO.setSessionId("THIS IS A HACK");
+                    enrollSessionBO.setValue(hackBO);
                 }
             }
 
@@ -170,7 +181,6 @@ public class LearningSessionViewModel extends ViewModel {
                 Log.w("TAG: ",databaseError.getMessage());
             }
         });
-        return enrollSessionBO;
     }
 
     // This method is for trainers to delete a learning session
