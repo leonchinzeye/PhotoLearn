@@ -54,6 +54,7 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
     private String mParam2;
     private ListView mListView;
     private LearningSessionListAdapter lslAdap;
+    private  android.support.v4.app.Fragment FragmentSelf;
 
     static public enum UserType {
         TRAINER, PARTICIPANT
@@ -102,6 +103,8 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
         View view = inflater.inflate(R.layout.fragment_learning_session_list, container, false);
 
         mListView = (ListView) view.findViewById(R.id.fragment_learning_session_list_view);
+
+        FragmentSelf = this;
 
         try {
             setListview();
@@ -171,7 +174,17 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
                         String value = input.getText().toString();
                         // Filter the BO for the specific learning session
                         dummyDao dao = new dummyDao();
-                        lslAdap.setDataSource(dao.GetLearningSession(value));
+                        LearningSessionViewModel vmLearningSession = ViewModelProviders.of(FragmentSelf).get(LearningSessionViewModel.class);
+                        vmLearningSession.getLearningSession(value).observe(FragmentSelf, new Observer<LearningSessionBO>() {
+                            @Override
+                            public void onChanged(@Nullable LearningSessionBO learningSessionBOS) {
+                                List<LearningSessionBO> lst = new ArrayList<LearningSessionBO>();
+                                lst.add(learningSessionBOS);
+                                lslAdap.setDataSource(lst);
+                                lslAdap.notifyDataSetChanged();
+                            }
+                        });
+
                     }
                 });
                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
