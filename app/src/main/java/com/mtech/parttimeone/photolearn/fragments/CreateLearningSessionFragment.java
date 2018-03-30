@@ -1,9 +1,12 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,10 +15,14 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.mtech.parttimeone.photolearn.Adapter.LearningSessionListAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -28,8 +35,8 @@ import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
 public class CreateLearningSessionFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "param1"; //SessionID
+    private static final String ARG_PARAM2 = "param2"; //Update/New
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -90,7 +97,31 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
         txtCourseDate = (EditText)view.findViewById(R.id.editTextStartDate);
         txtSessionID = (TextView)view.findViewById(R.id.create_SessionID);
 
-        txtSessionID.setText("Create New");
+        switch (mParam2){
+            case "NEW":
+                txtSessionID.setText("Create New");
+                break;
+
+            case "UPDATE":
+                txtSessionID.setText("Updating "+mParam1);
+                dummyDao dao = new dummyDao();
+                LearningSessionViewModel vmLearningSession = ViewModelProviders.of(this).get(LearningSessionViewModel.class);
+                vmLearningSession.getLearningSession(mParam1).observe(this, new Observer<LearningSessionBO>() {
+                    @Override
+                    public void onChanged(@Nullable LearningSessionBO learningSessionBOS) {
+                        txtCourseCode.setText(learningSessionBOS.getCourseCode());
+                        txtCourseModule.setText(learningSessionBOS.getCourseModule());
+                        txtCourseDate.setText(learningSessionBOS.getCourseDate());
+
+                    }
+                });
+                break;
+
+            default:
+                break;
+
+        }
+
 
         btnSave.setOnClickListener( new View.OnClickListener() {
 
@@ -110,13 +141,24 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
 
                 try {
 
-                    dao.createLearningSession(FragmentSelf,lsbo);
-                    Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") created!",Toast.LENGTH_SHORT).show();
-                    txtCourseCode.setText("");
-                    txtCourseModule.setText("");
-                    txtCourseDate.setText("");
+                    switch (mParam2){
+                        case "NEW":
+                            dao.createLearningSession(FragmentSelf,lsbo);
+                            Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") created!",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        case "UPDATE":
+                            dao.updateLearningSession(FragmentSelf,lsbo,lsbo.getSessionId());
+                            Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") updated!",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        default:
+                            break;
+
+                    }
+
                     BottomBarActivity act = (BottomBarActivity)getActivity();
-                    act.setCreateLearningSessionFragment();
+                    act.setLearningSessionListFragment();
 
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Learning Session already exists!",Toast.LENGTH_SHORT).show();
