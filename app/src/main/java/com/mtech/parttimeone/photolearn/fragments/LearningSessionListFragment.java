@@ -30,6 +30,7 @@ import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.dummyModel.LearningSession;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
+import com.mtech.parttimeone.photolearn.util.AppUtil;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +43,7 @@ import java.util.List;
  * Use the {@link LearningSessionListFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class LearningSessionListFragment extends android.support.v4.app.Fragment  {
+public class LearningSessionListFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     private static final String ARG_PARAM1 = "param1";
@@ -55,7 +56,7 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
     private LearningSessionListAdapter lslAdap;
 
     static public enum UserType {
-        TRAINER,PARTICIPANT
+        TRAINER, PARTICIPANT
     }
 
     private OnFragmentInteractionListener mListener;
@@ -121,14 +122,13 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
                 TextView sessiontitle = (TextView) view.findViewById(R.id.learning_session_title);
                 TextView sessionID = (TextView) view.findViewById(R.id.learning_session_id);
 
-                BottomBarActivity act = (BottomBarActivity)getActivity();
+                BottomBarActivity act = (BottomBarActivity) getActivity();
                 act.setTitleListFragment(sessionID.getText().toString());
 
                 //Toast.makeText(getBaseContext(), sessionID.getText(), Toast.LENGTH_LONG).show();
 
             }
         });
-
 
 
         return view;
@@ -152,8 +152,8 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
         switch (item.getItemId()) {
 
             case R.id.action_add:
-                BottomBarActivity act = (BottomBarActivity)getActivity();
-                act.setCreateLearningSessionFragment("","NEW");
+                BottomBarActivity act = (BottomBarActivity) getActivity();
+                act.setCreateLearningSessionFragment("", "NEW");
                 // Not implemented here
                 return false;
             case R.id.action_search:
@@ -224,31 +224,19 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
     }
 
     private void setListview() throws InterruptedException {
-        //Test class for displaying items
-        //TODO Should do to AsyncTask
-
-        dummyDao dao = new dummyDao();
-
-        //ArrayList<LearningSessionBO> lsl = dao.GetLearningSessionAll();
-
-
         LearningSessionViewModel vmLearningSession = ViewModelProviders.of(this).get(LearningSessionViewModel.class);
-        vmLearningSession.getLearningSessions(dao.getUserName(this), dao.getMode(this)).observe(this, new Observer<List<LearningSessionBO>>() {
+        vmLearningSession.getLearningSessions(AppUtil.getUserName(this), AppUtil.getMode(this)).observe(this, new Observer<List<LearningSessionBO>>() {
             @Override
             public void onChanged(@Nullable List<LearningSessionBO> learningSessionBOS) {
                 lslAdap = new LearningSessionListAdapter(getActivity(), learningSessionBOS);
                 mListView.setAdapter(lslAdap);
             }
         });
-//        List<LearningSessionBO> lsl =
 
-//        ArrayList<LearningSessionBO> lsl =dao.GetLearningSessionByUser(this,"");
-
-            }
+    }
 
     @Override
-    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
-    {
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo) {
         super.onCreateContextMenu(menu, v, menuInfo);
 
         //menu.setHeaderTitle("Select The Action");
@@ -259,21 +247,20 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
     }
 
     @Override
-    public boolean onContextItemSelected(MenuItem item){
+    public boolean onContextItemSelected(MenuItem item) {
 
         AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
         LearningSessionBO lbo = (LearningSessionBO) lslAdap.getItem(info.position);
 
-        if(item.getTitle()=="Update"){
-            BottomBarActivity act = (BottomBarActivity)getActivity();
-            act.setCreateLearningSessionFragment(lbo.getSessionId(),"UPDATE");
+        if (item.getTitle() == "Update") {
+            BottomBarActivity act = (BottomBarActivity) getActivity();
+            act.setCreateLearningSessionFragment(lbo.getSessionId(), "UPDATE");
             //Toast.makeText(getContext(),"Update Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
-        }
-        else if(item.getTitle()=="Delete"){
+        } else if (item.getTitle() == "Delete") {
             dummyDao dao = new dummyDao();
             try {
-                dao.deleteLearningSession(this,lbo.getSessionId());
-                Toast.makeText(getContext(),"Delete Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
+                dao.deleteLearningSession(this, lbo.getSessionId());
+                Toast.makeText(getContext(), "Delete Called for " + lbo.getSessionId(), Toast.LENGTH_LONG).show();
 
                 setListview();
 
@@ -282,10 +269,10 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
 
             } catch (Exception e) {
                 e.printStackTrace();
-                Toast.makeText(getContext(),"Error deleting: " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
+                Toast.makeText(getContext(), "Error deleting: " + lbo.getSessionId(), Toast.LENGTH_LONG).show();
             }
 
-        }else{
+        } else {
             return false;
         }
         return true;
