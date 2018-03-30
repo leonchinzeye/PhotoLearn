@@ -33,7 +33,7 @@ public class LearningSessionViewModel extends ViewModel {
     private LearningSessionRepository learningSessionRepository = new LearningSessionRepository();
 
     /* Global mapper */
-    private LearningSessionMapper mapper;
+    private LearningSessionMapper mapper = new LearningSessionMapper();
 
     /**
      * This points to the collection of user learning sessions
@@ -244,9 +244,10 @@ public class LearningSessionViewModel extends ViewModel {
     }
 
     //creates learning sessions filtered by participant user Id and stores the session Id
-    public boolean setParticipantLearningSession(LearningSessionBO mLearningSession, String sessionId, String userId) {
+    public boolean setParticipantLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) {
+        LearningSessionEntity eLearningSession = mapper.mapFrom(learningSessionBO);
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child(KEY_PARTICIPANT).child(userId).child(sessionId).setValue(mLearningSession);
+        mUserLearningSession.child(KEY_PARTICIPANT).child(userId).child(sessionId).setValue(eLearningSession);
 
         return true;
     }
