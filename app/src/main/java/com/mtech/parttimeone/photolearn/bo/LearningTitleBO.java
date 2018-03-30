@@ -11,7 +11,7 @@ public class LearningTitleBO extends TitleBO {
 
     }
 
-    public LearningTitleBO(String sessionId, String titleId, String title, String createdBy) {
-        super(sessionId, titleId, title, createdBy);
+    public LearningTitleBO(String sessionId, String title, String createdBy) {
+        super(sessionId, title, createdBy);
     }
 }

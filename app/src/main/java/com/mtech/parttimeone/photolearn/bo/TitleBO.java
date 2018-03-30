@@ -12,7 +12,6 @@ public abstract class TitleBO {
 
     private String uuid;
     private String sessionId;
-    private String titleId;
     private String title;
     private String createdBy;
 
@@ -23,9 +22,8 @@ public abstract class TitleBO {
 
     }
 
-    public TitleBO(String sessionId, String titleId, String title, String createdBy) {
+    public TitleBO(String sessionId, String title, String createdBy) {
         this.sessionId = sessionId;
-        this.titleId = titleId;
         this.title = title;
         this.createdBy = createdBy;
     }
@@ -45,10 +43,6 @@ public abstract class TitleBO {
     public void setSessionId(String sessionId) {
         this.sessionId = sessionId;
     }
-
-    public String getTitleId() { return titleId; }
-
-    public void setTitleId(String titleId) { this.titleId = titleId; }
 
     public String getTitle() {
         return title;

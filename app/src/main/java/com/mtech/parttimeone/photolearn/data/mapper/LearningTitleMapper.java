@@ -23,10 +23,6 @@ public class LearningTitleMapper extends FirebaseMapper<LearningTitleEntity, Lea
             titleBO.setSessionId(eLearningTitle.getSessionId());
         }
 
-        if (StringUtils.isNotEmpty(eLearningTitle.getTitleId())) {
-            titleBO.setTitleId(eLearningTitle.getTitleId());
-        }
-
         if (StringUtils.isNotEmpty(eLearningTitle.getTitle())) {
             titleBO.setTitle(eLearningTitle.getTitle());
         }
@@ -44,10 +40,6 @@ public class LearningTitleMapper extends FirebaseMapper<LearningTitleEntity, Lea
 
         if (StringUtils.isNotEmpty(titleBO.getSessionId())) {
             eLearningTitle.setSessionId(titleBO.getSessionId());
-        }
-
-        if (StringUtils.isNotEmpty(titleBO.getTitleId())) {
-            eLearningTitle.setTitleId(titleBO.getTitleId());
         }
 
         if (StringUtils.isNotEmpty(titleBO.getTitle())) {
