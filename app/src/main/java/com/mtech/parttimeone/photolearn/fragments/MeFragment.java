@@ -1,6 +1,7 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
 import android.app.LauncherActivity;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.content.Intent;
 import android.graphics.drawable.Drawable;
@@ -29,11 +30,13 @@ import com.google.firebase.auth.FirebaseUser;
 import com.mtech.parttimeone.photolearn.Adapter.ListModel;
 import com.mtech.parttimeone.photolearn.Adapter.MeListAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.MainActivity;
 import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
+import com.mtech.parttimeone.photolearn.bo.AccountBO;
 
 import java.util.ArrayList;
 
@@ -162,6 +165,11 @@ public class MeFragment extends Fragment implements AdapterView.OnItemClickListe
                 strmode="PARTICIPANT";
                 break;
         }
+
+        //update user's last active mode
+        AccountBO userAccount = new AccountBO(mAuth.getCurrentUser().getUid(),mAuth.getCurrentUser().getDisplayName(),mAuth.getCurrentUser().getEmail(),strmode);
+        AccountViewModel model = ViewModelProviders.of(this).get(AccountViewModel.class);
+        model.updateAccount(userAccount);
 
         s = s + strmode;
         tvMode.setText(s);
