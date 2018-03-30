@@ -90,14 +90,11 @@ public class QuizAttemptViewModel extends ViewModel {
 
     /**
      * Creates a Quiz Attempt as a participant
-     * @param QuizAttemptBO
+     * @param quizAttemptBO
      * @throws Exception if the Quiz session is not a unique session ID
      */
     public void createQuizAttempt(QuizAttemptBO quizAttemptBO) throws Exception {
-        QuizAttemptEntity eQuizAttempt = new QuizAttemptEntity();
-        eQuizAttempt = mapper.mapFrom(quizAttemptBO);
-
-        setQuizAttempt(eQuizAttempt);
+        setQuizAttempt(quizAttemptBO);
     }
 
     /**
@@ -130,7 +127,7 @@ public class QuizAttemptViewModel extends ViewModel {
         QuizAttemptEntity eQuizAttempt = mapper.mapFrom(quizAttemptBO);
 
         mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
-        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).setValue(quizAttemptBO);
+        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).child(quizAttemptBO.getAttemptId()).setValue(quizAttemptBO);
 
         return quizAttemptBO;
     }
@@ -191,13 +188,14 @@ public class QuizAttemptViewModel extends ViewModel {
 
 
     //creates Quiz Attempts filtered by session Id
-    public boolean setQuizAttempt(QuizAttemptEntity eQuizAttempt) {
+    public boolean setQuizAttempt(QuizAttemptBO quizAttemptBO) {
         mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
+        QuizAttemptEntity eQuizAttempt = new QuizAttemptEntity();
+        eQuizAttempt = mapper.mapFrom(quizAttemptBO);
+
         //get a unique key from firebase
         String key = mQuizAttemptRef.child(eQuizAttempt.getUserId()).push().getKey();
-        //set titleId to generated key
-        eQuizAttempt.setItemId(key);
-        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).setValue(eQuizAttempt);
+        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).child(key).setValue(eQuizAttempt);
 
         return true;
     }

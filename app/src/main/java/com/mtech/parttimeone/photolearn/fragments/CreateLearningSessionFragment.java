@@ -9,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.TextView;
 import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.R;
@@ -32,6 +33,10 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+    private EditText txtCourseCode;
+    private EditText txtCourseModule;
+    private EditText txtCourseDate;
+    private TextView txtSessionID;
 
     Button btnSave;
     android.support.v4.app.Fragment FragmentSelf;
@@ -79,31 +84,42 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
 
         FragmentSelf = this;
 
+        txtCourseCode = (EditText)view.findViewById(R.id.editTextModuleCode);
+        txtCourseModule = (EditText)view.findViewById(R.id.editTextModuleName);
+        txtCourseDate = (EditText)view.findViewById(R.id.editTextStartDate);
+        txtSessionID = (TextView)view.findViewById(R.id.create_SessionID);
+
+        txtSessionID.setText("Create New");
+
         btnSave.setOnClickListener( new View.OnClickListener() {
 
             @Override
             public void onClick(View v) {
                 // TODO Auto-generated method stub
                 LearningSessionBO lsbo = new LearningSessionBO();
-                EditText txtCourseCode = (EditText)view.findViewById(R.id.editTextModuleCode);
-                EditText txtCourseModule = (EditText)view.findViewById(R.id.editTextModuleName);
-                EditText txtCourseDate = (EditText)view.findViewById(R.id.editTextStartDate);
-                EditText txtSessionID = (EditText)view.findViewById(R.id.editTextSessionID);
+
 
 
                 lsbo.setCourseCode(txtCourseCode.getText().toString());
                 lsbo.setCourseModule(txtCourseModule.getText().toString());
                 lsbo.setCourseDate(txtCourseDate.getText().toString());
+                lsbo.setSessionId(lsbo.getCourseDate()+"-"+lsbo.getCourseCode()+"-M"+lsbo.getCourseModule());
 
                 dummyDao dao = new dummyDao();
 
                 try {
 
-                    dao.createLearningSession(FragmentSelf,lsbo,txtSessionID.getText().toString());
+                    dao.createLearningSession(FragmentSelf,lsbo);
+                    Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") created!",Toast.LENGTH_SHORT).show();
+                    txtCourseCode.setText("");
+                    txtCourseModule.setText("");
+                    txtCourseDate.setText("");
+                    getActivity().onBackPressed();
 
                 } catch (Exception e) {
                     Toast.makeText(getActivity(),"Learning Session already exists!",Toast.LENGTH_SHORT).show();
                     e.printStackTrace();
+                    return;
                 }
 
             }

@@ -5,9 +5,25 @@
     tools:context="com.mtech.parttimeone.photolearn.fragments.MeFragment">
 
     <!-- TODO: Update blank fragment layout -->
-    <ListView android:id="@+id/me_list"
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent">
-    </ListView>
+        android:layout_height="match_parent"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/textViewMode"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Mode"
+            android:textAppearance="@style/TextAppearance.Widget.AppCompat.Toolbar.Title" />
+
+        <ListView
+            android:id="@+id/me_list"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent">
+
+        </ListView>
+
+    </LinearLayout>
 
 </FrameLayout>
