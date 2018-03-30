@@ -86,6 +86,18 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         setDefaultFragment();
     }
 
+    // INIT the UI
+    private void initView(){
+        mFragmentManager = getSupportFragmentManager();
+        meFragment = new MeFragment();
+        //mainFragment = new Fragment();
+        //mainFragment = (Fragment) ItemRecyclerFragment.newInstance("MTECH-ORO-002","All about IOT", "TITLE");
+        //mainFragment = (Fragment) LearningSessionListFragment.newInstance("DUMMY ACCOUNT","LEARNING SESSION ID");
+        mainFragment =  (Fragment) LearningSessionListFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");;
+
+        setDefaultFragment();
+    }
+
     private void setCurrentFragment(Fragment fragment){
         mFragmentManager = getSupportFragmentManager();
         FragmentTransaction fragmentTransaction1 = mFragmentManager.beginTransaction();
@@ -109,7 +121,7 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         navigation.setSelectedItemId(R.id.navigation_main);
         navigation.setOnNavigationItemSelectedListener(mOnNavigationItemSelectedListener);
 
-        setLearningSessionListFragment();
+        initView();
     }
 
     @Override
@@ -142,14 +154,14 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         return mainFragment;
     }
 
-    public Fragment setCreateLearningTitleFragment(){
-        mainFragment = (Fragment) CreateLearningTitleFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");
+    public Fragment setCreateLearningTitleFragment(String learningSessionID){
+        mainFragment = (Fragment) CreateLearningTitleFragment.newInstance(learningSessionID,"TO_BE_REPLACED");
         intheView(mainFragment);
         return mainFragment;
     }
 
-    public Fragment setCreateQuizTitleFragment(){
-        mainFragment = (Fragment) CreateQuizTitleFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");
+    public Fragment setCreateQuizTitleFragment(String learningSessionID){
+        mainFragment = (Fragment) CreateQuizTitleFragment.newInstance(learningSessionID,"TO_BE_REPLACED");
         intheView(mainFragment);
         return mainFragment;
        // setDefaultFragment();

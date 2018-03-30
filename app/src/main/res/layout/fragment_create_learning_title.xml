@@ -10,7 +10,7 @@
         android:orientation="vertical">
 
         <EditText
-            android:id="@+id/editTextSessionID"
+            android:id="@+id/editTextLearningTitle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:ems="10"
@@ -19,6 +19,12 @@
             android:textStyle="italic"
             tools:layout_editor_absoluteX="0dp"
             tools:layout_editor_absoluteY="16dp" />
+
+        <Button
+            android:id="@+id/btnSaveLearningTitle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="Button" />
 
 
     </LinearLayout>

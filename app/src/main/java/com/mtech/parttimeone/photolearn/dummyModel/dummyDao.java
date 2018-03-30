@@ -1,11 +1,14 @@
 package com.mtech.parttimeone.photolearn.dummyModel;
 
+import android.app.Activity;
 import android.arch.lifecycle.ViewModelProviders;
 import android.support.v4.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
@@ -160,6 +163,28 @@ public class dummyDao {
         return userName;
     }
 
+    public UserType getMode(Fragment f){
+        GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)f.getActivity().getApplicationContext();
+        UserType ut;
+        ut = globalPhotoLearn.getmUserType();
+        return ut;
+    }
+
+    public String getUserName(Activity a){
+        GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)a.getApplicationContext();
+        FirebaseAuth mAuth;
+        String userName;
+        mAuth = globalPhotoLearn.getmAuth();
+        userName = mAuth.getCurrentUser().getUid();
+        return userName;
+    }
+
+    public UserType getMode(Activity a){
+        GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)a.getApplicationContext();
+        UserType ut;
+        ut = globalPhotoLearn.getmUserType();
+        return ut;
+    }
 
     public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO,String sessionID) throws Exception {
 
@@ -170,6 +195,27 @@ public class dummyDao {
 
     }
 
+    public void createLearningTitle(Fragment f, LearningTitleBO learningTitleBO) throws Exception {
+
+
+        LearningTitleViewModel lModel = ViewModelProviders.of(f).get(LearningTitleViewModel.class);
+
+        String userName =getUserName(f);
+
+        lModel.createLearningTitle(learningTitleBO);
+
+    }
+
+    public void createQuizTitle(Fragment f, QuizTitleBO QuizTitleBO) throws Exception {
+
+        QuizTitleViewModel lModel = ViewModelProviders.of(f).get(QuizTitleViewModel.class);
+
+        String userName =getUserName(f);
+
+        lModel.createQuizTitle(QuizTitleBO);
+
+    }
+    
     public ArrayList<LearningSessionBO> GetLearningSessionByUser(Fragment f, String userID) throws InterruptedException {
         //Dummy, To replace with real filter
 

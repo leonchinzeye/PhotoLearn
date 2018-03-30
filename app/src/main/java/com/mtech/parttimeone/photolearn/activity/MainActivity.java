@@ -32,6 +32,7 @@ import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 import com.mtech.parttimeone.photolearn.data.entity.AccountEntity;
+import com.mtech.parttimeone.photolearn.enumeration.UserType;
 
 public class MainActivity extends BaseActivity implements View.OnClickListener{
 
@@ -212,6 +213,8 @@ public class MainActivity extends BaseActivity implements View.OnClickListener{
             GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn)getApplicationContext();
             globalPhotoLearn.setmAuth(mAuth);
             globalPhotoLearn.setmGoogleSignInClient(mGoogleSignInClient);
+            //Added by Zhikai for mode settings
+            globalPhotoLearn.setmUserType(UserType.TRAINER);
 
             Intent learningSessionIntent = new Intent(this,BottomBarActivity.class);
             startActivity(learningSessionIntent);

@@ -12,18 +12,19 @@ import com.mtech.parttimeone.photolearn.bo.TitleBO;
 import com.mtech.parttimeone.photolearn.dummyModel.Title;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Created by Zhikai on 17/3/2018.
  */
 
-public class TitleListAdapter extends BaseAdapter {
+public class TitleListAdapter<T> extends BaseAdapter {
     private Context mContext;
     private LayoutInflater mInflater;
-    private ArrayList<TitleBO> mDataSource;
+    private List<T> mDataSource;
 
 
-    public TitleListAdapter(Context mContext, ArrayList<TitleBO> mDataSource) {
+    public TitleListAdapter(Context mContext, List<T> mDataSource) {
         this.mContext = mContext;
         this.mDataSource = mDataSource;
 

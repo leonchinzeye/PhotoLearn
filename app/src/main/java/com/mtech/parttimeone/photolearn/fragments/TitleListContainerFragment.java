@@ -113,11 +113,11 @@ public class TitleListContainerFragment extends android.support.v4.app.Fragment 
 
         switch(item.getItemId()){
             case R.id.action_add_quizitem:
-                act.setCreateQuizTitleFragment();
+                act.setCreateQuizTitleFragment(mParam1);
                 // Not implemented here
                 return false;
             case R.id.action_add_learningitem:
-                act.setCreateLearningTitleFragment();
+                act.setCreateLearningTitleFragment(mParam1);
                 // Not implemented here
                 return false;
             default:

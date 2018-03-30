@@ -233,7 +233,7 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
 
 
         LearningSessionViewModel vmLearningSession = ViewModelProviders.of(this).get(LearningSessionViewModel.class);
-        vmLearningSession.getLearningSessions(dao.getUserName(this), com.mtech.parttimeone.photolearn.enumeration.UserType.TRAINER).observe(this, new Observer<List<LearningSessionBO>>() {
+        vmLearningSession.getLearningSessions(dao.getUserName(this), dao.getMode(this)).observe(this, new Observer<List<LearningSessionBO>>() {
             @Override
             public void onChanged(@Nullable List<LearningSessionBO> learningSessionBOS) {
                 lslAdap = new LearningSessionListAdapter(getActivity(), learningSessionBOS);
@@ -271,4 +271,14 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
         return true;
     }
 
+    @Override
+    public void onResume() {
+        super.onResume();
+
+        try {
+            setListview();
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
+    }
 }
