@@ -55,6 +55,8 @@ public class TitleListAdapter<T> extends BaseAdapter {
         TextView titleTextView =
                 (TextView) rowView.findViewById(R.id.learning_session_title);
 
+        TextView titleIDTextView =
+                (TextView) rowView.findViewById(R.id.title_id);
 
         TextView creatorTextView =
                 (TextView) rowView.findViewById(R.id.learning_session_creator);
@@ -64,6 +66,7 @@ public class TitleListAdapter<T> extends BaseAdapter {
 
         titleTextView.setText(title.getTitle());
         creatorTextView.setText(title.getSessionId());
+        titleIDTextView.setText(title.getUuid());
         return rowView;
     }
 }
