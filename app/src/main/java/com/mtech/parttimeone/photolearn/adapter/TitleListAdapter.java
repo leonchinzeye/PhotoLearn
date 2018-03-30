@@ -50,20 +50,23 @@ public class TitleListAdapter<T> extends BaseAdapter {
     @Override
     public View getView(int i, View view, ViewGroup viewGroup) {
         // Get view for row item
-        View rowView = mInflater.inflate(R.layout.list_learningsession_layout, viewGroup, false);
+        View rowView = mInflater.inflate(R.layout.list_title_layout, viewGroup, false);
 
         TextView titleTextView =
                 (TextView) rowView.findViewById(R.id.learning_session_title);
 
+        TextView titleIDTextView =
+                (TextView) rowView.findViewById(R.id.title_id);
 
         TextView creatorTextView =
-                (TextView) rowView.findViewById(R.id.learning_session_creator);
+                (TextView) rowView.findViewById(R.id.learning_title_creator);
 
 
         TitleBO title = (TitleBO) getItem(i);
 
         titleTextView.setText(title.getTitle());
         creatorTextView.setText(title.getSessionId());
+        titleIDTextView.setText(title.getUuid());
         return rowView;
     }
 }

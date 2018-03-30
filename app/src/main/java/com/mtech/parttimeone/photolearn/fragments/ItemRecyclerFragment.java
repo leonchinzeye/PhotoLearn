@@ -1,24 +1,41 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.support.v7.widget.DefaultItemAnimator;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.LinearSnapHelper;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SnapHelper;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 
+import com.mtech.parttimeone.photolearn.Adapter.TitleListAdapter;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.Adapter.ItemRecyclerAdapter;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
+import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
+import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
+import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
+import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
+import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
+import com.mtech.parttimeone.photolearn.bo.TitleBO;
 import com.mtech.parttimeone.photolearn.dummyModel.Item;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -63,10 +80,11 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
     public static ItemRecyclerFragment newInstance(String param1, String param2, String param3) {
         ItemRecyclerFragment fragment = new ItemRecyclerFragment();
         Bundle args = new Bundle();
-        args.putString(ARG_PARAM1, param1);
-        args.putString(ARG_PARAM2, param2);
-        args.putString(ARG_PARAM3, param3);
+        args.putString(ARG_PARAM1, param1); //SessionID
+        args.putString(ARG_PARAM2, param2); //TitleID
+        args.putString(ARG_PARAM3, param3); //Type
         fragment.setArguments(args);
+
         return fragment;
     }
 
@@ -78,6 +96,49 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
             mParam2 = getArguments().getString(ARG_PARAM2);
             mParam3 = getArguments().getString(ARG_PARAM3);
         }
+
+
+        setHasOptionsMenu(true);
+    }
+
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        super.onCreateOptionsMenu(menu, inflater);
+        inflater.inflate(R.menu.menu_add, menu);
+
+    }
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        BottomBarActivity act = (BottomBarActivity)getActivity();
+
+        switch(item.getItemId()){
+            case R.id.action_add:
+                switch (mParam3) {
+                    case "TITLE":
+                        Intent it = new Intent(getActivity(), LearnItemCreationActivity.class);
+                        it.putExtra("TitleID", mParam2);
+                        startActivity(it);
+                        break;
+                    case "QUIZ":
+                        Intent iq = new Intent(getActivity(), QuizItemCreationActivity.class);
+                        iq.putExtra("TitleID", mParam2);
+                        startActivity(iq);
+                        break;
+
+                    default:
+
+                        break;
+
+                }
+
+                // Not implemented here
+                return false;
+
+            default:
+                break;
+        }
+
+        return false;
     }
 
     @Override

@@ -101,7 +101,7 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
             public void onItemClick(AdapterView<?> parent, View view, int position,
                                     long id) {
 
-                TextView sessiontitle = (TextView) view.findViewById(R.id.learning_session_title);
+                TextView sessiontitleid = (TextView) view.findViewById(R.id.title_id);
 
                 //Converted to fragment switching
                 //Intent myIntent = new Intent(getActivity(), ItemListActivity.class);
@@ -111,7 +111,7 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
                 //getActivity().startActivity(myIntent);
 
                 BottomBarActivity act = (BottomBarActivity)getActivity();
-                act.setItemListFragment(mParam1,sessiontitle.getText().toString(),mParam2);
+                act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
 
                 //Toast.makeText(getBaseContext(), sessionID.getText(), Toast.LENGTH_LONG).show();
 
