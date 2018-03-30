@@ -110,11 +110,13 @@ public class TitleListContainerFragment extends android.support.v4.app.Fragment 
 
         switch (dao.getMode(this)){
             case PARTICIPANT:
+                menu.getItem(0).setEnabled(true);
+                menu.getItem(1).setEnabled(false);
                 break;
 
             case TRAINER:
                 menu.getItem(0).setEnabled(false);
-                menu.getItem(1).setEnabled(false);
+                menu.getItem(1).setEnabled(true);
                 break;
 
         }

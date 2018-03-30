@@ -3,6 +3,7 @@ package com.mtech.parttimeone.photolearn.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
@@ -24,6 +25,8 @@ import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.Adapter.TitleListAdapter;
+import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
+import com.mtech.parttimeone.photolearn.activity.QuizItemDetailActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
 import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
@@ -54,6 +57,7 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
 
     private ListView mListView;
     private TitleListAdapter TitleAdapter;
+    android.support.v4.app.Fragment FragmentSelf;
 
     private OnFragmentInteractionListener mListener;
 
@@ -97,7 +101,7 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
         setListview(container.getContext());
         registerForContextMenu(mListView);
 
-
+        FragmentSelf = this;
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -113,8 +117,21 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
                 //myIntent.putExtra("Type", mParam2); //Optional parameters
                 //getActivity().startActivity(myIntent);
 
-                BottomBarActivity act = (BottomBarActivity)getActivity();
-                act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                dummyDao dao = new dummyDao();
+                switch (dao.getMode(FragmentSelf)){
+                    case PARTICIPANT:
+                        Intent iq = new Intent(getActivity(), QuizItemDetailActivity.class);
+                        iq.putExtra("TitleID", mParam2);
+                        startActivity(iq);
+                        break;
+
+                    case TRAINER:
+                        BottomBarActivity act = (BottomBarActivity)getActivity();
+                        act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                        break;
+
+                }
+
 
                 //Toast.makeText(getBaseContext(), sessionID.getText(), Toast.LENGTH_LONG).show();
 
@@ -270,12 +287,13 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
     @Override
     public boolean onContextItemSelected(MenuItem item){
 
+        BottomBarActivity act = (BottomBarActivity)getActivity();
 
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        dummyDao dao = new dummyDao();
 
         if(item.getTitle()=="Update"){
-            BottomBarActivity act = (BottomBarActivity)getActivity();
 
-            AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
 
             switch (mParam2) {
                 case "TITLE":
@@ -284,6 +302,7 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
                     break;
                 case "QUIZ":
                     QuizTitleBO qbo = (QuizTitleBO) TitleAdapter.getItem(info.position);
+                    act.setCreateQuizTitleFragment(qbo.getUuid(),"UPDATE",mParam1);
                     break;
 
                 default:
@@ -296,6 +315,33 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
             Toast.makeText(getContext(),"Update Called",Toast.LENGTH_LONG).show();
         }
         else if(item.getTitle()=="Delete"){
+
+            switch (mParam2) {
+                case "TITLE":
+                    LearningTitleBO lbo = ( LearningTitleBO) TitleAdapter.getItem(info.position);
+                    try {
+                        dao.deleteLearningTitle(FragmentSelf,lbo);
+                        setListview(getContext());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "QUIZ":
+                    QuizTitleBO qbo = (QuizTitleBO) TitleAdapter.getItem(info.position);
+
+                    try {
+                        dao.deleteQuizTitle(FragmentSelf,qbo);
+                        setListview(getContext());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                default:
+                    break;
+
+            }
+
             Toast.makeText(getContext(),"Delete Called",Toast.LENGTH_LONG).show();
         }else{
             return false;

@@ -180,7 +180,7 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
 
         //itemList = dao.GetLearningItemList(mParam1,mParam2);
 
-        updateBtn = (Button) view.findViewById(R.id.buttonUpdate);
+      /*  updateBtn = (Button) view.findViewById(R.id.buttonUpdate);
         deleteBtn = (Button) view.findViewById(R.id.buttonDelete);
 
         updateBtn.setOnClickListener(new View.OnClickListener() {
@@ -222,7 +222,7 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
                     e.printStackTrace();
                 }
             }
-        });
+        });*/
 
         switch (mParam3){
             case "TITLE":

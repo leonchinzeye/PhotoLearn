@@ -129,7 +129,7 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
                 dummyDao dao = new dummyDao();
 
                 ltbo.setTitle(txtLearningTitle.getText().toString());
-                ltbo.setSessionId(mParam1);
+                ltbo.setSessionId(mParam3);
                 ltbo.setCreatedBy(dao.getUserName(FragmentSelf));
                 //ltbo.setTitleId(UUID.randomUUID().toString());
 

@@ -227,7 +227,23 @@ public class dummyDao {
 
     }
 
+    public void deleteLearningTitle(Fragment f,LearningTitleBO bo) throws Exception {
 
+        LearningTitleViewModel lModel = ViewModelProviders.of(f).get(LearningTitleViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.deleteLearningTitle(bo);
+
+    }
+
+    public void deleteQuizTitle(Fragment f,QuizTitleBO bo) throws Exception {
+
+        QuizTitleViewModel lModel = ViewModelProviders.of(f).get(QuizTitleViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.deleteQuizTitle(bo);
+
+    }
     public void updateLearningSession(Fragment f, LearningSessionBO learningSessionBO, String sessionId) throws Exception {
 
         LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
