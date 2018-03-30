@@ -74,8 +74,8 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
     }
 
     //function for click the done button.
-    public void createtheLearningItem(Uri file) {
-        String title = adapter.getTitle();
+    public void createtheLearningItem(Uri file){
+        String title = adapter.itemBO.getItemtitle();
         setItemType(LEARNING_TYPE);
         if (StringUtils.isBlank(title)) {
             Toast toast = Toast.makeText(LearnItemCreationActivity.this, "Title should not be blank.", Toast.LENGTH_LONG);

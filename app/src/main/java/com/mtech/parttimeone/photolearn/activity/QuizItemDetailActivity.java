@@ -56,11 +56,11 @@ public class QuizItemDetailActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        if (!isReview){
+       // if (!isReview){
             getMenuInflater().inflate(R.menu.menu_edit_quizitemdetail_submit,menu);
             return super.onCreateOptionsMenu(menu);
-        }
-        return false;
+        //}
+       // return false;
     }
 
     @Override
@@ -93,7 +93,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist.add("true");
         anslist.add("false");
         obj_0.setAnswerOption(anslist);
-        QuizAttemptBO attemptBO_0 = new QuizAttemptBO("",new ArrayList<>());
+        QuizAttemptBO attemptBO_0 = new QuizAttemptBO();
         attemptBO_0.setAnswer(anslist);
         obj_0.setQuizAttemptBO(attemptBO_0);
         List<String> optionList = new ArrayList<>();
@@ -114,7 +114,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist1.add("true");
         anslist1.add("false");
         obj_1.setAnswerOption(anslist1);
-        QuizAttemptBO attemptBO_01 = new QuizAttemptBO("",new ArrayList<>());;
+        QuizAttemptBO attemptBO_01 = new QuizAttemptBO();;
         attemptBO_01.setAnswer(anslist1);
         obj_1.setQuizAttemptBO(attemptBO_01);
         List<String> optionList1 = new ArrayList<>();
@@ -138,7 +138,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist2.add("false");
         // answer option
         obj_2.setAnswerOption(anslist2);
-        QuizAttemptBO attemptBO_02 = new QuizAttemptBO("",new ArrayList<>());;
+        QuizAttemptBO attemptBO_02 = new QuizAttemptBO();;
         attemptBO_02.setAnswer(anslist2);
         obj_2.setQuizAttemptBO(attemptBO_02);
         List<String> optionList2 = new ArrayList<>();
@@ -162,7 +162,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist3.add("true");
         anslist3.add("false");
         obj_3.setAnswerOption(anslist);
-        QuizAttemptBO attemptBO_03 = new QuizAttemptBO("",new ArrayList<>());;
+        QuizAttemptBO attemptBO_03 = new QuizAttemptBO();;
         attemptBO_03.setAnswer(anslist3);
         obj_3.setQuizAttemptBO(attemptBO_03);
         List<String> optionList3 = new ArrayList<>();
@@ -190,7 +190,7 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist_4.add("false");
 
         obj_4.setAnswerOption(anslist_4);
-        QuizAttemptBO attemptBO_04 = new QuizAttemptBO("",new ArrayList<>());;
+        QuizAttemptBO attemptBO_04 = new QuizAttemptBO();;
         attemptBO_04.setAnswer(anslist4);
         obj_4.setQuizAttemptBO(attemptBO_04);
         List<String> optionList4 = new ArrayList<>();
@@ -234,14 +234,26 @@ public class QuizItemDetailActivity extends BaseActivity {
     }
 
     private void ExitandSave(){
+
     }
 
     private void ExitandUnsave(){
 
+        for (int i=0;i<itemArray.size();i++){
+
+        }
+
     }
 
     private void Submit(){
-        showScoreReview("Your total score is 70%, Go back and review the Answer?");
+        int count = getResult();
+
+        for (int i =0;i<itemArray.size();i++){
+            QuizItemBO itemBO = itemArray.get(i);
+            QuizAttemptBO attemptBO = itemBO.getQuizAttemptBO();
+        }
+
+        showScoreReview("Your total score is " + count+"/"+ itemArray.size()+",go back and review the Answer");
     }
 
     public void updateData(QuizItemBO obj,int position){
@@ -255,6 +267,7 @@ public class QuizItemDetailActivity extends BaseActivity {
     }
 
     private void showScoreReview(String content){
+
        AlertDialog.Builder builder = new AlertDialog.Builder(this);
        builder.setTitle("Score");
        builder.setMessage(content);
@@ -267,6 +280,19 @@ public class QuizItemDetailActivity extends BaseActivity {
        builder.create();
        builder.show();
 
+   }
+
+   private int getResult(){
+
+       int count = 0;
+       for (int i=0;i<itemArray.size();i++){
+           QuizItemBO itemObj = itemArray.get(i);
+           if (itemObj.isAnsCorrect()){
+               count ++;
+           }
+       }
+
+       return count;
    }
 
 }

@@ -17,6 +17,7 @@ import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.MainActivity;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
+import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 
 /**
  * Created by changling on 18/3/18.
@@ -29,23 +30,7 @@ public class LearningItemCreationAdapter extends BaseAdapter {
 
     private Context context;
 
-    private String desc_photo;
-    private String title;
-    public void setTitle(String title) {
-        this.title = title;
-    }
-
-    public String getTitle() {
-        return title;
-    }
-
-    public String getDesc_photo() {
-        return desc_photo;
-    }
-
-    public void setDesc_photo(String desc_photo) {
-        this.desc_photo = desc_photo;
-    }
+    public LearningItemBO itemBO = new LearningItemBO();
 
     public LearningItemCreationAdapter(Context context){
         this.context = context;
@@ -144,9 +129,9 @@ public class LearningItemCreationAdapter extends BaseAdapter {
         }
 
         if (position ==0){
-            holder.editText.setText(title);
+            holder.editText.setText(!TextUtils.isEmpty(itemBO.getItemtitle()) ? itemBO.getItemDesc():"");
         }else if(position==1){
-            holder.editText.setText(desc_photo);
+            holder.editText.setText(!TextUtils.isEmpty(itemBO.getItemDesc()) ? itemBO.getItemDesc():"");
         }
         TextWatcher watcher = new TextWatcher() {
             @Override
@@ -162,17 +147,17 @@ public class LearningItemCreationAdapter extends BaseAdapter {
             public void afterTextChanged(Editable s) {
                 if (TextUtils.isEmpty(s)) {
                     if (position ==0){
-                        title = "";
+                        itemBO.setItemtitle("");
                     }else if(position==1){
-                        desc_photo = "";
+                        itemBO.setItemDesc("");
                     }
                 } else {
                     if (position ==0){
-                        title = s.toString();
-                        Toast.makeText(context, title, Toast.LENGTH_SHORT).show();
+                        itemBO.setItemtitle(s.toString());
+                       // Toast.makeText(context, title, Toast.LENGTH_SHORT).show();
                     }else if(position==1){
-                        desc_photo = s.toString();
-                        Toast.makeText(context, desc_photo, Toast.LENGTH_SHORT).show();
+                        itemBO.setItemDesc(s.toString());
+                        //Toast.makeText(context, desc_photo, Toast.LENGTH_SHORT).show();
                     }
                 }
 
