@@ -14,7 +14,8 @@ import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.data.entity.QuizTitleEntity;
 import com.mtech.parttimeone.photolearn.data.mapper.QuizTitleMapper;
 import com.mtech.parttimeone.photolearn.data.repository.QuizTitleRepository;
-import com.mtech.parttimeone.photolearn.data.repository.UserTitleRepository;
+
+import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -27,205 +28,243 @@ public class QuizTitleViewModel extends ViewModel {
     private MutableLiveData<List<QuizTitleBO>> quizTitleBOs;
     private MutableLiveData<QuizTitleBO> quizTitleBO;
 
-    /** This points to the collection of Quiz titles **/
+    /* Global mapper */
+    private QuizTitleMapper mapper = new QuizTitleMapper();
+
+    /* This points to the collection of Quiz titles */
     private QuizTitleRepository quizTitleRepository = new QuizTitleRepository();
 
-    /** This points to the collection of user titles **/
-    private UserTitleRepository userTitleRepository = new UserTitleRepository();
-
     private DatabaseReference mQuizTitleRef;
-    private DatabaseReference mUserTitleRef;
 
     /**
      * This method loads just a single Quiz title
+     *
      * @param sessionId
+     * @param titleId
      * @return QuiztitleBO
      */
-    public LiveData<QuizTitleBO> getQuizTitle(String sessionId) {
+    public LiveData<QuizTitleBO> getQuizTitle(String sessionId, String titleId) {
         if (quizTitleBO == null) {
             quizTitleBO = new MutableLiveData<QuizTitleBO>();
-            loadQuizTitle(sessionId);
         }
+        loadQuizTitle(sessionId, titleId);
+
         return quizTitleBO;
     }
 
     /**
-     * This method loads just all Quiz titles
+     * This method loads all Quiz titles belonging to a session
+     *
+     * @param sessionId
+     * @return QuiztitleBO
+     */
+    public LiveData<List<QuizTitleBO>> getQuizTitles(String sessionId) {
+        if (quizTitleBOs == null) {
+            quizTitleBOs = new MutableLiveData<>();
+        }
+        loadQuizTitles(sessionId,null);
+
+        return quizTitleBOs;
+    }
+
+    /**
+     * This method loads all Quiz titles that the user created belonging to {@Code sessionId
+     *
      * @param userId
      * @param sessionId
      * @return list of QuiztitleBO
      */
     public LiveData<List<QuizTitleBO>> getQuizTitles(String sessionId, String userId) {
-        if (sessionId!=""){
-            loadAllQuizTitles(sessionId);
-        } else {
-            loadTrainerQuizTitles(userId);
+        if (quizTitleBOs == null) {
+            quizTitleBOs = new MutableLiveData<>();
         }
+        loadQuizTitles(sessionId, userId);
+
         return quizTitleBOs;
     }
 
     @Override
     protected void onCleared() {
         quizTitleRepository.removeListener();
-        userTitleRepository.removeListener();
-    }
-
-    private void loadQuizTitle(String sessionId) {
-        mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        mQuizTitleRef.child(sessionId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                QuizTitleEntity eQuizTitle = dataSnapshot.getValue(QuizTitleEntity.class);
-
-                if (eQuizTitle!= null) {
-                    QuizTitleMapper mapper = new QuizTitleMapper();
-                    quizTitleBO.setValue(mapper.map(eQuizTitle));
-                }
-            }
-
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
-            }
-        });
     }
 
     /**
      * Creates a Quiz title
+     *
      * @param quizTitleBO
-     * @param userId
      * @throws Exception if the Quiz session is not a unique session ID
      */
-    public void createQuizTitle(QuizTitleBO quizTitleBO, String sessionId, String userId) throws Exception {
-        //inserts Quiz_titles
-        setQuizTitle(quizTitleBO, sessionId);
-        //inserts user_titles -> trainers
-        setTrainerQuizTitle(quizTitleBO, sessionId, userId);
+    public boolean createQuizTitle(QuizTitleBO quizTitleBO) throws Exception {
+        QuizTitleEntity eQuizTitle = new QuizTitleEntity();
+        eQuizTitle = mapper.mapFrom(quizTitleBO);
+
+        setQuizTitle(eQuizTitle);
+        return true;
     }
 
-    // This method is for trainers to delete a Quiz title
-    public void deleteQuizTitle(String sessionId, String userId) {
-        //deletes Quiz_titles
-        //deletes user_titles -> trainers
-        removeQuizTitle(sessionId, userId);
+    /**
+     * Deletes a Quiz title
+     *
+     * @param quizTitleBO
+     * @throws Exception if the Quiz session is not a unique session ID
+     */
+    public void deleteQuizTitle(QuizTitleBO quizTitleBO) {
+        removeQuizTitle(quizTitleBO.getSessionId(), quizTitleBO.getUuid());
     }
 
-    // TODO
-    // This is for trainers to update a Quiz session
-    public QuizTitleBO updateQuizTitle(QuizTitleBO quizTitleBO, String sessionId , String userId) {
+    /**
+     * Deletes all quiz titles associated with a session
+     *
+     * @param sessionId
+     * @throws Exception if the Quiz session is not a unique session ID
+     */
+    public void deleteFromSession(String sessionId) {
+        removeQuizTitle(sessionId);
+    }
+
+    /**
+     * For trainer to update the quiz title
+     *
+     * @param quizTitleBO
+     * @return
+     */
+    public QuizTitleBO updateQuizTitle(QuizTitleBO quizTitleBO) {
+        QuizTitleEntity eQuizTitle = mapper.mapFrom(quizTitleBO);
+
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        //since the actual changes are not specified so update the entire node
-        mQuizTitleRef.child(sessionId).setValue(quizTitleBO);
-
-        //update trainer session data
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("trainers").addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                        if(sessionSnapshot.hasChild(sessionId)) {
-                            sessionSnapshot.child(sessionId).getRef().setValue(quizTitleBO);
-                        }
-                    }
-                }
-            }
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
-            }
-        });
+        mQuizTitleRef.child(eQuizTitle.getSessionId()).child(eQuizTitle.getTitleId()).setValue(eQuizTitle);
 
         return quizTitleBO;
     }
 
-    //this loads all titles based on sessionId
-    private void loadAllQuizTitles(String sessionId) {
+    private void loadQuizTitle(String sessionId, String titleId) {
+        mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
+        mQuizTitleRef.child(sessionId).child(titleId).addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                QuizTitleEntity eQuizTitle = dataSnapshot.getValue(QuizTitleEntity.class);
+
+                if (eQuizTitle != null) {
+                    QuizTitleBO titleBO = mapper.map(eQuizTitle);
+                    titleBO.setUuid(dataSnapshot.getKey());
+                    quizTitleBO.setValue(titleBO);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ", databaseError.getMessage());
+            }
+        });
+    }
+
+    private void loadQuizTitles(String sessionId, String userId) {
+        if (StringUtils.isNotEmpty(sessionId) && StringUtils.isEmpty(userId)) {
+            loadSessionQuizTitles(sessionId);
+            return;
+        }
+
+        if (StringUtils.isNotEmpty(sessionId) && StringUtils.isNotEmpty(userId)) {
+            loadSessionUserQuizTitles(sessionId, userId);
+        }
+
+        if (StringUtils.isEmpty(sessionId) && StringUtils.isEmpty(userId)) {
+            quizTitleBOs = new MutableLiveData<List<QuizTitleBO>>();
+            return;
+        }
+    }
+
+    private void loadSessionQuizTitles(String sessionId) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
         mQuizTitleRef.child(sessionId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     List<QuizTitleBO> listQuizTitles = new ArrayList<>();
-                    QuizTitleMapper mapper = new QuizTitleMapper();
-
+                    
                     for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                        QuizTitleEntity entity = sessionSnapshot.getValue(QuizTitleEntity.class);
-                        QuizTitleBO QuizTitleBO = mapper.map(entity);
+                        QuizTitleEntity eQuizTitle = sessionSnapshot.getValue(QuizTitleEntity.class);
+                        QuizTitleBO QuizTitleBO = mapper.map(eQuizTitle);
+                        QuizTitleBO.setUuid(dataSnapshot.getKey());
                         listQuizTitles.add(QuizTitleBO);
                     }
                     quizTitleBOs.setValue(listQuizTitles);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
     }
 
-    private void loadTrainerQuizTitles(String userId) {
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("trainers").child(userId).addValueEventListener(new ValueEventListener() {
+    private void loadSessionUserQuizTitles(String sessionId, String userId) {
+        mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
+        mQuizTitleRef.child(sessionId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     List<QuizTitleBO> listQuizTitles = new ArrayList<>();
-                    QuizTitleMapper mapper = new QuizTitleMapper();
 
-                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                        QuizTitleEntity entity = sessionSnapshot.getValue(QuizTitleEntity.class);
-                        QuizTitleBO QuizTitleBO = mapper.map(entity);
-                        listQuizTitles.add(QuizTitleBO);
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        QuizTitleEntity eTitle = snapshot.getValue(QuizTitleEntity.class);
+                        if (StringUtils.equals(userId, eTitle.getCreatedBy())) {
+                            QuizTitleBO eQuizTitle = mapper.map(eTitle);
+                            eQuizTitle.setUuid(snapshot.getKey());
+                            listQuizTitles.add(eQuizTitle);
+                        }
                     }
                     quizTitleBOs.setValue(listQuizTitles);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
     }
 
-    //creates Quiz titles filtered by session Id
-    public boolean setQuizTitle(QuizTitleBO quizTitleBO, String sessionId) {
+    public boolean setQuizTitle(QuizTitleEntity eQuizTitle) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        mQuizTitleRef.child(sessionId).setValue(quizTitleBO);
+
+        //get a unique key from firebase
+        String key = mQuizTitleRef.child(eQuizTitle.getSessionId()).push().getKey();
+        //set titleId to generated key
+        eQuizTitle.setTitleId(key);
+        mQuizTitleRef.child(eQuizTitle.getSessionId()).child(eQuizTitle.getTitleId()).setValue(eQuizTitle);
 
         return true;
     }
 
-    //creates Quiz titles filtered by trainer user Id and stores the session Id
-    public boolean setTrainerQuizTitle(QuizTitleBO quizTitleBO, String sessionId, String userId) {
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("trainers").child(userId).child(sessionId).setValue(quizTitleBO);
-
-        return true;
-    }
-
-    public boolean removeQuizTitle(String sessionId, String userId) {
+    public boolean removeQuizTitle(String sessionId) {
         mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
-        mQuizTitleRef.child(sessionId).removeValue();
-
-        //remove trainer links
-        mUserTitleRef = FirebaseDatabase.getInstance().getReference(userTitleRepository.getRootNode());
-        mUserTitleRef.child("trainers").addListenerForSingleValueEvent(new ValueEventListener() {
+        mQuizTitleRef.addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     for (DataSnapshot titleSnapshot : dataSnapshot.getChildren()) {
-                        if(titleSnapshot.hasChild(sessionId)) {
-                            titleSnapshot.child(sessionId).getRef().setValue(null);
+                        String titleId = titleSnapshot.getKey();
+                        QuizItemViewModel itemVM = new QuizItemViewModel();
+//                        itemVM.deleteFromTitle(titleId);
                         }
                     }
-                }
+                    mQuizTitleRef.child(sessionId).removeValue();
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-                Log.w("TAG: ",databaseError.getMessage());
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
+        return true;
+    }
+
+    public boolean removeQuizTitle(String sessionId, String titleId) {
+        mQuizTitleRef = FirebaseDatabase.getInstance().getReference(quizTitleRepository.getRootNode());
+        mQuizTitleRef.child(sessionId).child(titleId).removeValue();
+
         return true;
     }
 }
