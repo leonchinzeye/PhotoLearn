@@ -35,18 +35,6 @@
                 tools:text="Title" />
 
             <TextView
-                android:id="@+id/title_id"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="8dp"
-                android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
-                android:textSize="24sp"
-
-                android:visibility="visible"
-                tools:text="TitleID" />
-
-            <TextView
                 android:id="@+id/learning_title_creator"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -57,6 +45,21 @@
                 android:maxLines="3"
                 android:textSize="16sp"
                 tools:text="Creator" />
+
+            <TextView
+                android:id="@+id/title_id"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="8dp"
+                android:layout_marginStart="8dp"
+                android:layout_marginTop="8dp"
+
+                android:textAppearance="@style/TextAppearance.AppCompat.Caption"
+                android:textSize="8sp"
+                android:textStyle="italic"
+                android:visibility="visible"
+                tools:text="TitleID" />
+
         </LinearLayout>
     </android.support.v7.widget.CardView>
 
