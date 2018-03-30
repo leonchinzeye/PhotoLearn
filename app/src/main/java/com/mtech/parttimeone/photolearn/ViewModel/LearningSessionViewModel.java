@@ -141,11 +141,11 @@ public class LearningSessionViewModel extends ViewModel {
      * @param userId
      * @throws Exception if the learning session is not a unique session ID
      */
-    public void createLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) throws Exception {
+    public void createLearningSession(LearningSessionBO learningSessionBO, String userId) throws Exception {
         //inserts learning_sessions
-        setLearningSession(learningSessionBO, sessionId);
+        setLearningSession(learningSessionBO);
         //inserts user_learning_sessions -> trainers
-        setTrainerLearningSession(learningSessionBO, sessionId, userId);
+        setTrainerLearningSession(learningSessionBO, userId);
     }
 
     /**
@@ -222,25 +222,25 @@ public class LearningSessionViewModel extends ViewModel {
     }
 
     //creates learning sessions filtered by session Id
-    public boolean setLearningSession(LearningSessionBO learningSessionBO, String sessionId) {
+    public boolean setLearningSession(LearningSessionBO learningSessionBO) {
         LearningSessionEntity eLearningSession;
         LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
         eLearningSession = learningSessionMapper.mapFrom(learningSessionBO);
 
         mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mLearningSession.child(sessionId).setValue(eLearningSession);
+        mLearningSession.child(learningSessionBO.getSessionId()).setValue(eLearningSession);
 
         return true;
     }
 
     //creates learning sessions filtered by trainer user Id and stores the session Id
-    public boolean setTrainerLearningSession(LearningSessionBO learningSessionBO, String sessionId, String userId) {
+    public boolean setTrainerLearningSession(LearningSessionBO learningSessionBO, String userId) {
         LearningSessionEntity eLearningSession;
         LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
         eLearningSession = learningSessionMapper.mapFrom(learningSessionBO);
 
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child(KEY_TRAINER).child(userId).child(sessionId).setValue(eLearningSession);
+        mUserLearningSession.child(KEY_TRAINER).child(userId).child(learningSessionBO.getSessionId()).setValue(eLearningSession);
 
         return true;
     }
