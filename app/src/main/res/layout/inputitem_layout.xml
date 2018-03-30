@@ -8,9 +8,10 @@
         android:id="@+id/text_input"
         android:layout_width="match_parent"
         android:layout_height="80dp"
+        android:background="@null"
         android:gravity="left"
         android:hint="Title..."
-        android:background="@null"/>
+        android:textSize="16sp" />
     <!--android:inputType="textPassword"-->
     <!--android:textColor="#fefefe"-->
 

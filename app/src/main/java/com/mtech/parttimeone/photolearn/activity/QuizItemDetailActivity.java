@@ -20,6 +20,8 @@ import com.mtech.parttimeone.photolearn.Adapter.QuizItemDetailAdapter;
 import com.mtech.parttimeone.photolearn.Adapter.QuizItemDetailViewPagerAdapter;
 import com.mtech.parttimeone.photolearn.Adapter.QuizItemObj;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.bo.QuizAttemptBO;
+import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.dummyModel.Item;
 import com.mtech.parttimeone.photolearn.fragments.LearningSessionListFragment;
@@ -32,19 +34,17 @@ public class QuizItemDetailActivity extends BaseActivity {
 
     private FragmentManager mFragmentManager;
     private ViewPager viewPager;
-    private List<QuizItemObj> items = new ArrayList<>();
-//    private List<Fragment> fragmentList = new ArrayList<>();
-
-    private SubMenu dropdownList;
+    private List<QuizItemBO> itemArray = new ArrayList<>();
+    public Boolean isReview = true;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_item_detail);
+        isReview = true;
         initView();
         initData();
         //viewPager.setOffscreenPageLimit(fragmentList.size());
-
     }
 
     private void initView() {
@@ -56,12 +56,11 @@ public class QuizItemDetailActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        getMenuInflater().inflate(R.menu.menu_edit_quizitemdetail_submit,menu);
-//        dropdownList = menu.addSubMenu("");
-//        dropdownList.add(0,EXITANDUNSAVE,0,"Exit And Unsave");
-//        dropdownList.add(0,EXITANDSAVE,0,"Exit And Save");
-//        dropdownList.add(0,SUBMIT,0,"Submit");
-        return super.onCreateOptionsMenu(menu);
+        if (!isReview){
+            getMenuInflater().inflate(R.menu.menu_edit_quizitemdetail_submit,menu);
+            return super.onCreateOptionsMenu(menu);
+        }
+        return false;
     }
 
     @Override
@@ -83,93 +82,126 @@ public class QuizItemDetailActivity extends BaseActivity {
 
     public void initData(){
 
-        QuizItemObj obj = new QuizItemObj();
-        obj.setQuiz_title("How to resolve this issue");
-        obj.setExplanation("The Internet of things (IoT) is the network of physical devices, vehicles.");
-        obj.setQuiz_desc("The Internet of things (IoT) is the network of physical devices, vehicles.");
 
-        OptionItem item0 = obj.options.get(0);
-        item0.setOptionDetail("This is option 1");
-        OptionItem option1 = new OptionItem();
-        option1.setOptionDetail("This is option 2");
-        obj.options.add(option1);
-        OptionItem option2 = new OptionItem();
-        option2.setOptionDetail("This is option 3");
-        obj.options.add(option2);
-        OptionItem option3 = new OptionItem();
-        option3.setOptionDetail("This is option 4");
-        obj.options.add(option3);
+        QuizItemBO obj_0 = new QuizItemBO();
+        obj_0.setItemtitle("How to resolve this issue");
+        obj_0.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
+        obj_0.setDetailedSolution("he Internet of things (IoT) is the network of physical devices, vehicles.");
+        List<String> anslist = new ArrayList<>();
+        anslist.add("true");
+        anslist.add("false");
+        anslist.add("true");
+        anslist.add("false");
+        obj_0.setAnswerOption(anslist);
+        QuizAttemptBO attemptBO_0 = new QuizAttemptBO("",new ArrayList<>());
+        attemptBO_0.setAnswer(anslist);
+        obj_0.setQuizAttemptBO(attemptBO_0);
+        List<String> optionList = new ArrayList<>();
+        optionList.add("ques0_This is option 1");
+        optionList.add("ques0_This is option 2");
+        optionList.add("ques0_This is option 3");
+        optionList.add("ques0_This is option 4");
+        obj_0.setAnswer(optionList);
+        itemArray.add(obj_0);
 
-        QuizItemObj obj1 = new QuizItemObj();
-        obj1.setQuiz_title("How to resolve this issue 01");
-        obj1.setExplanation("The Internet of things (IoT) is the network of physical devices, vehicles.");
-        obj1.setQuiz_desc("The Internet of things (IoT) is the network of physical devices, vehicles.");
-        OptionItem item10 = obj1.options.get(0);
-        item10.setOptionDetail("This is option 1");
-        OptionItem option11 = new OptionItem();
-        option1.setOptionDetail("This is option 2");
-        obj1.options.add(option1);
-        OptionItem option12 = new OptionItem();
-        option2.setOptionDetail("This is option 3");
-        obj1.options.add(option2);
-        OptionItem option13 = new OptionItem();
-        option3.setOptionDetail("This is option 4");
-        obj1.options.add(option3);
+        QuizItemBO obj_1 = new QuizItemBO();
+        obj_1.setItemtitle("How to resolve this issue 1");
+        obj_1.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
+        obj_1.setDetailedSolution("he Internet of things (IoT) is the network of physical devices, vehicles.");
+        List<String> anslist1 = new ArrayList<>();
+        anslist1.add("true");
+        anslist1.add("false");
+        anslist1.add("true");
+        anslist1.add("false");
+        obj_1.setAnswerOption(anslist1);
+        QuizAttemptBO attemptBO_01 = new QuizAttemptBO("",new ArrayList<>());;
+        attemptBO_01.setAnswer(anslist1);
+        obj_1.setQuizAttemptBO(attemptBO_01);
+        List<String> optionList1 = new ArrayList<>();
+        optionList1.add("ques1_This is option 1");
+        optionList1.add("ques1_This is option 2");
+        optionList1.add("ques1_This is option 3");
+        optionList1.add("ques1_This is option 4");
+        obj_1.setAnswer(optionList1);
+        itemArray.add(obj_1);
 
-        QuizItemObj obj2 = new QuizItemObj();
-        obj2.setQuiz_title("How to resolve this issue 02");
-        obj2.setExplanation("The Internet of things (IoT) is the network of physical devices, vehicles. 02");
-        obj2.setQuiz_desc("The Internet of things (IoT) is the network of physical devices, vehicles.02");
-        OptionItem item20 = obj2.options.get(0);
-        item20.setOptionDetail("This is option 1");
-        OptionItem option21 = new OptionItem();
-        option1.setOptionDetail("This is option 2");
-        obj2.options.add(option1);
-        OptionItem option22 = new OptionItem();
-        option2.setOptionDetail("This is option 3");
-        obj2.options.add(option2);
-        OptionItem option23 = new OptionItem();
-        option3.setOptionDetail("This is option 4");
-        obj2.options.add(option3);
+        QuizItemBO obj_2 = new QuizItemBO();
+        obj_2.setItemtitle("How to resolve this issue 2");
+        obj_2.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
+        obj_2.setDetailedSolution("he Internet of things (IoT) is the network of physical devices, vehicles.");
+        List<String> anslist2 = new ArrayList<>();
+        anslist2.add("true");
+        anslist2.add("false");
+        anslist2.add("true");
+        anslist2.add("false");
+        anslist2.add("true");
+        anslist2.add("false");
+        // answer option
+        obj_2.setAnswerOption(anslist2);
+        QuizAttemptBO attemptBO_02 = new QuizAttemptBO("",new ArrayList<>());;
+        attemptBO_02.setAnswer(anslist2);
+        obj_2.setQuizAttemptBO(attemptBO_02);
+        List<String> optionList2 = new ArrayList<>();
+        optionList2.add("ques2_This is option 1");
+        optionList2.add("ques2_This is option 2");
+        optionList2.add("ques2_This is option 3");
+        optionList2.add("ques2_This is option 4");
+        optionList2.add("ques2_This is option 5");
+        optionList2.add("ques2_This is option 6");
+
+        obj_2.setAnswer(optionList2);
+        itemArray.add(obj_2);
+
+        QuizItemBO obj_3 = new QuizItemBO();
+        obj_3.setItemtitle("How to resolve this issue 3");
+        obj_3.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
+        obj_3.setDetailedSolution("he Internet of things (IoT) is the network of physical devices, vehicles.");
+        List<String> anslist3 = new ArrayList<>();
+        anslist3.add("true");
+        anslist3.add("false");
+        anslist3.add("true");
+        anslist3.add("false");
+        obj_3.setAnswerOption(anslist);
+        QuizAttemptBO attemptBO_03 = new QuizAttemptBO("",new ArrayList<>());;
+        attemptBO_03.setAnswer(anslist3);
+        obj_3.setQuizAttemptBO(attemptBO_03);
+        List<String> optionList3 = new ArrayList<>();
+        optionList3.add("ques3_This is option 1");
+        optionList3.add("ques3_This is option 2");
+        optionList3.add("ques3_This is option 3");
+        optionList3.add("ques3_This is option 4");
+        obj_3.setAnswer(optionList3);
+        itemArray.add(obj_3);
+
+        QuizItemBO obj_4 = new QuizItemBO();
+        obj_4.setItemtitle("How to resolve this issue 4");
+        obj_4.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
+        obj_4.setDetailedSolution("he Internet of things (IoT) is the network of physical devices, vehicles.");
+        List<String> anslist4 = new ArrayList<>();
+        anslist4.add("true");
+        anslist4.add("false");
+        anslist4.add("true");
+        anslist4.add("false");
+
+        List<String> anslist_4 = new ArrayList<>();
+        anslist_4.add("true");
+        anslist_4.add("false");
+        anslist_4.add("false");
+        anslist_4.add("false");
+
+        obj_4.setAnswerOption(anslist_4);
+        QuizAttemptBO attemptBO_04 = new QuizAttemptBO("",new ArrayList<>());;
+        attemptBO_04.setAnswer(anslist4);
+        obj_4.setQuizAttemptBO(attemptBO_04);
+        List<String> optionList4 = new ArrayList<>();
+        optionList4.add("ques4_This is option 1");
+        optionList4.add("ques4_This is option 2");
+        optionList4.add("ques4_This is option 3");
+        optionList4.add("ques4_This is option 4");
+        obj_4.setAnswer(optionList4);
+        itemArray.add(obj_4);
 
 
-        QuizItemObj obj3 = new QuizItemObj();
-        obj3.setQuiz_title("How to resolve this issue 03");
-        obj3.setExplanation("The Internet of things (IoT) is the network of physical devices, vehicles.03");
-        obj3.setQuiz_desc("The Internet of things (IoT) is the network of physical devices, vehicles.03");
-        OptionItem item30 = obj3.options.get(0);
-        item30.setOptionDetail("This is option 1");
-        OptionItem option31 = new OptionItem();
-        option1.setOptionDetail("This is option 2");
-        obj3.options.add(option1);
-        OptionItem option32 = new OptionItem();
-        option2.setOptionDetail("This is option 3");
-        obj3.options.add(option2);
-        OptionItem option33 = new OptionItem();
-        option3.setOptionDetail("This is option 4");
-        obj3.options.add(option3);
-
-        QuizItemObj obj4 = new QuizItemObj();
-        obj4.setQuiz_title("How to resolve this issue 04");
-        obj4.setExplanation("The Internet of things (IoT) is the network of physical devices, vehicles.04");
-        obj4.setQuiz_desc("The Internet of things (IoT) is the network of physical devices, vehicles.04");
-        OptionItem item40 = obj4.options.get(0);
-        item40.setOptionDetail("This is option 1");
-        OptionItem option41 = new OptionItem();
-        option1.setOptionDetail("This is option 2");
-        obj4.options.add(option1);
-        OptionItem option42 = new OptionItem();
-        option2.setOptionDetail("This is option 3");
-        obj4.options.add(option2);
-        OptionItem option43 = new OptionItem();
-        option3.setOptionDetail("This is option 4");
-        obj4.options.add(option3);
-
-        items.add(obj);
-        items.add(obj1);
-        items.add(obj2);
-        items.add(obj3);
-        items.add(obj4);
 
 //        for (int i=0;i<items.size();i++){
 //
@@ -179,7 +211,7 @@ public class QuizItemDetailActivity extends BaseActivity {
 
        // viewPager.setAdapter(new QuizItemDetailViewPagerAdapter(mFragmentManager,items.size(),items));
 
-        viewPager.setAdapter(new QuizItemDetailViewPagerAdapter(mFragmentManager, items.size()));
+        viewPager.setAdapter(new QuizItemDetailViewPagerAdapter(mFragmentManager, itemArray.size()));
 
 //        viewPager.addOnPageChangeListener(new ViewPager.OnPageChangeListener() {
 //            @Override
@@ -212,17 +244,17 @@ public class QuizItemDetailActivity extends BaseActivity {
         showScoreReview("Your total score is 70%, Go back and review the Answer?");
     }
 
-    public void updateData(QuizItemObj obj,int position){
-        items.remove(position);
-        items.add(position,obj);
+    public void updateData(QuizItemBO obj,int position){
+
+        itemArray.set(position,obj);
         viewPager.getAdapter().notifyDataSetChanged();
     }
 
-   public List<QuizItemObj>getItems(){
-       return this.items;
-   }
+    public List<QuizItemBO> getItemArray() {
+        return itemArray;
+    }
 
-   private void showScoreReview(String content){
+    private void showScoreReview(String content){
        AlertDialog.Builder builder = new AlertDialog.Builder(this);
        builder.setTitle("Score");
        builder.setMessage(content);

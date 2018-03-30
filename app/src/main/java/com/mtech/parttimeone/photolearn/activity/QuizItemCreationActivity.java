@@ -14,6 +14,10 @@ import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.QuizItemCreationAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
+
+import java.util.ArrayList;
+import java.util.List;
 import com.mtech.parttimeone.photolearn.asyncTask.UploadAsyncTask;
 
 import org.apache.commons.lang3.StringUtils;
@@ -28,6 +32,22 @@ public class QuizItemCreationActivity extends ItemCreationActivity  {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_quiz_item_creation);
         initView();
+    }
+
+
+    private void initData(){
+        QuizItemBO obj_0 = new QuizItemBO();
+        obj_0.setItemtitle("How to resolve this issue");
+        obj_0.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
+        obj_0.setDetailedSolution("he Internet of things (IoT) is the network of physical devices, vehicles.");
+
+        obj_0.addOption("ques0_This is option 1");
+        obj_0.addOption("ques0_This is option 2");
+        obj_0.addOption("ques0_This is option 3");
+        obj_0.addOption("ques0_This is option 4");
+        obj_0.addOption("ques0_This is option 5");
+
+        adapter.quizItemObj = obj_0;
 
     }
 
@@ -40,9 +60,18 @@ public class QuizItemCreationActivity extends ItemCreationActivity  {
 
     // INIT the UI
     private void initView(){
+
         super.setPageTitle("Create Quiz Item");
         listView = findViewById(R.id.quiz_creation_list);
         adapter = new  QuizItemCreationAdapter(this);
+        initData();
+//        if (adapter.quizItemObj.getOptions().isEmpty()){
+//            // add new item
+//            adapter.quizItemObj.addOption("");
+//        }else{
+//            // update quiz item.
+//            initData();
+//        }
         listView.setAdapter(adapter);
     }
 

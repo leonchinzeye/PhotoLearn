@@ -22,6 +22,8 @@ import android.widget.Toast;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
+import com.mtech.parttimeone.photolearn.bo.QuizAttemptBO;
+import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 
 import java.util.Random;
 
@@ -38,8 +40,8 @@ public class QuizItemCreationAdapter extends BaseAdapter {
 
     private Context context;
 
-    private QuizItemObj quizItemObj = new QuizItemObj();
-
+    //private QuizItemObj quizItemObj = new QuizItemObj();
+    public QuizItemBO quizItemObj = new QuizItemBO ();
 
     public QuizItemCreationAdapter(Context context){
         this.context = context;
@@ -47,7 +49,7 @@ public class QuizItemCreationAdapter extends BaseAdapter {
 
     @Override
     public int getCount(){
-        return 3 + quizItemObj.options.size();
+        return 3 + quizItemObj.getAnswer().size();
     }
 
     @Override
@@ -79,13 +81,13 @@ public class QuizItemCreationAdapter extends BaseAdapter {
         int type = getItemViewType(position);
 
         if (type == TYPE_TITLE){
-            return quizItemObj.getQuiz_title();
+            return quizItemObj.getItemtitle();
         }else if (type == TYPE_PHOTO){
-            return quizItemObj.getQuiz_desc();
+            return quizItemObj.getItemDesc();
         }else if (position == TYPE_EXPLANATION){
-            return quizItemObj.getExplanation();
+            return quizItemObj.getDetailedSolution();
         }else {
-            return quizItemObj.options.get(position - 2);
+            return quizItemObj.getAnswer().get(position - 2);
         }
 
     }
@@ -243,25 +245,24 @@ public class QuizItemCreationAdapter extends BaseAdapter {
 
 
     public void addNewOption(){
-        OptionItem optionitem = new OptionItem();
-        quizItemObj.options.add(optionitem);
+       // OptionItem optionitem = new OptionItem();
+        quizItemObj.addOption("");
         notifyDataSetChanged();
 
     }
 
     public void deleteOption(int position){
-        if (quizItemObj.options.size() == 1){
+        if (quizItemObj.getAnswer().size() == 1){
             Toast.makeText(context,R.string.error_keep_one_option, Toast.LENGTH_SHORT).show();
         }else {
-            quizItemObj.options.remove(position-2);
+            quizItemObj.deleteOptionAndAnswer(position-2);
             notifyDataSetChanged();
         }
 
     }
 
     public void changeAnswerOption(int position){
-        OptionItem optionItem = quizItemObj.options.get(position-2);
-        optionItem.setAns(!optionItem.getAns());
+        quizItemObj.updateAns(position-2);
         notifyDataSetChanged();
     }
 
@@ -273,20 +274,21 @@ public class QuizItemCreationAdapter extends BaseAdapter {
 
         switch (type){
             case TYPE_TITLE:{
-                holder.editText.setText(quizItemObj.getQuiz_title()!=null?quizItemObj.getQuiz_title():"");
+                holder.editText.setText(quizItemObj.getItemtitle()!=null?quizItemObj.getItemtitle():"");
             }
             break;
             case TYPE_PHOTO:{
-                holder.editText.setText(quizItemObj.getQuiz_desc() != null?quizItemObj.getQuiz_desc():"");
+                holder.editText.setText(quizItemObj.getItemDesc() != null?quizItemObj.getItemDesc():"");
             }
             break;
             case TYPE_OPTION:{
-               OptionItem optionitem = quizItemObj.options.get(position-2);
-               holder.editText.setText(optionitem.getOptionDetail() != null?optionitem.getOptionDetail():"");
+              // OptionItem optionitem = quizItemObj.options.get(position-2);
+             //  holder.editText.setText(optionitem.getOptionDetail() != null?optionitem.getOptionDetail():"");
+                holder.editText.setText(quizItemObj.getAnswer().get(position-2));
             }
             break;
             case TYPE_EXPLANATION:{
-                holder.editText.setText(quizItemObj.getExplanation() != null?quizItemObj.getExplanation():"");
+                holder.editText.setText(quizItemObj.getDetailedSolution() != null?quizItemObj.getDetailedSolution():"");
             }
             break;
         }
@@ -306,23 +308,24 @@ public class QuizItemCreationAdapter extends BaseAdapter {
 
                 switch (type) {
                     case TYPE_TITLE: {
-                        quizItemObj.setQuiz_title(!TextUtils.isEmpty(s) ? s.toString() : "");
+                        quizItemObj.setItemtitle(!TextUtils.isEmpty(s) ? s.toString() : "");
                         //Toast.makeText(context, quizItemObj.getQuiz_title(), Toast.LENGTH_SHORT).show();
                     }
                     break;
                     case TYPE_PHOTO: {
-                        quizItemObj.setQuiz_desc(!TextUtils.isEmpty(s) ? s.toString() : "");
+                        quizItemObj.setItemDesc(!TextUtils.isEmpty(s) ? s.toString() : "");
                         //Toast.makeText(context, quizItemObj.getQuiz_desc(), Toast.LENGTH_SHORT).show();
                     }
                     break;
                     case TYPE_OPTION: {
-                        OptionItem optionitem = quizItemObj.options.get(position - 2);
-                        optionitem.setOptionDetail(!TextUtils.isEmpty(s) ? s.toString() : "");
+//                        OptionItem optionitem = quizItemObj.options.get(position - 2);
+//                        optionitem.setOptionDetail(!TextUtils.isEmpty(s) ? s.toString() : "");
+                         quizItemObj.updateOption(!TextUtils.isEmpty(s) ? s.toString() : "",position-2);
                         //Toast.makeText(context, optionitem.getOptionDetail(), Toast.LENGTH_SHORT).show();
                     }
                     break;
                     case TYPE_EXPLANATION: {
-                        quizItemObj.setExplanation(!TextUtils.isEmpty(s) ? s.toString() : "");
+                        quizItemObj.setDetailedSolution(!TextUtils.isEmpty(s) ? s.toString() : "");
                         //Toast.makeText(context, quizItemObj.getExplanation(), Toast.LENGTH_SHORT).show();
 
                     }

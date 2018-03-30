@@ -16,6 +16,8 @@ import com.mtech.parttimeone.photolearn.Adapter.QuizItemDetailAdapter;
 import com.mtech.parttimeone.photolearn.Adapter.QuizItemObj;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.activity.QuizItemDetailActivity;
+import com.mtech.parttimeone.photolearn.bo.QuizAttemptBO;
+import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -25,9 +27,10 @@ public class QuizItemDetailFragment extends Fragment  {
     private static final String ARG_PARAM1 = "param1";
 
     private ListView listView;
-    QuizItemObj itemObj;
+    QuizItemBO itemObj;
     private int mParam1;
     QuizItemDetailAdapter adapter;
+    Boolean isReview;
 
     public QuizItemDetailFragment() {
         // Required empty public constructor
@@ -55,18 +58,22 @@ public class QuizItemDetailFragment extends Fragment  {
             public void onItemClick(AdapterView<?> parent, View view,
                                     int position, long id) {
 
+                if (isReview||position==0||position==1){
+                    return;
+                }
                 CheckedTextView checkedTextView = view.findViewById(R.id.option_selection_text);
-                OptionItem optionItem = itemObj.options.get(position-2);
-                optionItem.setAns(!optionItem.getAns());
+                QuizAttemptBO attemptBO = itemObj.getQuizAttemptBO();
+                attemptBO.addAns(!checkedTextView.isChecked(),position-2,itemObj.getAnswer().size());
                 checkedTextView.setChecked(!checkedTextView.isChecked());
                 adapter.notifyDataSetChanged();
                 ((QuizItemDetailActivity)getActivity()).updateData(itemObj, mParam1);
             }
         });
         adapter  = new QuizItemDetailAdapter(getActivity(),itemObj,mParam1);
+        adapter.isReview = isReview;
         listView.setAdapter(adapter);
         listView.setChoiceMode(ListView.CHOICE_MODE_MULTIPLE);
-         return view;
+        return view;
     }
 
     @Override
@@ -75,7 +82,8 @@ public class QuizItemDetailFragment extends Fragment  {
         if (getArguments() != null) {
             mParam1 = getArguments().getInt(ARG_PARAM1);
         }
-        itemObj = ((QuizItemDetailActivity)getActivity()).getItems().get(mParam1);
+        itemObj = ((QuizItemDetailActivity)getActivity()).getItemArray().get(mParam1);
+        isReview = ((QuizItemDetailActivity)getActivity()).isReview;
     }
 
     @Override
@@ -84,6 +92,8 @@ public class QuizItemDetailFragment extends Fragment  {
     }
 
     public void updateData(){
+        QuizItemDetailActivity activity = new QuizItemDetailActivity();
+
     }
 
     @Override
