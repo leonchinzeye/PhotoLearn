@@ -26,7 +26,7 @@ public class QuizItemBO extends ItemBO {
     private List<String> answer = new ArrayList<>(); //option
     private List<String> answerOption = new ArrayList<>(); //isOptionAns
 
-    private QuizAttemptBO quizAttemptBO = new QuizAttemptBO("",new ArrayList<>());
+    private QuizAttemptBO quizAttemptBO = new QuizAttemptBO("","","",new ArrayList<>());
 
    // private String itemDescription;
 

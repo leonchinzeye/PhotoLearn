@@ -1,7 +1,9 @@
 package com.mtech.parttimeone.photolearn.ViewModel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,6 +15,8 @@ import com.mtech.parttimeone.photolearn.data.repository.QuizAttemptRepository;
 import com.mtech.parttimeone.photolearn.data.entity.QuizAttemptEntity;
 import com.mtech.parttimeone.photolearn.bo.QuizAttemptBO;
 
+import org.apache.commons.lang3.StringUtils;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,35 +26,61 @@ import java.util.List;
 
 public class QuizAttemptViewModel extends ViewModel {
     private MutableLiveData<List<QuizAttemptBO>> quizAttemptBOs;
-    private List<QuizAttemptBO> quizAttempts;
-    private QuizAttemptBO quizAttempt;
-    private boolean hasLoadedQuizAttempts = false;
-    private boolean hasLoadedQuizAttempt = false;
+    private MutableLiveData<QuizAttemptBO> quizAttemptBO;
+
+    /* Global mapper */
+    QuizAttemptMapper mapper = new QuizAttemptMapper();
 
     /** This points to the collection of Quiz Attempts **/
     private QuizAttemptRepository quizAttemptRepository = new QuizAttemptRepository();
 
     private DatabaseReference mQuizAttemptRef;
 
-    private void getQuizAttempt(String quizItemId, String userId) {
-        mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
-        mQuizAttemptRef.child(userId).child(quizItemId).addListenerForSingleValueEvent(new ValueEventListener() {
-            @Override
-            public void onDataChange(DataSnapshot dataSnapshot) {
-                QuizAttemptEntity eQuizAttempt = dataSnapshot.getValue(QuizAttemptEntity.class);
+    /**
+     * This method loads just a single Quiz attempt
+     *
+     * @param itemId
+     * @param titleId
+     * @return QuiztitleBO
+     */
+    public LiveData<QuizAttemptBO> getQuizAttempt(String itemId, String titleId) {
+        if (quizAttemptBO == null) {
+            quizAttemptBO = new MutableLiveData<QuizAttemptBO>();
+        }
+        loadQuizAttempt(itemId, titleId);
 
-                if (eQuizAttempt!= null) {
-                    QuizAttemptMapper mapper = new QuizAttemptMapper();
-                    quizAttempt = mapper.map(eQuizAttempt);
-                    hasLoadedQuizAttempt = true;
-                }
-            }
+        return quizAttemptBO;
+    }
 
-            @Override
-            public void onCancelled(DatabaseError databaseError) {
+    /**
+     * This method loads all Quiz attempts belonging to a title
+     *
+     * @param sessionId
+     * @return QuiztitleBO
+     */
+    public LiveData<List<QuizAttemptBO>> getQuizAttempts(String sessionId) {
+        if (quizAttemptBOs == null) {
+            quizAttemptBOs = new MutableLiveData<>();
+        }
+        loadQuizAttempts(sessionId,null);
 
-            }
-        });
+        return quizAttemptBOs;
+    }
+
+    /**
+     * This method loads all Quiz attempts that the user created belonging to {@Code sessionId
+     *
+     * @param userId
+     * @param sessionId
+     * @return list of QuiztitleBO
+     */
+    public LiveData<List<QuizAttemptBO>> getQuizAttempts(String sessionId, String userId) {
+        if (quizAttemptBOs == null) {
+            quizAttemptBOs = new MutableLiveData<>();
+        }
+        loadQuizAttempts(sessionId, userId);
+
+        return quizAttemptBOs;
     }
 
     @Override
@@ -59,115 +89,139 @@ public class QuizAttemptViewModel extends ViewModel {
     }
 
     /**
-     * This method loads just all Quiz Attempts
-     * @param userId
-     * @param quizItemid
-     * @return list of QuizAttemptBO
-     */
-    public List<QuizAttemptBO> loadQuizAttempts(String quizItemid, String userId) {
-        loadAllQuizAttempts(quizItemid, userId);
-
-        if (hasLoadedQuizAttempts) {
-            hasLoadedQuizAttempts = false;
-            return this.quizAttempts;
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * This method loads just a single Quiz Attempt
-     * @param userId
-     * @param quizItemId
-     * @return QuizAttemptBO
-     */
-    public QuizAttemptBO loadQuizAttempt(String quizItemId, String userId) {
-        getQuizAttempt(quizItemId, userId);
-
-        if (hasLoadedQuizAttempt) {
-            hasLoadedQuizAttempt = false;
-            return this.quizAttempt;
-        } else {
-            return null;
-        }
-    }
-
-    /**
      * Creates a Quiz Attempt as a participant
      * @param QuizAttemptBO
-     * @param userId
      * @throws Exception if the Quiz session is not a unique session ID
      */
-    public void createQuizAttempt(QuizAttemptBO QuizAttemptBO, String quizItemId, String userId) throws Exception {
-        //inserts Quiz_Attempts
-        setQuizAttempt(QuizAttemptBO, quizItemId, userId);
+    public void createQuizAttempt(QuizAttemptBO quizAttemptBO) throws Exception {
+        QuizAttemptEntity eQuizAttempt = new QuizAttemptEntity();
+        eQuizAttempt = mapper.mapFrom(quizAttemptBO);
+
+        setQuizAttempt(eQuizAttempt);
     }
 
-    // This method is for trainers to delete a Quiz Attempt
-    public void deleteQuizAttempt(String quizItemId, String userId) {
-        //deletes Quiz_Attempts
-        removeQuizAttempt(quizItemId, userId);
+    /**
+     * Deletes a Quiz attempt
+     *
+     * @param quizAttemptBO
+     * @throws Exception if the Quiz session is not a unique session ID
+     */
+    public void deleteQuizAttempt(QuizAttemptBO quizAttemptBO) {
+        removeQuizAttempt(quizAttemptBO.getItemId(), quizAttemptBO.getAttemptId());
     }
 
-    // TODO
-    // This is for trainers to update a Quiz session
-    public QuizAttemptBO updateQuizAttempt(QuizAttemptBO QuizAttemptBO, String quizItemId , String userId) {
+    /**
+     * Deletes all quiz attempts associated with a item
+     *
+     * @param itemId
+     * @throws Exception if the Quiz session is not a unique session ID
+     */
+    public void deleteFromSession(String itemId) {
+        removeQuizTitle(itemId);
+    }
+
+    /**
+     * For participant to update the quiz attempt
+     *
+     * @param quizAttemptBO
+     * @return
+     */
+    public QuizAttemptBO updateQuizAttempt(QuizAttemptBO quizAttemptBO) {
+        QuizAttemptEntity eQuizAttempt = mapper.mapFrom(quizAttemptBO);
+
         mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
-        //since the actual changes are not specified so update the entire node
-        mQuizAttemptRef.child(userId).child(quizItemId).setValue(QuizAttemptBO);
+        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).setValue(quizAttemptBO);
 
-        return QuizAttemptBO;
+        return quizAttemptBO;
     }
 
-    //this loads all Attempts based on quizItemId
-    private void loadAllQuizAttempts(String quizItemId, String userId) {
+    private void loadQuizAttempt(String itemId, String userId) {
         mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
-        mQuizAttemptRef.child(userId).child(quizItemId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mQuizAttemptRef.child(userId).child(itemId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
-                if (dataSnapshot.getValue() != null) {
-                    List<QuizAttemptBO> listQuizAttempts = new ArrayList<>();
-                    QuizAttemptMapper mapper = new QuizAttemptMapper();
+                QuizAttemptEntity eQuizAttempt = dataSnapshot.getValue(QuizAttemptEntity.class);
 
-                    for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
-                        QuizAttemptEntity entity = sessionSnapshot.getValue(QuizAttemptEntity.class);
-                        QuizAttemptBO QuizAttemptBO = mapper.map(entity);
-                        listQuizAttempts.add(QuizAttemptBO);
-                    }
-
-                    quizAttemptBOs.setValue(listQuizAttempts);
+                if (eQuizAttempt != null) {
+                    QuizAttemptBO attemptBO = mapper.map(eQuizAttempt);
+                    quizAttemptBO.setValue(attemptBO);
                 }
             }
+
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ", databaseError.getMessage());
             }
         });
     }
 
-    //creates Quiz Attempts filtered by session Id
-    public boolean setQuizAttempt(QuizAttemptBO QuizAttemptBO, String quizItemId, String userId) {
+
+    private void loadQuizAttempts(String itemId, String userId) {
+        if (StringUtils.isNotEmpty(itemId) && StringUtils.isNotEmpty(userId)) {
+            loadItemUserQuizTitles(itemId, userId);
+        }
+    }
+
+    private void loadItemUserQuizTitles(String itemId, String userId) {
         mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
-        mQuizAttemptRef.child(userId).child(quizItemId).setValue(QuizAttemptBO);
+        mQuizAttemptRef.child(userId).addListenerForSingleValueEvent(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    List<QuizAttemptBO> listQuizTitles = new ArrayList<>();
+
+                    for (DataSnapshot snapshot : dataSnapshot.getChildren()) {
+                        QuizAttemptEntity eAttempt = snapshot.getValue(QuizAttemptEntity.class);
+                        if (StringUtils.equals(itemId, eAttempt.getItemId())) {
+                            QuizAttemptBO eQuizAttempt = mapper.map(eAttempt);
+                            eQuizAttempt.setItemId(snapshot.getKey());
+                            listQuizTitles.add(eQuizAttempt);
+                        }
+                    }
+                    quizAttemptBOs.setValue(listQuizTitles);
+                }
+            }
+
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ",databaseError.getMessage());
+            }
+        });
+    }
+
+
+    //creates Quiz Attempts filtered by session Id
+    public boolean setQuizAttempt(QuizAttemptEntity eQuizAttempt) {
+        mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
+        //get a unique key from firebase
+        String key = mQuizAttemptRef.child(eQuizAttempt.getUserId()).push().getKey();
+        //set titleId to generated key
+        eQuizAttempt.setItemId(key);
+        mQuizAttemptRef.child(eQuizAttempt.getUserId()).child(eQuizAttempt.getItemId()).setValue(eQuizAttempt);
 
         return true;
     }
 
-    public boolean isHasLeadedQuizAttempts() {
-        return hasLoadedQuizAttempts;
-    }
+    public boolean removeQuizTitle(String itemId) {
+        mQuizAttemptRef = FirebaseDatabase.getInstance().getReference(quizAttemptRepository.getRootNode());
+        mQuizAttemptRef.addValueEventListener(new ValueEventListener() {
+            @Override
+            public void onDataChange(DataSnapshot dataSnapshot) {
+                if (dataSnapshot.getValue() != null) {
+                    for (DataSnapshot itemSnapshot : dataSnapshot.getChildren()) {
+                        if (itemSnapshot.hasChild(itemId)) {
+                            itemSnapshot.child(itemId).getRef().setValue(null);
+                        }
+                    }
+                }
+            }
 
-    public void setHasLoadedQuizAttempts(boolean hasLoadedQuizAttempts) {
-        this.hasLoadedQuizAttempt = hasLoadedQuizAttempt;
-    }
-
-    public boolean isHasLoadedQuizAttempt() {
-        return hasLoadedQuizAttempt;
-    }
-
-    public void setHasLoadedQuizAttempt(boolean hasLoadedQuizAttempt) {
-        this.hasLoadedQuizAttempt = hasLoadedQuizAttempt;
+            @Override
+            public void onCancelled(DatabaseError databaseError) {
+                Log.w("TAG: ", databaseError.getMessage());
+            }
+        });
+        return true;
     }
 
     public boolean removeQuizAttempt(String quizItemId, String userId) {
