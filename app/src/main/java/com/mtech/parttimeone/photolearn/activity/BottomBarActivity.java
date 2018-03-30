@@ -37,7 +37,7 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
     Fragment mainFragment;
     Fragment currentFragment;
     private FragmentManager mFragmentManager;
-
+    private static final String BACK_STACK_ROOT_TAG = "root_fragment";
 
 
     private BottomNavigationView.OnNavigationItemSelectedListener mOnNavigationItemSelectedListener
@@ -47,7 +47,7 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         public boolean onNavigationItemSelected(@NonNull MenuItem item) {
 
             FragmentTransaction transaction = mFragmentManager.beginTransaction();
-
+            mFragmentManager.popBackStack(BACK_STACK_ROOT_TAG, FragmentManager.POP_BACK_STACK_INCLUSIVE);
             switch (item.getItemId()) {
                 case R.id.navigation_main:
                     setCurrentFragment(mainFragment);
@@ -95,7 +95,11 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         //mainFragment = (Fragment) LearningSessionListFragment.newInstance("DUMMY ACCOUNT","LEARNING SESSION ID");
         mainFragment =  (Fragment) LearningSessionListFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");;
 
-        setDefaultFragment();
+        FragmentTransaction fragmentTransaction = mFragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.fragment_content, mainFragment);
+        fragmentTransaction.addToBackStack(BACK_STACK_ROOT_TAG);
+        fragmentTransaction.commit();
+        currentFragment = mainFragment;
     }
 
     private void setCurrentFragment(Fragment fragment){
@@ -105,8 +109,9 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
                     fragmentTransaction1.hide(currentFragment).show(fragment);
                 } else {
 
-                    fragmentTransaction1.hide(currentFragment).add(R.id.fragment_content, fragment);
-                    fragmentTransaction1.addToBackStack(null);
+                    //fragmentTransaction1.hide(currentFragment).add(R.id.fragment_content, fragment);
+                    fragmentTransaction1.replace(R.id.fragment_content, fragment);
+                    //fragmentTransaction1.addToBackStack(null);
 
                 }
          currentFragment = fragment;

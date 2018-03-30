@@ -260,11 +260,15 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
 
     @Override
     public boolean onContextItemSelected(MenuItem item){
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        LearningSessionBO lbo = (LearningSessionBO) lslAdap.getItem(info.position);
+
         if(item.getTitle()=="Update"){
-            Toast.makeText(getContext(),"Update Called",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),"Update Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
         }
         else if(item.getTitle()=="Delete"){
-            Toast.makeText(getContext(),"Delete Called",Toast.LENGTH_LONG).show();
+            Toast.makeText(getContext(),"Delete Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
         }else{
             return false;
         }
