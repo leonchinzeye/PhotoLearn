@@ -1,28 +1,23 @@
 package com.mtech.parttimeone.photolearn.activity;
 
 import android.net.Uri;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.AdapterView;
 import android.widget.ListView;
-import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.QuizItemCreationAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.asyncTask.UploadAsyncTask;
 import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 
-import java.util.ArrayList;
-import java.util.List;
-import com.mtech.parttimeone.photolearn.asyncTask.UploadAsyncTask;
+public class QuizItemCreationActivity extends ItemCreationActivity {
 
-import org.apache.commons.lang3.StringUtils;
-
-public class QuizItemCreationActivity extends ItemCreationActivity  {
+    private static final String QUIZ_TYPE = "QUIZ";
 
     private ListView listView;
     QuizItemCreationAdapter adapter;
@@ -35,7 +30,7 @@ public class QuizItemCreationActivity extends ItemCreationActivity  {
     }
 
 
-    private void initData(){
+    private void initData() {
         QuizItemBO obj_0 = new QuizItemBO();
         obj_0.setItemtitle("How to resolve this issue");
         obj_0.setItemDesc("The Internet of things (IoT) is the network of physical devices, vehicles.");
@@ -54,16 +49,16 @@ public class QuizItemCreationActivity extends ItemCreationActivity  {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        getMenuInflater().inflate(R.menu.menu_done,menu);
+        getMenuInflater().inflate(R.menu.menu_done, menu);
         return super.onCreateOptionsMenu(menu);
     }
 
     // INIT the UI
-    private void initView(){
+    private void initView() {
 
         super.setPageTitle("Create Quiz Item");
         listView = findViewById(R.id.quiz_creation_list);
-        adapter = new  QuizItemCreationAdapter(this);
+        adapter = new QuizItemCreationAdapter(this);
         initData();
 //        if (adapter.quizItemObj.getOptions().isEmpty()){
 //            // add new item
@@ -86,10 +81,9 @@ public class QuizItemCreationActivity extends ItemCreationActivity  {
         }
     }
 
-    public void submitQuizItem(Uri file){
-        //TO DO - need to put logic to derive Item id
-        setItemId("quiz_1");
-        new UploadAsyncTask(this).execute(file);
+    public void submitQuizItem(Uri file) {
+        setItemType(QUIZ_TYPE);
+        new UploadAsyncTask(QuizItemCreationActivity.this).execute(file);
     }
 
     @Override
@@ -104,13 +98,13 @@ public class QuizItemCreationActivity extends ItemCreationActivity  {
 
     // selecttion item.
     @Override
-    public boolean onContextItemSelected (MenuItem item){
+    public boolean onContextItemSelected(MenuItem item) {
         switch (item.getItemId()) {
-            case R.id.add_photo_button:{
+            case R.id.take_photo: {
                 takePhoto();
             }
             break;
-            case R.id.library:{
+            case R.id.library: {
                 selectPhotofromLibrary();
             }
             break;
@@ -119,7 +113,11 @@ public class QuizItemCreationActivity extends ItemCreationActivity  {
     }
 
 
+    public void saveItemImagePath(Uri downloadUrl) {
+        //Call View Model
+        Log.d(TAG, "saveItem for Quiz:Call ViewModel to save Item!" + downloadUrl);
 
+    }
 
 
 }
