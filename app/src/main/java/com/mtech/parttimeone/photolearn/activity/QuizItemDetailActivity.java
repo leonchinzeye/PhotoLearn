@@ -56,11 +56,11 @@ public class QuizItemDetailActivity extends BaseActivity {
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu items for use in the action bar
-        if (!isReview){
+       // if (!isReview){
             getMenuInflater().inflate(R.menu.menu_edit_quizitemdetail_submit,menu);
             return super.onCreateOptionsMenu(menu);
-        }
-        return false;
+        //}
+       // return false;
     }
 
     @Override
@@ -234,14 +234,26 @@ public class QuizItemDetailActivity extends BaseActivity {
     }
 
     private void ExitandSave(){
+
     }
 
     private void ExitandUnsave(){
 
+        for (int i=0;i<itemArray.size();i++){
+
+        }
+
     }
 
     private void Submit(){
-        showScoreReview("Your total score is 70%, Go back and review the Answer?");
+        int count = getResult();
+
+        for (int i =0;i<itemArray.size();i++){
+            QuizItemBO itemBO = itemArray.get(i);
+            QuizAttemptBO attemptBO = itemBO.getQuizAttemptBO();
+        }
+
+        showScoreReview("Your total score is " + count+"/"+ itemArray.size()+",go back and review the Answer");
     }
 
     public void updateData(QuizItemBO obj,int position){
@@ -255,6 +267,7 @@ public class QuizItemDetailActivity extends BaseActivity {
     }
 
     private void showScoreReview(String content){
+
        AlertDialog.Builder builder = new AlertDialog.Builder(this);
        builder.setTitle("Score");
        builder.setMessage(content);
@@ -267,6 +280,19 @@ public class QuizItemDetailActivity extends BaseActivity {
        builder.create();
        builder.show();
 
+   }
+
+   private int getResult(){
+
+       int count = 0;
+       for (int i=0;i<itemArray.size();i++){
+           QuizItemBO itemObj = itemArray.get(i);
+           if (itemObj.isAnsCorrect()){
+               count ++;
+           }
+       }
+
+       return count;
    }
 
 }
