@@ -1,6 +1,5 @@
 package com.mtech.parttimeone.photolearn.activity;
 
-import android.arch.lifecycle.ViewModel;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Intent;
 import android.net.Uri;
@@ -11,14 +10,12 @@ import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.widget.Adapter;
 import android.widget.ListView;
 import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.LearningItemCreationAdapter;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.ViewModel.LearningItemViewModel;
-import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 import com.mtech.parttimeone.photolearn.asyncTask.UploadAsyncTask;
 import com.mtech.parttimeone.photolearn.handler.LifeCycleHandler;
 
@@ -40,9 +37,9 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
         setContentView(R.layout.activity_learn_item_creation);
 
         Intent intent = getIntent();
-       // it.putExtra("TitleID", mParam2);
+        // it.putExtra("TitleID", mParam2);
 
-         titleId = intent.getStringExtra("TitleID");
+        titleId = intent.getStringExtra("TitleID");
 
         intheView();
     }
@@ -78,7 +75,7 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
     }
 
     //function for click the done button.
-    public void createtheLearningItem(Uri file){
+    public void createtheLearningItem(Uri file) {
         String title = adapter.itemBO.getItemtitle();
         setItemType(LEARNING_TYPE);
         if (StringUtils.isBlank(title)) {
@@ -127,11 +124,11 @@ public class LearnItemCreationActivity extends ItemCreationActivity {
         //Call View Model
         Log.d(TAG, "saveItem for Learn:Call ViewModel to save Item!" + downloadUrl);
         //if (downloadUrl.toString() != null&&!downloadUrl.toString().isEmpty()){
-            adapter.itemBO.setPhotoURL(downloadUrl.toString());
-       // }
+        adapter.itemBO.setPhotoURL(downloadUrl.toString());
+        // }
         adapter.itemBO.setGPS("NUS ISS");
         adapter.itemBO.setTitleId(titleId);
-        adapter.itemBO.setUserId(LifeCycleHandler.getInstance().getAccountBO().getUid());
+        adapter.itemBO.setUserId(LifeCycleHandler.getInstance().getAccountBO().getUserUid());
         LearningItemViewModel vmlearningItemViewModel = ViewModelProviders.of(this).get(LearningItemViewModel.class);
         try {
             vmlearningItemViewModel.createLearningItem(adapter.itemBO);
