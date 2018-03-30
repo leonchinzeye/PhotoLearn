@@ -32,6 +32,9 @@ public class LearningSessionViewModel extends ViewModel {
     /** This points to the collection of learning sessions **/
     private LearningSessionRepository learningSessionRepository = new LearningSessionRepository();
 
+    /* Global mapper */
+    private LearningSessionMapper mapper;
+
     /**
      * This points to the collection of user learning sessions
      **/
@@ -93,7 +96,6 @@ public class LearningSessionViewModel extends ViewModel {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     List<LearningSessionBO> listLearningSessions = new ArrayList<>();
-                    LearningSessionMapper mapper = new LearningSessionMapper();
 
                     for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
                         LearningSessionEntity entity = sessionSnapshot.getValue(LearningSessionEntity.class);
@@ -118,7 +120,6 @@ public class LearningSessionViewModel extends ViewModel {
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     List<LearningSessionBO> listLearningSessions = new ArrayList<>();
-                    LearningSessionMapper mapper = new LearningSessionMapper();
 
                     for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
                         LearningSessionEntity entity = sessionSnapshot.getValue(LearningSessionEntity.class);
@@ -169,25 +170,25 @@ public class LearningSessionViewModel extends ViewModel {
     // TODO
     // This is for trainers to update a learning session
     public LearningSessionBO updateLearningSession(LearningSessionBO learningSessionBO, String sessionId , String userId) {
-        //since the actual changes are not specified so update entire node
+        LearningSessionEntity eSession = mapper.mapFrom(learningSessionBO);
 
         //update main session data
         mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
-        mLearningSession.child(sessionId).setValue(learningSessionBO);
+        mLearningSession.child(sessionId).setValue(eSession);
 
         //update trainer session data
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child("trainers").child(userId).child(sessionId).setValue(learningSessionBO);
+        mUserLearningSession.child(KEY_TRAINER).child(userId).child(sessionId).setValue(eSession);
 
        //update participant session data
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
-        mUserLearningSession.child("participants").addListenerForSingleValueEvent(new ValueEventListener() {
+        mUserLearningSession.child(KEY_PARTICIPANT).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
                     for (DataSnapshot sessionSnapshot : dataSnapshot.getChildren()) {
                         if(sessionSnapshot.hasChild(sessionId)) {
-                            sessionSnapshot.child(sessionId).getRef().setValue(learningSessionBO);
+                            sessionSnapshot.child(sessionId).getRef().setValue(eSession);
                         }
                     }
                 }
@@ -209,7 +210,6 @@ public class LearningSessionViewModel extends ViewModel {
                 LearningSessionEntity eLearningSession = dataSnapshot.getValue(LearningSessionEntity.class);
 
                 if (eLearningSession != null) {
-                    LearningSessionMapper mapper = new LearningSessionMapper();
                     learningSessionBO.setValue(mapper.map(eLearningSession));
                 }
             }
@@ -224,8 +224,7 @@ public class LearningSessionViewModel extends ViewModel {
     //creates learning sessions filtered by session Id
     public boolean setLearningSession(LearningSessionBO learningSessionBO) {
         LearningSessionEntity eLearningSession;
-        LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
-        eLearningSession = learningSessionMapper.mapFrom(learningSessionBO);
+        eLearningSession = mapper.mapFrom(learningSessionBO);
 
         mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
         mLearningSession.child(learningSessionBO.getSessionId()).setValue(eLearningSession);
@@ -236,8 +235,7 @@ public class LearningSessionViewModel extends ViewModel {
     //creates learning sessions filtered by trainer user Id and stores the session Id
     public boolean setTrainerLearningSession(LearningSessionBO learningSessionBO, String userId) {
         LearningSessionEntity eLearningSession;
-        LearningSessionMapper learningSessionMapper = new LearningSessionMapper();
-        eLearningSession = learningSessionMapper.mapFrom(learningSessionBO);
+        eLearningSession = mapper.mapFrom(learningSessionBO);
 
         mUserLearningSession = FirebaseDatabase.getInstance().getReference(userLearningSessionRepository.getRootNode());
         mUserLearningSession.child(KEY_TRAINER).child(userId).child(learningSessionBO.getSessionId()).setValue(eLearningSession);
@@ -254,6 +252,9 @@ public class LearningSessionViewModel extends ViewModel {
     }
 
     public boolean removeLearningSession(String sessionId, String userId) {
+        LearningTitleViewModel learningTitleVM = new LearningTitleViewModel();
+        learningTitleVM.deleteFromSession(sessionId);
+
         mLearningSession = FirebaseDatabase.getInstance().getReference(learningSessionRepository.getRootNode());
         mLearningSession.child(sessionId).removeValue();
 
