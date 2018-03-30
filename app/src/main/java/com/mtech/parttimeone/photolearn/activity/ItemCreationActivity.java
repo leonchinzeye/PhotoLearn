@@ -4,6 +4,7 @@ import android.Manifest;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -20,6 +21,9 @@ import com.mtech.parttimeone.photolearn.BuildConfig;
 import com.mtech.parttimeone.photolearn.R;
 
 import java.io.File;
+import java.io.IOException;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 
 public class ItemCreationActivity extends BaseActivity {
 
@@ -28,6 +32,7 @@ public class ItemCreationActivity extends BaseActivity {
     private static final String QUIZ_TYPE = "QUIZ";
     private static final String LEARNING_TYPE = "LEARNING";
     protected static final String TAG = "PhotoLearn";
+    private String mCurrentPhotoPath;
 
     private String itemType = null;
 
@@ -89,29 +94,51 @@ public class ItemCreationActivity extends BaseActivity {
         }
     }
 
+    private File createImageFile() throws IOException {
+        // Create an image file name
+        String timeStamp = new SimpleDateFormat("yyyyMMdd_HHmmss").format(new Date());
+        String imageFileName = "JPEG_" + timeStamp + "_";
+        File storageDir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES);
+        if (!storageDir.exists()) {
+            return null;
+        }
+        File image = File.createTempFile(
+                imageFileName,  /* prefix */
+                ".jpg",         /* suffix */
+                storageDir      /* directory */
+        );
+
+        // Save a file: path for use with ACTION_VIEW intents
+        mCurrentPhotoPath = image.getAbsolutePath();
+        return image;
+    }
+
     public void openCamera() {
 
         Intent intent = new Intent(MediaStore.ACTION_IMAGE_CAPTURE);
-        File mediaStorageDir = new File(Environment.getExternalStoragePublicDirectory(
-                Environment.DIRECTORY_PICTURES), "IMG_FOLDER");
+        if (intent.resolveActivity(getPackageManager()) != null) {
+            File mediaFile = null;
+            try {
+                mediaFile = createImageFile();
 
-        try {
-            if (!mediaStorageDir.exists()) {
-                if (!mediaStorageDir.mkdirs()) {
-                    return;
-                }
+            } catch (Exception e) {
+                Log.d(TAG, "Exception occured:" + e.getMessage());
+                e.printStackTrace();
             }
-        } catch (Exception e) {
-            Log.d(TAG, "Exception occured:" + e.getMessage());
-            e.printStackTrace();
-        }
 
 
-        setFilePath(FileProvider.getUriForFile(ItemCreationActivity.this,
+        /*setFilePath(FileProvider.getUriForFile(ItemCreationActivity.this,
                 BuildConfig.APPLICATION_ID + ".provider",
                 new File(mediaStorageDir.getPath() + File.separator +
-                        "profile_img.jpg")));
-        startActivityForResult(Intent.createChooser(intent, "Click an image"), CLICK_IMAGE_REQUEST);
+                        "profile_img.jpg")));*/
+            if (mediaFile != null) {
+                filePath = FileProvider.getUriForFile(ItemCreationActivity.this, BuildConfig.APPLICATION_ID + ".provider", mediaFile);
+                intent.putExtra(MediaStore.EXTRA_OUTPUT, filePath);
+                startActivityForResult(Intent.createChooser(intent, "Click an image"), CLICK_IMAGE_REQUEST);
+            }
+
+
+        }
     }
 
     @Override
@@ -152,13 +179,38 @@ public class ItemCreationActivity extends BaseActivity {
                 addBth.setImageBitmap(bit);
 
             } else if (requestCode == CLICK_IMAGE_REQUEST) {
-                bit = MediaStore.Images.Media.getBitmap(getContentResolver(), getFilePath());
-                addBth.setImageBitmap(bit);
+                //bit = MediaStore.Images.Media.getBitmap(getContentResolver(), getFilePath());
+                //addBth.setImageBitmap(bit);
+                setPic(addBth);
             }
             Log.d(TAG, "OnActivityResult file path:" + filePath);
         } catch (Exception exp) {
             Log.d(TAG, "Exception occured:" + exp.getMessage());
         }
+    }
+
+    private void setPic(ImageButton addBth) {
+        // Get the dimensions of the View
+        int targetW = addBth.getWidth();
+        int targetH = addBth.getHeight();
+
+        // Get the dimensions of the bitmap
+        BitmapFactory.Options bmOptions = new BitmapFactory.Options();
+        bmOptions.inJustDecodeBounds = true;
+        BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        int photoW = bmOptions.outWidth;
+        int photoH = bmOptions.outHeight;
+
+        // Determine how much to scale down the image
+        int scaleFactor = Math.min(photoW / targetW, photoH / targetH);
+
+        // Decode the image file into a Bitmap sized to fill the View
+        bmOptions.inJustDecodeBounds = false;
+        bmOptions.inSampleSize = scaleFactor;
+        bmOptions.inPurgeable = true;
+
+        Bitmap bitmap = BitmapFactory.decodeFile(mCurrentPhotoPath, bmOptions);
+        addBth.setImageBitmap(bitmap);
     }
 
 
