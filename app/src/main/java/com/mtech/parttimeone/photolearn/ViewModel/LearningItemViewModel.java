@@ -1,7 +1,9 @@
 package com.mtech.parttimeone.photolearn.ViewModel;
 
+import android.arch.lifecycle.LiveData;
 import android.arch.lifecycle.MutableLiveData;
 import android.arch.lifecycle.ViewModel;
+import android.util.Log;
 
 import com.google.firebase.database.DataSnapshot;
 import com.google.firebase.database.DatabaseError;
@@ -13,6 +15,8 @@ import com.mtech.parttimeone.photolearn.data.entity.LearningItemEntity;
 import com.mtech.parttimeone.photolearn.data.mapper.LearningItemMapper;
 import com.mtech.parttimeone.photolearn.data.repository.LearningItemRepository;
 
+import org.apache.commons.lang3.mutable.Mutable;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -22,17 +26,43 @@ import java.util.List;
 
 public class LearningItemViewModel extends ViewModel {
     private MutableLiveData<List<LearningItemBO>> learningItemBOs;
-    private List<LearningItemBO> learningItems = new ArrayList<>();
-    private LearningItemBO learningItem;
-    private boolean hasLoadedLearningItems = false;
-    private boolean hasLoadedLearningItem = false;
+    private MutableLiveData<LearningItemBO> learningItemBO;
 
     /** This points to the collection of learning titles **/
     private LearningItemRepository learningItemRepository = new LearningItemRepository();
 
     private DatabaseReference mLearningItemRef;
 
-    private void getLearningTitle(String titleId) {
+    /**
+     * This method loads just a single learning item
+     * @param titleId
+     * @return learningitemBO
+     */
+    public LiveData<LearningItemBO> getLearningTitle(String titleId) {
+        if (learningItemBO == null) {
+            learningItemBO = new MutableLiveData<LearningItemBO>();
+            loadLearningItem(titleId);
+        }
+        return learningItemBO;
+    }
+
+    /**
+     * This method loads just all learning items
+     * @param titleId
+     * @return list of learningitemBO
+     */
+    public LiveData<List<LearningItemBO>> getLearningTitles(String titleId) {
+        loadAllLearningItems(titleId);
+
+        return learningItemBOs;
+    }
+
+    @Override
+    protected void onCleared() {
+        learningItemRepository.removeListener();
+    }
+
+    private void loadLearningItem(String titleId) {
         mLearningItemRef = FirebaseDatabase.getInstance().getReference(learningItemRepository.getRootNode());
         mLearningItemRef.child(titleId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
@@ -41,56 +71,15 @@ public class LearningItemViewModel extends ViewModel {
 
                 if (eLearningItem!= null) {
                     LearningItemMapper mapper = new LearningItemMapper();
-                    learningItem = mapper.map(eLearningItem);
-                    hasLoadedLearningItem = true;
+                    learningItemBO.setValue(mapper.map(eLearningItem));
                 }
             }
 
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
-    }
-
-    @Override
-    protected void onCleared() {
-        learningItemRepository.removeListener();
-    }
-
-    /**
-     * This method loads just all learning items
-     * @param userId
-     * @param titleId
-     * @return list of learningitemBO
-     */
-    public List<LearningItemBO> loadLearningItems(String titleId, String userId) {
-        loadAllLearningItems(titleId);
-
-        if (hasLoadedLearningItems) {
-            hasLoadedLearningItems = false;
-            return this.learningItems;
-        }
-        else {
-            return null;
-        }
-    }
-
-    /**
-     * This method loads just a single learning item
-     * @param userId
-     * @param itemId
-     * @return learningitemBO
-     */
-    public LearningItemBO loadLearningItem(String itemId, String userId) {
-        getLearningTitle(itemId);
-
-        if (hasLoadedLearningItem) {
-            hasLoadedLearningItem = false;
-            return this.learningItem;
-        } else {
-            return null;
-        }
     }
 
     /**
@@ -123,7 +112,7 @@ public class LearningItemViewModel extends ViewModel {
     //this loads all items based on titleId
     private void loadAllLearningItems(String titleId) {
         mLearningItemRef = FirebaseDatabase.getInstance().getReference(learningItemRepository.getRootNode());
-        mLearningItemRef.child(titleId).addListenerForSingleValueEvent(new ValueEventListener() {
+        mLearningItemRef.child(titleId).addValueEventListener(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 if (dataSnapshot.getValue() != null) {
@@ -135,13 +124,12 @@ public class LearningItemViewModel extends ViewModel {
                         LearningItemBO learningItemBO = mapper.map(entity);
                         listLearningItems.add(learningItemBO);
                     }
-
                     learningItemBOs.setValue(listLearningItems);
                 }
             }
             @Override
             public void onCancelled(DatabaseError databaseError) {
-
+                Log.w("TAG: ",databaseError.getMessage());
             }
         });
     }
@@ -152,22 +140,6 @@ public class LearningItemViewModel extends ViewModel {
         mLearningItemRef.child(titleId).setValue(learningItemBO);
 
         return true;
-    }
-
-    public boolean HasLoadedLearningItems() {
-        return hasLoadedLearningItems;
-    }
-
-    public void setHasLoadedLearningItems(boolean hasLoadedLearningItems) {
-        this.hasLoadedLearningItem = hasLoadedLearningItem;
-    }
-
-    public boolean HasLoadedLearningItem() {
-        return hasLoadedLearningItem;
-    }
-
-    public void setHasLoadedLearningItem(boolean hasLoadedLearningItem) {
-        this.hasLoadedLearningItem = hasLoadedLearningItem;
     }
 
     public boolean removeLearningItem(String titleId) {
