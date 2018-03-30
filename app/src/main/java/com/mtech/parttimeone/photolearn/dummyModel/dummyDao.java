@@ -195,6 +195,24 @@ public class dummyDao {
 
     }
 
+    public void deleteLearningSession(Fragment f, String sessionId) throws Exception {
+
+        LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.deleteLearningSession(sessionId,userName);
+
+    }
+
+    public void updateLearningSession(Fragment f, LearningSessionBO learningSessionBO, String sessionId) throws Exception {
+
+        LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.updateLearningSession(learningSessionBO,sessionId,userName);
+
+    }
+
 
 
     public void createLearningTitle(Fragment f, LearningTitleBO learningTitleBO) throws Exception {

@@ -154,8 +154,8 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         return mainFragment;
     }
 
-    public Fragment setCreateLearningSessionFragment(){
-        mainFragment = (Fragment) CreateLearningSessionFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");
+    public Fragment setCreateLearningSessionFragment(String sessionID, String mode){
+        mainFragment = (Fragment) CreateLearningSessionFragment.newInstance(sessionID,mode);
         intheView(mainFragment);
         return mainFragment;
     }

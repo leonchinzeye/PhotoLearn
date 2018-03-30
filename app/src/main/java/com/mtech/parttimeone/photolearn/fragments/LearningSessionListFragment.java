@@ -153,7 +153,7 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
 
             case R.id.action_add:
                 BottomBarActivity act = (BottomBarActivity)getActivity();
-                act.setCreateLearningSessionFragment();
+                act.setCreateLearningSessionFragment("","NEW");
                 // Not implemented here
                 return false;
             case R.id.action_search:
@@ -265,10 +265,26 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
         LearningSessionBO lbo = (LearningSessionBO) lslAdap.getItem(info.position);
 
         if(item.getTitle()=="Update"){
-            Toast.makeText(getContext(),"Update Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
+            BottomBarActivity act = (BottomBarActivity)getActivity();
+            act.setCreateLearningSessionFragment(lbo.getSessionId(),"UPDATE");
+            //Toast.makeText(getContext(),"Update Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
         }
         else if(item.getTitle()=="Delete"){
-            Toast.makeText(getContext(),"Delete Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
+            dummyDao dao = new dummyDao();
+            try {
+                dao.deleteLearningSession(this,lbo.getSessionId());
+                Toast.makeText(getContext(),"Delete Called for " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
+
+                setListview();
+
+                if (lslAdap != null)
+                    lslAdap.notifyDataSetChanged();
+
+            } catch (Exception e) {
+                e.printStackTrace();
+                Toast.makeText(getContext(),"Error deleting: " + lbo.getSessionId(),Toast.LENGTH_LONG).show();
+            }
+
         }else{
             return false;
         }
