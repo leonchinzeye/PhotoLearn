@@ -79,7 +79,7 @@ public class QuizAttemptBO {
         if (answer.isEmpty()){
             for (int i = 0;i<size;i++){
                 if (i==index){
-                    answer.add(TRUUE);
+                    answer.add(TRUE);
                 }else {
                     answer.add(FALSE);
                 }
