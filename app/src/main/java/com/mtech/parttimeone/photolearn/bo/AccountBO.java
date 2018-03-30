@@ -10,20 +10,28 @@ import java.math.BigInteger;
  */
 
 public class AccountBO {
-
-    private String uid;
-    private BigInteger accountNumber;
+    private String userUid;
     private String accountName;
-    private TrainerBO trainerBO;
-    private ParticipantBO participantBO;
-    private UserType currentUser;
+    private String email;
+    private String lastActive;
 
-    public BigInteger getAccountNumber() {
-        return accountNumber;
+    public AccountBO() {
+
     }
 
-    public void setAccountNumber(BigInteger accountNumber) {
-        this.accountNumber = accountNumber;
+    public AccountBO(String userUid, String name, String email, String lastActive) {
+        this.userUid = userUid;
+        this.accountName = name;
+        this.email = email;
+        this.lastActive = lastActive;
+    }
+
+    public String getUserUid() {
+        return userUid;
+    }
+
+    public void setUserUid(String userUid) {
+        this.userUid = userUid;
     }
 
     public String getAccountName() {
@@ -34,35 +42,19 @@ public class AccountBO {
         this.accountName = accountName;
     }
 
-    public TrainerBO getTrainerBO() {
-        return trainerBO;
+    public String getEmail() {
+        return email;
     }
 
-    public void setTrainerBO(TrainerBO trainerBO) {
-        this.trainerBO = trainerBO;
+    public void setEmail(String email) {
+        this.email = email;
     }
 
-    public ParticipantBO getParticipantBO() {
-        return participantBO;
+    public String getLastActive() {
+        return lastActive;
     }
 
-    public void setParticipantBO(ParticipantBO participantBO) {
-        this.participantBO = participantBO;
-    }
-
-    public String getUid() {
-        return uid;
-    }
-
-    public void setUid(String uid) {
-        this.uid = uid;
-    }
-
-    public UserType getCurrentUser() {
-        return currentUser;
-    }
-
-    public void setCurrentUser(UserType currentUser) {
-        this.currentUser = currentUser;
+    public void setLastActive(String lastActive) {
+        this.lastActive = lastActive;
     }
 }

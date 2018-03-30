@@ -6,6 +6,10 @@ public class AccountEntity {
     private String email;
     private String lastActive;
 
+    public AccountEntity() {
+
+    }
+
     public AccountEntity(String userId, String name, String email, String lastActive) {
         this.userId = userId;
         this.name = name;
