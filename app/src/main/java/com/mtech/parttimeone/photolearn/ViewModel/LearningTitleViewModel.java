@@ -44,14 +44,14 @@ public class LearningTitleViewModel extends ViewModel {
 
     /**
      * This method loads just a single learning title
-     *
-     * @param id
-     * @return learningtitleBO
+     * @param sessionId
+     * @param titleId
+     * @return
      */
-    public LiveData<LearningTitleBO> getLearningTitle(String id) {
+    public LiveData<LearningTitleBO> getLearningTitle(String sessionId, String titleId) {
         if (learningTitleBO == null) {
             learningTitleBO = new MutableLiveData<LearningTitleBO>();
-            loadLearningTitle(id);
+            loadLearningTitle(sessionId, titleId);
         }
         return learningTitleBO;
     }
@@ -232,16 +232,16 @@ public class LearningTitleViewModel extends ViewModel {
         userTitleRepository.removeListener();
     }
 
-    private void loadLearningTitle(String id) {
+    private void loadLearningTitle(String sessionId, String titleId) {
         mLearningTitleRef = FirebaseDatabase.getInstance().getReference(learningTitleRepository.getRootNode());
-        mLearningTitleRef.child(id).addListenerForSingleValueEvent(new ValueEventListener() {
+        mLearningTitleRef.child(sessionId).child(titleId).addListenerForSingleValueEvent(new ValueEventListener() {
             @Override
             public void onDataChange(DataSnapshot dataSnapshot) {
                 LearningTitleEntity eLearningTitle = dataSnapshot.getValue(LearningTitleEntity.class);
 
                 if (eLearningTitle != null) {
                     LearningTitleBO titleBO = mapper.map(eLearningTitle);
-                    titleBO.setUuid(id);
+                    titleBO.setUuid(titleId);
                     learningTitleBO.setValue(titleBO);
                 }
             }
