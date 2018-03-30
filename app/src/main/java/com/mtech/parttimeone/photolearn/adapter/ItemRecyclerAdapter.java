@@ -13,6 +13,7 @@ import android.widget.TextView;
 import com.mtech.parttimeone.photolearn.R;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
 import com.mtech.parttimeone.photolearn.dummyModel.Item;
+import com.squareup.picasso.Picasso;
 
 import java.util.List;
 
@@ -51,8 +52,12 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
 
         String mDrawableName = ItemList.get(position).getPhotoURL();
         Context c = holder.dispimage.getContext();
-        int resID = c.getResources().getIdentifier(mDrawableName , "drawable", c.getPackageName());
-        holder.dispimage.setImageResource(resID);
+        //int resID = c.getResources().getIdentifier(mDrawableName , "drawable", c.getPackageName());
+        //holder.dispimage.setImageResource(resID);
+       // mDrawableName = "https://firebasestorage.googleapis.com/v0/b/photolearn-c06db.appspot.com/o/images%2Flearning%2Ftyut?alt=media&token=99acb196-ed9c-45fd-811b-1e5a7f463ac7";
+        mDrawableName = "https://firebasestorage.googleapis.com/v0/b/photolearn-c06db.appspot.com/o/images%2Flearning%2Futy_67?alt=media&token=9efea33f-8454-4452-b6f9-930ba782b585";
+        Picasso.get().load(mDrawableName).into(holder.dispimage);
+
         //holder.dispimage.ItemList.get(position).getImage());
     }
 

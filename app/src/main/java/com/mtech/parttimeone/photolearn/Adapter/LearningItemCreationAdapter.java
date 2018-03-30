@@ -28,8 +28,24 @@ public class LearningItemCreationAdapter extends BaseAdapter {
     public static final int TYPE_PHOTO = 1;
 
     private Context context;
-    String title;
-    String desc_photo;
+
+    private String desc_photo;
+    private String title;
+    public void setTitle(String title) {
+        this.title = title;
+    }
+
+    public String getTitle() {
+        return title;
+    }
+
+    public String getDesc_photo() {
+        return desc_photo;
+    }
+
+    public void setDesc_photo(String desc_photo) {
+        this.desc_photo = desc_photo;
+    }
 
     public LearningItemCreationAdapter(Context context){
         this.context = context;
