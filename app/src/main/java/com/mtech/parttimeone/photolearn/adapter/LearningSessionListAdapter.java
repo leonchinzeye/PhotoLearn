@@ -66,8 +66,8 @@ public class LearningSessionListAdapter extends BaseAdapter {
 
         LearningSessionBO ls = (LearningSessionBO) getItem(i);
 
-        titleTextView.setText(ls.getCourseCode());
-        subtitleTextView.setText(ls.getCourseModule());
+        titleTextView.setText(ls.getCourseModule());
+        subtitleTextView.setText(ls.getSessionId());
         //creatorTextView.setText(ls.getLearningSessionCreator());
         dateTextView.setText(ls.getCourseDate());
         return rowView;

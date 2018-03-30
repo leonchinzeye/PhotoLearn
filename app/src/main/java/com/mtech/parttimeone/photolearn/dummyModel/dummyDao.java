@@ -195,7 +195,6 @@ public class dummyDao {
 
     }
 
-
     public void createLearningTitle(Fragment f, LearningTitleBO learningTitleBO) throws Exception {
 
 

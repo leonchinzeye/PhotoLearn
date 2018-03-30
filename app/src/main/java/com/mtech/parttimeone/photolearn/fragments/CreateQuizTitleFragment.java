@@ -98,12 +98,12 @@ public class CreateQuizTitleFragment extends android.support.v4.app.Fragment {
                 ltbo.setTitle(txtQuizTitle.getText().toString());
                 ltbo.setSessionId(mParam1);
                 ltbo.setCreatedBy(dao.getUserName(FragmentSelf));
-                ltbo.setTitleId(UUID.randomUUID().toString());
+                //ltbo.setTitleId(UUID.randomUUID().toString());
 
 
                 try {
 
-                    dao.createQuizTitle(FragmentSelf,ltbo,txtQuizTitle.getText().toString());
+                    dao.createQuizTitle(FragmentSelf,ltbo);
                     Toast.makeText(getActivity(),"Quiz Title (" + ltbo.getTitle() +") created!",Toast.LENGTH_SHORT).show();
                     txtQuizTitle.setText("");
 

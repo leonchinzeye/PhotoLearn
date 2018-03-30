@@ -154,14 +154,14 @@ public class BottomBarActivity extends BaseActivity   implements ItemRecyclerFra
         return mainFragment;
     }
 
-    public Fragment setCreateLearningTitleFragment(){
-        mainFragment = (Fragment) CreateLearningTitleFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");
+    public Fragment setCreateLearningTitleFragment(String learningSessionID){
+        mainFragment = (Fragment) CreateLearningTitleFragment.newInstance(learningSessionID,"TO_BE_REPLACED");
         intheView(mainFragment);
         return mainFragment;
     }
 
-    public Fragment setCreateQuizTitleFragment(){
-        mainFragment = (Fragment) CreateQuizTitleFragment.newInstance("TO_BE_REPLACED","TO_BE_REPLACED");
+    public Fragment setCreateQuizTitleFragment(String learningSessionID){
+        mainFragment = (Fragment) CreateQuizTitleFragment.newInstance(learningSessionID,"TO_BE_REPLACED");
         intheView(mainFragment);
         return mainFragment;
        // setDefaultFragment();

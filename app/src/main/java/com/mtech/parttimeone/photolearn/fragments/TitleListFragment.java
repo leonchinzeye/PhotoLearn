@@ -1,9 +1,12 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,14 +14,22 @@ import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
 
+import com.mtech.parttimeone.photolearn.Adapter.LearningSessionListAdapter;
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.Adapter.TitleListAdapter;
+import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
+import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
+import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.bo.TitleBO;
 import com.mtech.parttimeone.photolearn.dummyModel.Title;
 import com.mtech.parttimeone.photolearn.dummyModel.dummyDao;
 
 import java.util.ArrayList;
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -82,6 +93,8 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
         mListView = (ListView) view.findViewById(R.id.title_list_view);
         setListview(container.getContext());
         registerForContextMenu(mListView);
+
+
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -160,14 +173,39 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
 
         switch (mParam2) {
             case "TITLE":
-                lsl = dao.GetTitleList(mParam1);
+                LearningTitleViewModel vmLearningTitle = ViewModelProviders.of(this).get(LearningTitleViewModel.class);
+                vmLearningTitle.getLearningTitles(mParam1).observe(this, new Observer<List<LearningTitleBO>>() {
+                    @Override
+                    public void onChanged(@Nullable List<LearningTitleBO> learningTitleBOS) {
+                        TitleAdapter = new TitleListAdapter<LearningTitleBO>(c,learningTitleBOS);
+
+                        mListView.setAdapter(TitleAdapter);
+
+                        TitleAdapter.notifyDataSetChanged();
+                    }
+                });
                 break;
             case "QUIZ":
-                lsl = dao.GetQuizList(mParam1);
+                QuizTitleViewModel vmQuizTitle = ViewModelProviders.of(this).get(QuizTitleViewModel.class);
+                vmQuizTitle.getQuizTitles(mParam1).observe(this, new Observer<List<QuizTitleBO>>() {
+                    @Override
+                    public void onChanged(@Nullable List<QuizTitleBO> QuizTitleBOS) {
+                        TitleAdapter = new TitleListAdapter<QuizTitleBO>(c,QuizTitleBOS);
+
+                        mListView.setAdapter(TitleAdapter);
+
+                        TitleAdapter.notifyDataSetChanged();
+                    }
+                });
                 break;
 
             default:
                 lsl = new ArrayList<TitleBO>();
+                TitleAdapter = new TitleListAdapter<TitleBO>(c,lsl);
+
+                mListView.setAdapter(TitleAdapter);
+
+                TitleAdapter.notifyDataSetChanged();
             break;
 
         }
@@ -203,17 +241,15 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
 //        lsl.add(ls13);
 //        lsl.add(ls14);
 
-        TitleAdapter = new TitleListAdapter(c,lsl);
 
-        mListView.setAdapter(TitleAdapter);
-
-        TitleAdapter.notifyDataSetChanged();
 
     }
 
     @Override
     public void onResume() {
         super.onResume();
-        TitleAdapter.notifyDataSetChanged();
+
+        if (TitleAdapter != null)
+            TitleAdapter.notifyDataSetChanged();
     }
 }
