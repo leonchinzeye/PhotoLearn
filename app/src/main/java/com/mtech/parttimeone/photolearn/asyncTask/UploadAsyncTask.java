@@ -16,6 +16,8 @@ import com.mtech.parttimeone.photolearn.activity.BaseActivity;
 import com.mtech.parttimeone.photolearn.activity.ItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 
+import java.util.UUID;
+
 /**
  * Created by kunal on 25/3/2018.
  */
@@ -40,8 +42,10 @@ public class UploadAsyncTask extends AsyncTask<Uri, Void, Void> {
     protected Void doInBackground(Uri... file) {
         // Uri file = Uri.fromFile(new File("path/to/images/rivers.jpg"));
         // StorageReference riversRef = mStorageRef.child("images/rivers.jpg");
-        Log.d(TAG, "Titleid:"+ activity.getItemId());
-        mStorageRef.child("images").child("learning").child(activity.getItemId()).putFile(file[0])
+        Log.d(TAG, "Titleid:"+ activity.getItemType());
+        String uniqueID = UUID.randomUUID().toString();
+
+        mStorageRef.child("images").child(activity.getItemType()).child(uniqueID).putFile(file[0])
                 .addOnSuccessListener(new OnSuccessListener<UploadTask.TaskSnapshot>() {
                     @Override
                     public void onSuccess(UploadTask.TaskSnapshot taskSnapshot) {
@@ -55,7 +59,8 @@ public class UploadAsyncTask extends AsyncTask<Uri, Void, Void> {
                     @Override
                     public void onFailure(@NonNull Exception exception) {
                         // Handle unsuccessful uploads
-                        // ...
+                        Log.d(TAG, "Exception:"+ exception.getMessage());
+
                     }
                 });
         return null;
