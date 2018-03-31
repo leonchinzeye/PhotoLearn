@@ -2,6 +2,8 @@ package com.mtech.parttimeone.photolearn.data.mapper;
 
 import com.mtech.parttimeone.photolearn.bo.QuizAttemptBO;
 import com.mtech.parttimeone.photolearn.data.entity.QuizAttemptEntity;
+import com.mtech.parttimeone.photolearn.data.entity.QuizItemAttemptEntity;
+
 import org.apache.commons.lang3.StringUtils;
 
 import java.util.ArrayList;
@@ -14,24 +16,21 @@ import java.util.List;
 public class QuizAttemptMapper extends FirebaseMapper<QuizAttemptEntity, QuizAttemptBO>  {
     @Override
     public QuizAttemptBO map(QuizAttemptEntity eQuizAttempt) {
-        List<String> answer = new ArrayList<>();
-        QuizAttemptBO quizAttemptBO = new QuizAttemptBO("","","",answer);
-
-        if (StringUtils.isNotEmpty(eQuizAttempt.getAttemptId())) {
-            quizAttemptBO.setAttemptId(eQuizAttempt.getAttemptId());
-        }
-
-        if (StringUtils.isNotEmpty(eQuizAttempt.getItemId())) {
-            quizAttemptBO.setItemId(eQuizAttempt.getItemId());
-        }
+        QuizAttemptBO quizAttemptBO = new QuizAttemptBO("","",null);
 
         if (StringUtils.isNotEmpty(eQuizAttempt.getUserId())) {
             quizAttemptBO.setUserId(eQuizAttempt.getUserId());
         }
 
-        if (StringUtils.isNotEmpty(eQuizAttempt.getAnswer().toString())) {
-            quizAttemptBO.setAnswer(eQuizAttempt.getAnswer());
+        if (StringUtils.isNotEmpty(eQuizAttempt.getSaveState())) {
+            quizAttemptBO.setSaveState(eQuizAttempt.getSaveState());
         }
+
+        /*
+        if (StringUtils.isNotEmpty(eQuizAttempt.getAttemptEntityList())) {
+            quizAttemptBO.setAttemptBOList(eQuizAttempt.setAttemptEntityList());
+        }
+        */
 
         return quizAttemptBO;
     }
@@ -40,20 +39,12 @@ public class QuizAttemptMapper extends FirebaseMapper<QuizAttemptEntity, QuizAtt
     public QuizAttemptEntity mapFrom(QuizAttemptBO quizAttemptBO) {
         QuizAttemptEntity  eQuizAttempt = new QuizAttemptEntity();
 
-        if (StringUtils.isNotEmpty(quizAttemptBO.getAttemptId())) {
-            eQuizAttempt.setAttemptId(quizAttemptBO.getAttemptId());
-        }
-
-        if (StringUtils.isNotEmpty(quizAttemptBO.getItemId())) {
-            eQuizAttempt.setItemId(quizAttemptBO.getItemId());
-        }
-
         if (StringUtils.isNotEmpty(quizAttemptBO.getUserId())) {
             eQuizAttempt.setUserId(quizAttemptBO.getUserId());
         }
 
-        if (StringUtils.isNotEmpty(quizAttemptBO.getAnswer().toString())) {
-            eQuizAttempt.setAnswer(quizAttemptBO.getAnswer());
+        if (StringUtils.isNotEmpty(quizAttemptBO.getSaveState())) {
+            eQuizAttempt.setSaveState(quizAttemptBO.getSaveState());
         }
 
         return eQuizAttempt;

@@ -9,83 +9,41 @@ import java.util.List;
  */
 
 public class QuizAttemptBO {
-    final static String TRUE = "true";
-    final static String FALSE = "false";
-
-    private String attemptId;
     private String userId;
-    private String itemId;
-    private List<String> answer = new ArrayList<>();
+    private String saveState;
+    List<QuizItemAttemptBO> attemptBOList;
 
-    public void QuizAttemptBO() {
+    public QuizAttemptBO() {
 
     }
 
-    public QuizAttemptBO(String attemptId, String userId, String itemId, List<String> answer) {
-        this.attemptId = attemptId;
+    public QuizAttemptBO(String userId, String saveState, List<QuizItemAttemptBO> attemptBOList) {
         this.userId = userId;
-        this.itemId = itemId;
-        this.answer = answer;
-    }
-//
-    public QuizAttemptBO(){
-
-    }
-
-    public String getAttemptId() {
-        return attemptId;
-    }
-
-    public void setAttemptId(String attemptId) {
-        this.attemptId = attemptId;
+        this.saveState = saveState;
+        this.attemptBOList = attemptBOList;
     }
 
     public String getUserId() {
-        return userId;
-    }
+    return userId;
+}
 
     public void setUserId(String userId) {
         this.userId = userId;
     }
 
-    public String getItemId() {
-        return itemId;
+    public String getSaveState() {
+        return saveState;
     }
 
-    public void setItemId(String itemId) {
-        this.itemId = itemId;
+    public void setSaveState(String saveState) {
+        this.saveState = saveState;
     }
 
-    public List<String> getAnswer() {
-        return answer;
+    public List<QuizItemAttemptBO> getAttemptBOList() {
+        return attemptBOList;
     }
 
-    public void setAnswer(List<String> answer) {
-        this.answer = answer;
-    }
-
-    public Boolean isAns(int index){
-        if (answer.isEmpty()){
-            return false;
-        }else {
-            String value = answer.get(index);
-            Boolean isAns = Boolean.valueOf(value);
-            return isAns;
-        }
-    }
-
-    public void addAns(boolean value,int index,int size){
-        String isAns = String.valueOf(value);
-        if (answer.isEmpty()){
-            for (int i = 0;i<size;i++){
-                if (i==index){
-                    answer.add(TRUE);
-                }else {
-                    answer.add(FALSE);
-                }
-            }
-        }else{
-            answer.set(index,isAns);
-        }
+    public void setAttemptBOList(List<QuizItemAttemptBO> attemptBOList) {
+        this.attemptBOList = attemptBOList;
     }
 }

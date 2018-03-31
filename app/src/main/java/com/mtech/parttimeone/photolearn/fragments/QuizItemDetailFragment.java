@@ -62,8 +62,11 @@ public class QuizItemDetailFragment extends Fragment  {
                     return;
                 }
                 CheckedTextView checkedTextView = view.findViewById(R.id.option_selection_text);
+                //TODO
+                /*
                 QuizAttemptBO attemptBO = itemObj.getQuizAttemptBO();
                 attemptBO.addAns(!checkedTextView.isChecked(),position-2,itemObj.getAnswer().size());
+                */
                 checkedTextView.setChecked(!checkedTextView.isChecked());
                 adapter.notifyDataSetChanged();
                 ((QuizItemDetailActivity)getActivity()).updateData(itemObj, mParam1);

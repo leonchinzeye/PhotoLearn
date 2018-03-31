@@ -26,7 +26,7 @@ public class QuizItemBO extends ItemBO {
     private List<String> answer = new ArrayList<>(); //option
     private List<String> answerOption = new ArrayList<>(); //isOptionAns
 
-    private QuizAttemptBO quizAttemptBO = new QuizAttemptBO("","","",new ArrayList<>());
+    //private QuizAttemptBO quizAttemptBO = new QuizAttemptBO("","","",new ArrayList<>());
 
    // private String itemDescription;
 
@@ -58,6 +58,7 @@ public class QuizItemBO extends ItemBO {
         this.detailedSolution = detailedSolution;
     }
 
+    /*
     public void setQuizAttemptBO(QuizAttemptBO quizAttemptBO){
         this.quizAttemptBO = quizAttemptBO;
     }
@@ -65,6 +66,7 @@ public class QuizItemBO extends ItemBO {
     public QuizAttemptBO getQuizAttemptBO(){
         return quizAttemptBO;
     }
+    */
 
     public List<String> getAnswer() {
         return answer;
@@ -133,8 +135,8 @@ public class QuizItemBO extends ItemBO {
 
     public Boolean isAnsCorrect(){
         // isAns option should be true.
-        return answerOption.equals(quizAttemptBO.getAnswer());//containsAll(quizAttemptBO.getAnswer());
-
+        //return answerOption.equals(quizAttemptBO.getAnswer());//containsAll(quizAttemptBO.getAnswer());
+        //TODO
+        return true;
     }
-
 }

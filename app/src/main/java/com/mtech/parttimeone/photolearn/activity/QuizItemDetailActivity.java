@@ -94,8 +94,11 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist.add("false");
         obj_0.setAnswerOption(anslist);
         QuizAttemptBO attemptBO_0 = new QuizAttemptBO();
+        //TODO
+        /*  need to iterate through array
         attemptBO_0.setAnswer(anslist);
         obj_0.setQuizAttemptBO(attemptBO_0);
+        */
         List<String> optionList = new ArrayList<>();
         optionList.add("ques0_This is option 1");
         optionList.add("ques0_This is option 2");
@@ -115,8 +118,11 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist1.add("false");
         obj_1.setAnswerOption(anslist1);
         QuizAttemptBO attemptBO_01 = new QuizAttemptBO();;
+        //TODO
+        /*  need to iterate through array
         attemptBO_01.setAnswer(anslist1);
         obj_1.setQuizAttemptBO(attemptBO_01);
+        */
         List<String> optionList1 = new ArrayList<>();
         optionList1.add("ques1_This is option 1");
         optionList1.add("ques1_This is option 2");
@@ -139,8 +145,11 @@ public class QuizItemDetailActivity extends BaseActivity {
         // answer option
         obj_2.setAnswerOption(anslist2);
         QuizAttemptBO attemptBO_02 = new QuizAttemptBO();;
+        //TODO
+        /*  need to iterate through array
         attemptBO_02.setAnswer(anslist2);
         obj_2.setQuizAttemptBO(attemptBO_02);
+         */
         List<String> optionList2 = new ArrayList<>();
         optionList2.add("ques2_This is option 1");
         optionList2.add("ques2_This is option 2");
@@ -163,8 +172,11 @@ public class QuizItemDetailActivity extends BaseActivity {
         anslist3.add("false");
         obj_3.setAnswerOption(anslist);
         QuizAttemptBO attemptBO_03 = new QuizAttemptBO();;
+        //TODO
+        /*  need to iterate through array
         attemptBO_03.setAnswer(anslist3);
         obj_3.setQuizAttemptBO(attemptBO_03);
+        */
         List<String> optionList3 = new ArrayList<>();
         optionList3.add("ques3_This is option 1");
         optionList3.add("ques3_This is option 2");
@@ -191,8 +203,11 @@ public class QuizItemDetailActivity extends BaseActivity {
 
         obj_4.setAnswerOption(anslist_4);
         QuizAttemptBO attemptBO_04 = new QuizAttemptBO();;
+        //TODO
+        /*  need to iterate through array
         attemptBO_04.setAnswer(anslist4);
         obj_4.setQuizAttemptBO(attemptBO_04);
+        */
         List<String> optionList4 = new ArrayList<>();
         optionList4.add("ques4_This is option 1");
         optionList4.add("ques4_This is option 2");
@@ -250,7 +265,8 @@ public class QuizItemDetailActivity extends BaseActivity {
 
         for (int i =0;i<itemArray.size();i++){
             QuizItemBO itemBO = itemArray.get(i);
-            QuizAttemptBO attemptBO = itemBO.getQuizAttemptBO();
+            //TODO
+            //QuizAttemptBO attemptBO = itemBO.getQuizAttemptBO();
         }
 
         showScoreReview("Your total score is " + count+"/"+ itemArray.size()+",go back and review the Answer");
