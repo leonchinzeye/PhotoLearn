@@ -118,19 +118,36 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
                 //getActivity().startActivity(myIntent);
 
                 dummyDao dao = new dummyDao();
-                switch (dao.getMode(FragmentSelf)){
-                    case PARTICIPANT:
-                        Intent iq = new Intent(getActivity(), QuizItemDetailActivity.class);
-                        iq.putExtra("TitleID", mParam2);
-                        startActivity(iq);
+
+                BottomBarActivity act = (BottomBarActivity)getActivity();
+
+                switch (mParam2) {
+                    case "TITLE":
+
+                        act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                        break;
+                    case "QUIZ":
+                        switch (dao.getMode(FragmentSelf)){
+                            case PARTICIPANT:
+                                Intent iq = new Intent(getActivity(), QuizItemDetailActivity.class);
+                                iq.putExtra("TitleID", mParam2);
+                                startActivity(iq);
+                                break;
+
+                            case TRAINER:
+                                act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                                break;
+
+                        }
                         break;
 
-                    case TRAINER:
-                        BottomBarActivity act = (BottomBarActivity)getActivity();
-                        act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                    default:
+
                         break;
 
                 }
+
+
 
 
                 //Toast.makeText(getBaseContext(), sessionID.getText(), Toast.LENGTH_LONG).show();
