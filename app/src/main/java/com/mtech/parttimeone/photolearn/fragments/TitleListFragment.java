@@ -135,7 +135,11 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
                                 break;
 
                             case TRAINER:
-                                act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                                //act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                                Intent iq2 = new Intent(getActivity(), QuizItemCreationActivity.class);
+                                iq2.putExtra("TitleID", mParam2);
+                                iq2.putExtra("Mode", "UPDATE");
+                                startActivity(iq2);
                                 break;
 
                         }
