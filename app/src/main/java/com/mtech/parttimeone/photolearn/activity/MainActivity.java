@@ -104,6 +104,7 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             findViewById(R.id.sign_in_button).setVisibility(View.VISIBLE);
             findViewById(R.id.button_facebook_login).setVisibility(View.VISIBLE);
         } else {
+            String test = currentUser.getDisplayName();
             Log.d(TAG, "onStart uesr id:" + currentUser.getUid() + "::display name:" + currentUser.getDisplayName());
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
@@ -201,13 +202,15 @@ public class MainActivity extends BaseActivity implements View.OnClickListener {
             findViewById(R.id.sign_in_button).setVisibility(View.GONE);
             findViewById(R.id.button_facebook_login).setVisibility(View.GONE);
 
+            GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn) getApplicationContext();
+            globalPhotoLearn.setmAuth(mAuth);
+            globalPhotoLearn.setmGoogleSignInClient(mGoogleSignInClient);
+            globalPhotoLearn.setmUserType(UserType.TRAINER);
+
             AccountViewModel accModel = ViewModelProviders.of(this).get(AccountViewModel.class);
             accModel.getAccount(user).observe(this, new Observer<AccountBO>() {
                 @Override
                 public void onChanged(@Nullable AccountBO accountBO) {
-                    GlobalPhotoLearn globalPhotoLearn = (GlobalPhotoLearn) getApplicationContext();
-                    globalPhotoLearn.setmAuth(mAuth);
-                    globalPhotoLearn.setmGoogleSignInClient(mGoogleSignInClient);
                     globalPhotoLearn.setAccountBO(accountBO);
 
                     switch (accountBO.getLastActive()) {

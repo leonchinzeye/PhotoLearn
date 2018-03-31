@@ -35,12 +35,7 @@
         <activity android:name=".activity.LoginActivity" />
         <activity android:name=".activity.BaseActivity" />
         <activity android:name=".activity.BottomBarActivity" />
-        <activity android:name=".activity.LearnItemCreationActivity">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.Default" />
-            </intent-filter>
-        </activity>
+        <activity android:name=".activity.LearnItemCreationActivity"/>
         <activity android:name=".activity.ModeActivity" />
 
         <meta-data
