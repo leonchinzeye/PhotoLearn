@@ -54,6 +54,7 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
     private String mParam2;
     private ListView mListView;
     private LearningSessionListAdapter lslAdap;
+    private  android.support.v4.app.Fragment FragmentSelf;
 
     static public enum UserType {
         TRAINER, PARTICIPANT
@@ -103,6 +104,8 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
 
         mListView = (ListView) view.findViewById(R.id.fragment_learning_session_list_view);
 
+        FragmentSelf = this;
+
         try {
             setListview();
         } catch (InterruptedException e) {
@@ -138,6 +141,21 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         super.onCreateOptionsMenu(menu, inflater);
         inflater.inflate(R.menu.menu_add_search, menu);
+
+        dummyDao dao = new dummyDao();
+
+        switch (dao.getMode(this)){
+            case PARTICIPANT:
+                menu.getItem(0).setEnabled(false);
+                menu.getItem(1).setEnabled(true);
+                break;
+
+            case TRAINER:
+                menu.getItem(0).setEnabled(true);
+                menu.getItem(1).setEnabled(false);
+                break;
+
+        }
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -166,12 +184,27 @@ public class LearningSessionListFragment extends android.support.v4.app.Fragment
                 final EditText input = new EditText(getContext());
                 alert.setView(input);
 
-                alert.setPositiveButton("Search", new DialogInterface.OnClickListener() {
+                alert.setPositiveButton("Enroll", new DialogInterface.OnClickListener() {
                     public void onClick(DialogInterface dialog, int whichButton) {
                         String value = input.getText().toString();
                         // Filter the BO for the specific learning session
                         dummyDao dao = new dummyDao();
-                        lslAdap.setDataSource(dao.GetLearningSession(value));
+                        LearningSessionViewModel vmLearningSession = ViewModelProviders.of(FragmentSelf).get(LearningSessionViewModel.class);
+                        vmLearningSession.enrollLearningSession(value,dao.getUserName(FragmentSelf)).observe(FragmentSelf, new Observer<LearningSessionBO>() {
+                            @Override
+                            public void onChanged(@Nullable LearningSessionBO learningSessionBOS) {
+                                if (learningSessionBOS.getSessionId() == "THIS IS A HACK") {
+
+                                    Toast.makeText(getContext(),"Learning session not found",Toast.LENGTH_LONG).show();
+
+                                }else {
+                                    //Enroll
+                                    vmLearningSession.enrollLearningSession(learningSessionBOS.getSessionId(),dao.getUserName(FragmentSelf));
+                                    Toast.makeText(getContext(),"Learning session enrolled successfully",Toast.LENGTH_LONG).show();
+                                }
+                            }
+                        });
+
                     }
                 });
                 alert.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {

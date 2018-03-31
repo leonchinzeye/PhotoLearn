@@ -6,14 +6,17 @@ import android.support.v4.app.Fragment;
 
 import com.google.firebase.auth.FirebaseAuth;
 import com.mtech.parttimeone.photolearn.ViewModel.AccountViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningItemViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.QuizItemViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
 import com.mtech.parttimeone.photolearn.application.GlobalPhotoLearn;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
+import com.mtech.parttimeone.photolearn.bo.QuizItemBO;
 import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
 import com.mtech.parttimeone.photolearn.bo.TitleBO;
 import com.mtech.parttimeone.photolearn.enumeration.UserType;
@@ -186,6 +189,8 @@ public class dummyDao {
         return ut;
     }
 
+
+
     public void createLearningSession(Fragment f, LearningSessionBO learningSessionBO) throws Exception {
 
         LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
@@ -204,6 +209,41 @@ public class dummyDao {
 
     }
 
+    public void deleteLearningItem(Fragment f, LearningItemBO bo) throws Exception {
+
+        LearningItemViewModel lModel = ViewModelProviders.of(f).get(LearningItemViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.deleteLearningItem(bo);
+
+    }
+
+    public void deleteQuizItem(Fragment f, QuizItemBO bo) throws Exception {
+
+        QuizItemViewModel lModel = ViewModelProviders.of(f).get(QuizItemViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.deleteQuizItem(bo);
+
+    }
+
+    public void deleteLearningTitle(Fragment f,LearningTitleBO bo) throws Exception {
+
+        LearningTitleViewModel lModel = ViewModelProviders.of(f).get(LearningTitleViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.deleteLearningTitle(bo);
+
+    }
+
+    public void deleteQuizTitle(Fragment f,QuizTitleBO bo) throws Exception {
+
+        QuizTitleViewModel lModel = ViewModelProviders.of(f).get(QuizTitleViewModel.class);
+
+        String userName =getUserName(f);
+        lModel.deleteQuizTitle(bo);
+
+    }
     public void updateLearningSession(Fragment f, LearningSessionBO learningSessionBO, String sessionId) throws Exception {
 
         LearningSessionViewModel lModel = ViewModelProviders.of(f).get(LearningSessionViewModel.class);
@@ -235,7 +275,23 @@ public class dummyDao {
         lModel.createQuizTitle(QuizTitleBO);
 
     }
-    
+
+    public void updateLearningTitle(Fragment f, LearningTitleBO learningTitleBO) throws Exception {
+
+
+        LearningTitleViewModel lModel = ViewModelProviders.of(f).get(LearningTitleViewModel.class);
+
+        lModel.updateLearningTitle(learningTitleBO);
+
+    }
+
+    public void updateQuizTitle(Fragment f, QuizTitleBO QuizTitleBO) throws Exception {
+
+        QuizTitleViewModel lModel = ViewModelProviders.of(f).get(QuizTitleViewModel.class);
+
+        lModel.updateQuizTitle(QuizTitleBO);
+
+    }
     public ArrayList<LearningSessionBO> GetLearningSessionByUser(Fragment f, String userID) throws InterruptedException {
         //Dummy, To replace with real filter
 

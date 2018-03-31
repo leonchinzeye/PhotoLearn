@@ -1,9 +1,12 @@
 package com.mtech.parttimeone.photolearn.fragments;
 
+import android.arch.lifecycle.Observer;
+import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
+import android.support.annotation.Nullable;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -12,6 +15,8 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.R;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningSessionViewModel;
+import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
@@ -30,12 +35,14 @@ import java.util.UUID;
 public class CreateLearningTitleFragment extends android.support.v4.app.Fragment {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    private static final String ARG_PARAM1 = "param1";
-    private static final String ARG_PARAM2 = "param2";
+    private static final String ARG_PARAM1 = "param1"; //UUID
+    private static final String ARG_PARAM2 = "param2"; //New/Update
+    private static final String ARG_PARAM3 = "param3"; //SessionID
 
     // TODO: Rename and change types of parameters
-    private String mParam1; //SessionID
-    private String mParam2;
+    private String mParam1; //UUID
+    private String mParam2; //New/Update
+    private String mParam3; //SessionID
 
     private EditText txtLearningTitle;
     Button btnSave;
@@ -56,11 +63,12 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
      * @return A new instance of fragment CreateLearningTitleFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static CreateLearningTitleFragment newInstance(String param1, String param2) {
+    public static CreateLearningTitleFragment newInstance(String param1, String param2, String param3) {
         CreateLearningTitleFragment fragment = new CreateLearningTitleFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
+        args.putString(ARG_PARAM3, param3);
         fragment.setArguments(args);
         return fragment;
     }
@@ -71,6 +79,7 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
         if (getArguments() != null) {
             mParam1 = getArguments().getString(ARG_PARAM1);
             mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam3 = getArguments().getString(ARG_PARAM3);
         }
     }
 
@@ -86,6 +95,29 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
 
         FragmentSelf = this;
 
+        switch (mParam2){
+            case "NEW":
+
+                break;
+
+            case "UPDATE":
+
+                dummyDao dao = new dummyDao();
+                LearningTitleViewModel vmLearningTitle = ViewModelProviders.of(this).get(LearningTitleViewModel.class);
+                vmLearningTitle.getLearningTitle(mParam3,mParam1).observe(this, new Observer<LearningTitleBO>() {
+                    @Override
+                    public void onChanged(@Nullable LearningTitleBO learningTitleBOS) {
+                        txtLearningTitle.setText(learningTitleBOS.getTitle());
+
+                    }
+                });
+                break;
+
+            default:
+                break;
+
+        }
+
         btnSave.setOnClickListener( new View.OnClickListener() {
 
             @Override
@@ -97,18 +129,34 @@ public class CreateLearningTitleFragment extends android.support.v4.app.Fragment
                 dummyDao dao = new dummyDao();
 
                 ltbo.setTitle(txtLearningTitle.getText().toString());
-                ltbo.setSessionId(mParam1);
+                ltbo.setSessionId(mParam3);
                 ltbo.setCreatedBy(dao.getUserName(FragmentSelf));
                 //ltbo.setTitleId(UUID.randomUUID().toString());
 
 
                 try {
 
+                    switch (mParam2){
+                        case "NEW":
+                            dao.createLearningTitle(FragmentSelf,ltbo);
+                            Toast.makeText(getActivity(),"Learning Title (" + ltbo.getTitle() +") created!",Toast.LENGTH_SHORT).show();
 
-                    dao.createLearningTitle(FragmentSelf,ltbo);
+                            break;
 
-                    Toast.makeText(getActivity(),"Learning Title (" + ltbo.getTitle() +") created!",Toast.LENGTH_SHORT).show();
-                    txtLearningTitle.setText("");
+                        case "UPDATE":
+                            ltbo.setUuid(mParam3);
+                            dao.updateLearningTitle(FragmentSelf,ltbo);
+                            Toast.makeText(getActivity(),"Learning Title (" + ltbo.getTitle() +") updated!",Toast.LENGTH_SHORT).show();
+
+                            break;
+
+                        default:
+                            break;
+
+                    }
+
+
+                     txtLearningTitle.setText("");
                     BottomBarActivity act = (BottomBarActivity)getActivity();
                     act.setTitleListFragment(ltbo.getSessionId());
 

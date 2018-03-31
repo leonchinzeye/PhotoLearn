@@ -19,6 +19,10 @@ import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.Button;
+import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.TitleListAdapter;
 import com.mtech.parttimeone.photolearn.R;
@@ -30,6 +34,7 @@ import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.activity.LearnItemCreationActivity;
 import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
+import com.mtech.parttimeone.photolearn.activity.QuizItemDetailActivity;
 import com.mtech.parttimeone.photolearn.bo.ItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningItemBO;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
@@ -65,6 +70,9 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
     private List<ItemBO> itemList;
     private RecyclerView recyclerView;
     private ItemRecyclerAdapter mAdapter;
+    private Button updateBtn;
+    private Button deleteBtn;
+    android.support.v4.app.Fragment FragmentSelf;
 
     private OnFragmentInteractionListener mListener;
 
@@ -124,9 +132,22 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
                         startActivity(it);
                         break;
                     case "QUIZ":
-                        Intent iq = new Intent(getActivity(), QuizItemCreationActivity.class);
-                        iq.putExtra("TitleID", mParam2);
-                        startActivity(iq);
+                        dummyDao dao = new dummyDao();
+                        switch (dao.getMode(this)){
+                            case PARTICIPANT:
+                                Intent iq = new Intent(getActivity(), QuizItemDetailActivity.class);
+                                iq.putExtra("TitleID", mParam2);
+                                startActivity(iq);
+                                break;
+
+                            case TRAINER:
+                                Intent iq2 = new Intent(getActivity(), QuizItemCreationActivity.class);
+                                iq2.putExtra("TitleID", mParam2);
+                                startActivity(iq2);
+                                break;
+
+                        }
+
                         break;
 
                     default:
@@ -153,12 +174,55 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
 
         recyclerView = (RecyclerView) view.findViewById(R.id.item_recyclerView);
 
+        FragmentSelf = this;
+
         dummyDao dao = new dummyDao();
 
         //itemList = dao.GetLearningItemList(mParam1,mParam2);
 
+      /*  updateBtn = (Button) view.findViewById(R.id.buttonUpdate);
+        deleteBtn = (Button) view.findViewById(R.id.buttonDelete);
+
+        updateBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                Intent iq2 = new Intent(getActivity(), QuizItemCreationActivity.class);
+                iq2.putExtra("TitleID", mParam2);
+                startActivity(iq2);
+            }
+        });
+
+        deleteBtn.setOnClickListener(new View.OnClickListener() {
+            public void onClick(View v) {
+                // TODO Auto-generated method stub
+                int position=(Integer)v.getTag();
 
 
+                try {
+                    switch (mParam3){
+                        case "TITLE":
+                            LearningItemBO lbo = (LearningItemBO) mAdapter.getItem(position);
+                            dao.deleteLearningItem(FragmentSelf,lbo);
+                            Toast.makeText(getActivity(),"Item (" + lbo.getItemtitle() +") deleted!",Toast.LENGTH_SHORT).show();
+
+                            break;
+                        case "QUIZ":
+                            QuizItemBO qbo = (QuizItemBO) mAdapter.getItem(position);
+                            dao.deleteQuizItem(FragmentSelf,qbo);
+                            Toast.makeText(getActivity(),"Item (" + qbo.getItemtitle() +") deleted!",Toast.LENGTH_SHORT).show();
+                            break;
+
+                        default:
+                            break;
+                    }
+
+
+
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+            }
+        });*/
 
         switch (mParam3){
             case "TITLE":
@@ -200,6 +264,8 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
                 break;
 
         }
+
+
         return view;
     }
 

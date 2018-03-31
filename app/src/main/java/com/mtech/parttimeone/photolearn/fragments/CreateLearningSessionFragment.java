@@ -189,7 +189,6 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
                 lsbo.setCourseCode(txtCourseCode.getText().toString());
                 lsbo.setCourseModule(txtCourseModule.getText().toString());
                 lsbo.setCourseDate(txtCourseDate.getText().toString().replace("-", ""));
-                lsbo.setSessionId(lsbo.getCourseDate() + "-" + lsbo.getCourseCode() + "-M" + lsbo.getCourseModule());
 
                 dummyDao dao = new dummyDao();
 
@@ -197,11 +196,13 @@ public class CreateLearningSessionFragment extends android.support.v4.app.Fragme
 
                     switch (mParam2){
                         case "NEW":
+                            lsbo.setSessionId(lsbo.getCourseDate() + "-" + lsbo.getCourseCode() + "-M" + lsbo.getCourseModule());
                             dao.createLearningSession(FragmentSelf,lsbo);
                             Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") created!",Toast.LENGTH_SHORT).show();
                             break;
 
                         case "UPDATE":
+                            lsbo.setSessionId(mParam1);
                             dao.updateLearningSession(FragmentSelf,lsbo,lsbo.getSessionId());
                             Toast.makeText(getActivity(),"Learning Session (ID:" + lsbo.getSessionId() +") updated!",Toast.LENGTH_SHORT).show();
                             break;

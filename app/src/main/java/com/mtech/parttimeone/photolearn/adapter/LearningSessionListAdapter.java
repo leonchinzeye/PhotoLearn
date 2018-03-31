@@ -73,7 +73,7 @@ public class LearningSessionListAdapter extends BaseAdapter {
         return rowView;
     }
 
-    public void setDataSource(ArrayList<LearningSessionBO> mDataSource){
+    public void setDataSource(List<LearningSessionBO> mDataSource){
         this.mDataSource = mDataSource;
         this.notifyDataSetChanged();
     }

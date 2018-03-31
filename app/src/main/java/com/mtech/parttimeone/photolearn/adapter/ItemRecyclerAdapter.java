@@ -6,6 +6,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -36,6 +37,10 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         return new ItemViewHolder(itemView);
     }
 
+    public Object getItem(int position) {
+        return ItemList.get(position);
+    }
+
     @Override
     public void onBindViewHolder(ItemViewHolder holder, int position) {
 //        holder.title.setText(ItemList.get(position).getTitle());
@@ -58,6 +63,8 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         mDrawableName = "https://firebasestorage.googleapis.com/v0/b/photolearn-c06db.appspot.com/o/images%2Flearning%2Futy_67?alt=media&token=9efea33f-8454-4452-b6f9-930ba782b585";
         Picasso.get().load(mDrawableName).into(holder.dispimage);
 
+        //set tag
+        holder.deletebutton.setTag(position);
         //holder.dispimage.ItemList.get(position).getImage());
     }
 
@@ -74,6 +81,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
         public TextView date;
         public TextView description;
         public ImageView dispimage;
+        public Button deletebutton;
 
         public ItemViewHolder(View view) {
             super(view);
@@ -83,6 +91,7 @@ public class ItemRecyclerAdapter extends RecyclerView.Adapter<ItemRecyclerAdapte
             location = (TextView) view.findViewById(R.id.item_location);
             description = (TextView) view.findViewById(R.id.item_description);
             dispimage = (ImageView) view.findViewById(R.id.item_image);
+            deletebutton = (Button)  view.findViewById(R.id.buttonDelete);
         }
     }
 }

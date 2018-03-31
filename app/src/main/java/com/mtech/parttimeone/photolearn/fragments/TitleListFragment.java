@@ -3,16 +3,20 @@ package com.mtech.parttimeone.photolearn.fragments;
 import android.arch.lifecycle.Observer;
 import android.arch.lifecycle.ViewModelProviders;
 import android.content.Context;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.annotation.Nullable;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
+import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.mtech.parttimeone.photolearn.Adapter.LearningSessionListAdapter;
 import com.mtech.parttimeone.photolearn.R;
@@ -21,6 +25,8 @@ import com.mtech.parttimeone.photolearn.ViewModel.LearningTitleViewModel;
 import com.mtech.parttimeone.photolearn.ViewModel.QuizTitleViewModel;
 import com.mtech.parttimeone.photolearn.activity.BottomBarActivity;
 import com.mtech.parttimeone.photolearn.Adapter.TitleListAdapter;
+import com.mtech.parttimeone.photolearn.activity.QuizItemCreationActivity;
+import com.mtech.parttimeone.photolearn.activity.QuizItemDetailActivity;
 import com.mtech.parttimeone.photolearn.bo.LearningSessionBO;
 import com.mtech.parttimeone.photolearn.bo.LearningTitleBO;
 import com.mtech.parttimeone.photolearn.bo.QuizTitleBO;
@@ -51,6 +57,7 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
 
     private ListView mListView;
     private TitleListAdapter TitleAdapter;
+    android.support.v4.app.Fragment FragmentSelf;
 
     private OnFragmentInteractionListener mListener;
 
@@ -94,7 +101,7 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
         setListview(container.getContext());
         registerForContextMenu(mListView);
 
-
+        FragmentSelf = this;
 
         mListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
@@ -110,8 +117,21 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
                 //myIntent.putExtra("Type", mParam2); //Optional parameters
                 //getActivity().startActivity(myIntent);
 
-                BottomBarActivity act = (BottomBarActivity)getActivity();
-                act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                dummyDao dao = new dummyDao();
+                switch (dao.getMode(FragmentSelf)){
+                    case PARTICIPANT:
+                        Intent iq = new Intent(getActivity(), QuizItemDetailActivity.class);
+                        iq.putExtra("TitleID", mParam2);
+                        startActivity(iq);
+                        break;
+
+                    case TRAINER:
+                        BottomBarActivity act = (BottomBarActivity)getActivity();
+                        act.setItemListFragment(mParam1,sessiontitleid.getText().toString(),mParam2);
+                        break;
+
+                }
+
 
                 //Toast.makeText(getBaseContext(), sessionID.getText(), Toast.LENGTH_LONG).show();
 
@@ -252,4 +272,81 @@ public class TitleListFragment extends android.support.v4.app.Fragment {
         if (TitleAdapter != null)
             TitleAdapter.notifyDataSetChanged();
     }
+
+    public void onCreateContextMenu(ContextMenu menu, View v, ContextMenu.ContextMenuInfo menuInfo)
+    {
+        super.onCreateContextMenu(menu, v, menuInfo);
+
+        //menu.setHeaderTitle("Select The Action");
+        menu.add(0, v.getId(), 0, "Update");//groupId, itemId, order, title
+        menu.add(0, v.getId(), 0, "Delete");
+
+
+    }
+
+    @Override
+    public boolean onContextItemSelected(MenuItem item){
+
+        BottomBarActivity act = (BottomBarActivity)getActivity();
+
+        AdapterView.AdapterContextMenuInfo info = (AdapterView.AdapterContextMenuInfo) item.getMenuInfo();
+        dummyDao dao = new dummyDao();
+
+        if(item.getTitle()=="Update"){
+
+
+            switch (mParam2) {
+                case "TITLE":
+                    LearningTitleBO lbo = (LearningTitleBO) TitleAdapter.getItem(info.position);
+                    act.setCreateLearningTitleFragment(lbo.getUuid(),"UPDATE",mParam1);
+                    break;
+                case "QUIZ":
+                    QuizTitleBO qbo = (QuizTitleBO) TitleAdapter.getItem(info.position);
+                    act.setCreateQuizTitleFragment(qbo.getUuid(),"UPDATE",mParam1);
+                    break;
+
+                default:
+                    break;
+
+            }
+
+
+
+            Toast.makeText(getContext(),"Update Called",Toast.LENGTH_LONG).show();
+        }
+        else if(item.getTitle()=="Delete"){
+
+            switch (mParam2) {
+                case "TITLE":
+                    LearningTitleBO lbo = ( LearningTitleBO) TitleAdapter.getItem(info.position);
+                    try {
+                        dao.deleteLearningTitle(FragmentSelf,lbo);
+                        setListview(getContext());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+                case "QUIZ":
+                    QuizTitleBO qbo = (QuizTitleBO) TitleAdapter.getItem(info.position);
+
+                    try {
+                        dao.deleteQuizTitle(FragmentSelf,qbo);
+                        setListview(getContext());
+                    } catch (Exception e) {
+                        e.printStackTrace();
+                    }
+                    break;
+
+                default:
+                    break;
+
+            }
+
+            Toast.makeText(getContext(),"Delete Called",Toast.LENGTH_LONG).show();
+        }else{
+            return false;
+        }
+        return true;
+    }
+
 }
