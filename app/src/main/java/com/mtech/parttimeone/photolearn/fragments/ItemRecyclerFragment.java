@@ -143,6 +143,7 @@ public class ItemRecyclerFragment extends android.support.v4.app.Fragment {
                             case TRAINER:
                                 Intent iq2 = new Intent(getActivity(), QuizItemCreationActivity.class);
                                 iq2.putExtra("TitleID", mParam2);
+                                iq2.putExtra("Mode", "NEW");
                                 startActivity(iq2);
                                 break;
 
